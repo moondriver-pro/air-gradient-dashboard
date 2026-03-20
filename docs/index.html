@@ -100,6 +100,15 @@
       color: #6b7280;
       margin-top: 4px;
     }
+    .metric-level {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-top: 5px;
+      color: #374151;
+      opacity: 0.75;
+    }
 
     .divider {
       width: 1px;
@@ -149,76 +158,89 @@
         key: 'pm02_corrected',
         label: 'PM 2.5',
         unit: '\u00b5g/m\u00b3',
+        // Thailand PCD AQI breakpoints (air4thai.pcd.go.th)
         thresholds: [
-          { value: 12,  color: 'yellow' },
-          { value: 35,  color: 'red' },
+          { value: 15,   color: 'green',  label: 'Good' },
+          { value: 25,   color: 'yellow', label: 'Moderate' },
+          { value: 37.5, color: 'orange', label: 'Unhealthy (Sensitive)' },
+          { value: 75,   color: 'red',    label: 'Unhealthy' },
         ],
-        defaultColor: 'green',
+        defaultColor: 'blue',
+        defaultLabel: 'Very Good',
       },
       {
         key: 'rco2_corrected',
         label: 'CO\u2082',
         unit: 'ppm',
         thresholds: [
-          { value: 800,  color: 'yellow' },
-          { value: 1500, color: 'red' },
+          { value: 800,  color: 'yellow', label: 'Moderate' },
+          { value: 1000, color: 'orange', label: 'Poor' },
+          { value: 1500, color: 'red',    label: 'Very Poor' },
         ],
         defaultColor: 'green',
+        defaultLabel: 'Good',
       },
       {
         key: 'atmp_corrected',
         label: 'Temperature',
         unit: '\u00b0C',
         thresholds: [
-          { value: 18, color: 'green' },
-          { value: 28, color: 'yellow' },
-          { value: 35, color: 'red' },
+          { value: 18, color: 'green',  label: 'Comfortable' },
+          { value: 28, color: 'yellow', label: 'Warm' },
+          { value: 35, color: 'red',    label: 'Hot' },
         ],
         defaultColor: 'blue',
+        defaultLabel: 'Cool',
       },
       {
         key: 'rhum_corrected',
         label: 'Humidity',
         unit: '%',
         thresholds: [
-          { value: 30, color: 'green' },
-          { value: 65, color: 'yellow' },
-          { value: 80, color: 'red' },
+          { value: 30, color: 'green',  label: 'Comfortable' },
+          { value: 65, color: 'yellow', label: 'Humid' },
+          { value: 80, color: 'red',    label: 'Very Humid' },
         ],
         defaultColor: 'yellow',
+        defaultLabel: 'Dry',
       },
       {
         key: 'tvocIndex',
         label: 'TVOC Index',
         unit: '',
         thresholds: [
-          { value: 100, color: 'yellow' },
-          { value: 250, color: 'orange' },
-          { value: 400, color: 'red' },
+          { value: 100, color: 'yellow', label: 'Moderate' },
+          { value: 250, color: 'orange', label: 'Poor' },
+          { value: 400, color: 'red',    label: 'Very Poor' },
         ],
         defaultColor: 'green',
+        defaultLabel: 'Good',
       },
       {
         key: 'noxIndex',
         label: 'NOx Index',
         unit: '',
         thresholds: [
-          { value: 20,  color: 'yellow' },
-          { value: 150, color: 'red' },
+          { value: 20,  color: 'yellow', label: 'Moderate' },
+          { value: 50,  color: 'orange', label: 'Poor' },
+          { value: 150, color: 'red',    label: 'Very Poor' },
         ],
         defaultColor: 'green',
+        defaultLabel: 'Good',
       },
     ];
 
-    function getColor(metric, value) {
-      if (value === null || value === undefined) return 'gray';
-      // For temperature, use step-based logic
-      const steps = metric.thresholds;
+    function getState(metric, value) {
+      if (value === null || value === undefined) return { color: 'gray', level: '\u2014' };
       let color = metric.defaultColor;
-      for (const step of steps) {
-        if (value >= step.value) color = step.color;
+      let level = metric.defaultLabel || '';
+      for (const step of metric.thresholds) {
+        if (value >= step.value) {
+          color = step.color;
+          level = step.label || '';
+        }
       }
-      return color;
+      return { color, level };
     }
 
     function renderPanel(panelEl, sensor) {
@@ -231,13 +253,14 @@
         <div class="metrics">
           ${METRICS.map(m => {
             const raw = sensor[m.key];
-            const val = raw !== undefined && raw !== null ? Number(raw).toFixed(raw < 10 ? 1 : 0) : '—';
-            const color = getColor(m, raw);
+            const val = raw !== undefined && raw !== null ? Number(raw).toFixed(raw < 10 ? 1 : 0) : '\u2014';
+            const state = getState(m, raw);
             return `
-              <div class="metric ${color}">
+              <div class="metric ${state.color}">
                 <div class="metric-label">${m.label}</div>
                 <div class="metric-value">${val}</div>
                 <div class="metric-unit">${m.unit}</div>
+                <div class="metric-level">${state.level}</div>
               </div>`;
           }).join('')}
         </div>`;
