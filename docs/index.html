@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Air Quality Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d1117;
+      color: #fff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      padding: 18px 10px 8px;
+    }
+    header h1 {
+      font-size: 2rem;
+      color: #58a6ff;
+      letter-spacing: 2px;
+    }
+    #last-updated {
+      font-size: 0.85rem;
+      color: #8b949e;
+      margin-top: 4px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 16px;
+      flex: 1;
+    }
+
+    .sensor-panel {
+      background: #161b22;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #30363d;
+    }
+
+    .sensor-title {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #30363d;
+      color: #58a6ff;
+    }
+    .sensor-title span {
+      font-size: 0.85rem;
+      color: #8b949e;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .metric {
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+      transition: background 0.5s;
+    }
+    .metric.green  { background: #1a4731; }
+    .metric.yellow { background: #4d3800; }
+    .metric.orange { background: #5a2d00; }
+    .metric.red    { background: #4d1111; }
+    .metric.blue   { background: #0d2a4d; }
+    .metric.gray   { background: #21262d; }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: #c9d1d9;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .metric-value {
+      font-size: 2.4rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+    .metric-unit {
+      font-size: 0.75rem;
+      color: #8b949e;
+      margin-top: 4px;
+    }
+
+    .divider {
+      width: 1px;
+      background: #30363d;
+      margin: 16px 0;
+    }
+
+    .error-msg {
+      text-align: center;
+      color: #f85149;
+      padding: 20px;
+      font-size: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.75rem;
+      color: #484f58;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .metric-value { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌿 Air Quality Monitor</h1>
+    <div id="last-updated">Loading...</div>
+  </header>
+
+  <div class="grid" id="dashboard">
+    <div class="sensor-panel" id="panel-0"></div>
+    <div class="sensor-panel" id="panel-1"></div>
+  </div>
+
+  <footer>Auto-refreshes every 60 seconds &nbsp;|&nbsp; Data from AirGradient</footer>
+
+  <script>
+    const TOKEN = '034709b8-1071-4f2f-b695-6af71c4281bf';
+    const API_URL = `https://api.airgradient.com/public/api/v1/locations/measures/current?token=${TOKEN}`;
+
+    const METRICS = [
+      {
+        key: 'pm02_corrected',
+        label: 'PM 2.5',
+        unit: 'µg/m³',
+        thresholds: [
+          { value: 12,  color: 'yellow' },
+          { value: 35,  color: 'red' },
+        ],
+        defaultColor: 'green',
+      },
+      {
+        key: 'rco2_corrected',
+        label: 'CO₂',
+        unit: 'ppm',
+        thresholds: [
+          { value: 800,  color: 'yellow' },
+          { value: 1500, color: 'red' },
+        ],
+        defaultColor: 'green',
+      },
+      {
+        key: 'atmp_corrected',
+        label: 'Temperature',
+        unit: '°C',
+        thresholds: [
+          { value: 18, color: 'green' },
+          { value: 28, color: 'yellow' },
+          { value: 35, color: 'red' },
+        ],
+        defaultColor: 'blue',
+      },
+      {
+        key: 'rhum_corrected',
+        label: 'Humidity',
+        unit: '%',
+        thresholds: [
+          { value: 30, color: 'green' },
+          { value: 65, color: 'yellow' },
+          { value: 80, color: 'red' },
+        ],
+        defaultColor: 'yellow',
+      },
+      {
+        key: 'tvocIndex',
+        label: 'TVOC Index',
+        unit: '',
+        thresholds: [
+          { value: 100, color: 'yellow' },
+          { value: 250, color: 'orange' },
+          { value: 400, color: 'red' },
+        ],
+        defaultColor: 'green',
+      },
+      {
+        key: 'noxIndex',
+        label: 'NOx Index',
+        unit: '',
+        thresholds: [
+          { value: 20,  color: 'yellow' },
+          { value: 150, color: 'red' },
+        ],
+        defaultColor: 'green',
+      },
+    ];
+
+    function getColor(metric, value) {
+      if (value === null || value === undefined) return 'gray';
+      // For temperature, use step-based logic
+      const steps = metric.thresholds;
+      let color = metric.defaultColor;
+      for (const step of steps) {
+        if (value >= step.value) color = step.color;
+      }
+      return color;
+    }
+
+    function renderPanel(panelEl, sensor) {
+      const locType = sensor.locationType === 'outdoor' ? '🌿 Outdoor' : '🏢 Indoor';
+      panelEl.innerHTML = `
+        <div class="sensor-title">
+          ${sensor.locationName}
+          <span>${locType} &nbsp;|&nbsp; ${sensor.model} &nbsp;|&nbsp; S/N: ${sensor.serialno}</span>
+        </div>
+        <div class="metrics">
+          ${METRICS.map(m => {
+            const raw = sensor[m.key];
+            const val = raw !== undefined && raw !== null ? Number(raw).toFixed(raw < 10 ? 1 : 0) : '—';
+            const color = getColor(m, raw);
+            return `
+              <div class="metric ${color}">
+                <div class="metric-label">${m.label}</div>
+                <div class="metric-value">${val}</div>
+                <div class="metric-unit">${m.unit}</div>
+              </div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    async function fetchAndRender() {
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        // AirGradient API returns array directly or {value: [...]}
+        const sensors = Array.isArray(data) ? data : (data.value || []);
+
+        sensors.forEach((sensor, i) => {
+          const panel = document.getElementById(`panel-${i}`);
+          if (panel) renderPanel(panel, sensor);
+        });
+
+        // Add extra panels if more than 2 sensors appear
+        if (sensors.length > 2) {
+          const grid = document.getElementById('dashboard');
+          for (let i = 2; i < sensors.length; i++) {
+            let panel = document.getElementById(`panel-${i}`);
+            if (!panel) {
+              panel = document.createElement('div');
+              panel.className = 'sensor-panel';
+              panel.id = `panel-${i}`;
+              grid.appendChild(panel);
+            }
+            renderPanel(panel, sensors[i]);
+          }
+        }
+
+        const now = new Date().toLocaleString();
+        document.getElementById('last-updated').textContent = `Last updated: ${now}`;
+      } catch (err) {
+        document.getElementById('last-updated').textContent = `Error: ${err.message}`;
+        console.error(err);
+      }
+    }
+
+    fetchAndRender();
+    setInterval(fetchAndRender, 60000);
+  </script>
+</body>
+</html>
