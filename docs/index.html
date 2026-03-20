@@ -8,8 +8,8 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #0d1117;
-      color: #fff;
+      background: #f0f4f8;
+      color: #111827;
       font-family: 'Segoe UI', Arial, sans-serif;
       min-height: 100vh;
       display: flex;
@@ -22,12 +22,12 @@
     }
     header h1 {
       font-size: 2rem;
-      color: #58a6ff;
+      color: #2563eb;
       letter-spacing: 2px;
     }
     #last-updated {
       font-size: 0.85rem;
-      color: #8b949e;
+      color: #6b7280;
       margin-top: 4px;
     }
 
@@ -40,10 +40,11 @@
     }
 
     .sensor-panel {
-      background: #161b22;
+      background: #ffffff;
       border-radius: 12px;
       padding: 16px;
-      border: 1px solid #30363d;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
     }
 
     .sensor-title {
@@ -52,12 +53,12 @@
       font-weight: bold;
       margin-bottom: 14px;
       padding-bottom: 10px;
-      border-bottom: 1px solid #30363d;
-      color: #58a6ff;
+      border-bottom: 1px solid #e2e8f0;
+      color: #2563eb;
     }
     .sensor-title span {
       font-size: 0.85rem;
-      color: #8b949e;
+      color: #6b7280;
       display: block;
       margin-top: 2px;
     }
@@ -74,16 +75,16 @@
       text-align: center;
       transition: background 0.5s;
     }
-    .metric.green  { background: #1a4731; }
-    .metric.yellow { background: #4d3800; }
-    .metric.orange { background: #5a2d00; }
-    .metric.red    { background: #4d1111; }
-    .metric.blue   { background: #0d2a4d; }
-    .metric.gray   { background: #21262d; }
+    .metric.green  { background: #dcfce7; }
+    .metric.yellow { background: #fef9c3; }
+    .metric.orange { background: #ffedd5; }
+    .metric.red    { background: #fee2e2; }
+    .metric.blue   { background: #dbeafe; }
+    .metric.gray   { background: #f1f5f9; }
 
     .metric-label {
       font-size: 0.75rem;
-      color: #c9d1d9;
+      color: #374151;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 6px;
@@ -92,16 +93,17 @@
       font-size: 2.4rem;
       font-weight: bold;
       line-height: 1;
+      color: #111827;
     }
     .metric-unit {
       font-size: 0.75rem;
-      color: #8b949e;
+      color: #6b7280;
       margin-top: 4px;
     }
 
     .divider {
       width: 1px;
-      background: #30363d;
+      background: #e2e8f0;
       margin: 16px 0;
     }
 
@@ -116,7 +118,7 @@
       text-align: center;
       padding: 10px;
       font-size: 0.75rem;
-      color: #484f58;
+      color: #9ca3af;
     }
 
     @media (max-width: 900px) {
