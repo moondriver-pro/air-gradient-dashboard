@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Air Quality Dashboard</title>
   <style>
+    /* ===== RESET & BASE ===== */
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -16,6 +17,7 @@
       flex-direction: column;
     }
 
+    /* ===== HEADER ===== */
     header {
       text-align: center;
       padding: 18px 10px 8px;
@@ -31,6 +33,7 @@
       margin-top: 4px;
     }
 
+    /* ===== LAYOUT GRID ===== */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -39,6 +42,7 @@
       flex: 1;
     }
 
+    /* ===== SENSOR PANEL ===== */
     .sensor-panel {
       background: #ffffff;
       border-radius: 12px;
@@ -46,7 +50,6 @@
       border: 1px solid #e2e8f0;
       box-shadow: 0 1px 6px rgba(0,0,0,0.08);
     }
-
     .sensor-title {
       text-align: center;
       font-size: 1.4rem;
@@ -63,12 +66,12 @@
       margin-top: 2px;
     }
 
+    /* ===== METRIC CARDS ===== */
     .metrics {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 10px;
     }
-
     .metric {
       border-radius: 10px;
       padding: 14px 10px;
@@ -110,36 +113,18 @@
       opacity: 0.75;
     }
 
-    .divider {
-      width: 1px;
-      background: #e2e8f0;
-      margin: 16px 0;
-    }
-
-    .error-msg {
-      text-align: center;
-      color: #f85149;
-      padding: 20px;
-      font-size: 1rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 10px;
-      font-size: 0.75rem;
-      color: #9ca3af;
-    }
-
+    /* ===== AIR4THAI PANEL ===== */
     .air4thai-panel { grid-column: span 2; }
     .air4thai-panel .metrics { max-width: 480px; margin: 0 auto; }
 
+    /* ===== 24-HOUR AVG SECTION ===== */
     .avg-section {
       margin-top: 14px;
       padding-top: 12px;
       border-top: 1px solid #e2e8f0;
     }
     .avg-title {
-      font-size: 1.rem;
+      font-size: 0.9rem;
       text-transform: none;
       letter-spacing: 0.5px;
       color: #374151;
@@ -152,12 +137,13 @@
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
     }
-    .avg-grid .metric { padding: 10px 6px; }
+    .avg-grid .metric       { padding: 10px 6px; }
     .avg-grid .metric-value { font-size: 1.6rem; }
     .avg-grid .metric-label { font-size: 0.68rem; }
     .avg-grid .metric-unit  { font-size: 0.68rem; }
     .avg-grid .metric-level { font-size: 0.6rem; }
 
+    /* ===== WHO REFERENCE BAR ===== */
     .who-reference {
       margin: 0 16px 12px;
       background: #ffffff;
@@ -166,7 +152,7 @@
       padding: 14px 16px;
       box-shadow: 0 1px 6px rgba(0,0,0,0.06);
     }
-    .who-reference .who-heading {
+    .who-heading {
       font-size: 0.85rem;
       font-weight: 700;
       color: #1d4ed8;
@@ -174,51 +160,70 @@
       margin-bottom: 10px;
       letter-spacing: 0.3px;
     }
-    .who-reference .who-items {
+    .who-items {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
     }
-    .who-reference .who-item {
+    .who-item {
       background: #f0f9ff;
       border-radius: 10px;
       padding: 10px 8px;
       text-align: center;
       border: 1px solid #bae6fd;
     }
-    .who-reference .who-item .who-metric {
+    .who-metric {
       font-size: 0.68rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: #374151;
       margin-bottom: 4px;
     }
-    .who-reference .who-item .who-value {
+    .who-value {
       font-size: 1.3rem;
       font-weight: bold;
       color: #0369a1;
       line-height: 1.1;
     }
-    .who-reference .who-item .who-unit {
+    .who-unit {
       font-size: 0.68rem;
       color: #6b7280;
       margin-top: 2px;
     }
-    .who-reference .who-item .who-std {
+    .who-std {
       font-size: 0.6rem;
       color: #9ca3af;
       margin-top: 3px;
     }
 
+    /* ===== PLACEHOLDER / STATUS MESSAGE ===== */
+    .panel-msg {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      padding: 6px 0;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; }
       .metric-value { font-size: 1.8rem; }
       .air4thai-panel { grid-column: span 1; }
-      .who-reference .who-items { grid-template-columns: repeat(3, 1fr); }
+      .who-items { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>Air Quality Monitor</h1>
     <div id="last-updated">Loading...</div>
@@ -233,7 +238,7 @@
   </div>
 
   <div class="who-reference">
-    <div class="who-heading">WHO Guidelines — Recommended Safe Levels</div>
+    <div class="who-heading">WHO Guidelines &mdash; Recommended Safe Levels</div>
     <div class="who-items">
       <div class="who-item">
         <div class="who-metric">PM<sub>2.5</sub></div>
@@ -267,21 +272,29 @@
       </div>
     </div>
   </div>
-  <footer>Auto-refreshes every 60 seconds &nbsp;|&nbsp; Sensors: AirGradient &nbsp;|&nbsp; Reference: Air4Thai / PCD (Don Mueang District Office)</footer>
+
+  <footer>
+    Auto-refreshes every 60 seconds &nbsp;|&nbsp;
+    Sensors: AirGradient &nbsp;|&nbsp;
+    Reference: Air4Thai / PCD (Don Mueang District Office)
+  </footer>
 
   <script>
-    const TOKEN = '034709b8-1071-4f2f-b695-6af71c4281bf';
+    // ===== CONFIG =====
+    const TOKEN   = '034709b8-1071-4f2f-b695-6af71c4281bf';
     const API_URL = `https://api.airgradient.com/public/api/v1/locations/measures/current?token=${TOKEN}`;
 
     const A4T_SOURCE = 'http://air4thai.pcd.go.th/services/getNewAQI_JSON.php?stationID=bkp74t';
     const AIR4THAI_PROXIES = [
-      'https://api.allorigins.win/raw?url=' + encodeURIComponent(A4T_SOURCE),
-      'https://corsproxy.io/?' + encodeURIComponent(A4T_SOURCE),
+      'https://api.allorigins.win/raw?url='      + encodeURIComponent(A4T_SOURCE),
+      'https://corsproxy.io/?'                   + encodeURIComponent(A4T_SOURCE),
       'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(A4T_SOURCE),
     ];
+
     const A4T_COLOR = { '1':'blue', '2':'green', '3':'yellow', '4':'orange', '5':'red' };
     const A4T_LABEL = { '1':'Very Good', '2':'Good', '3':'Moderate', '4':'Unhealthy (Sensitive)', '5':'Unhealthy' };
 
+    // ===== METRICS DEFINITION =====
     const METRICS = [
       {
         key: 'pm02_corrected', label: 'PM<sub>2.5</sub>', unit: '\u00b5g/m\u00b3', dec: 1,
@@ -332,34 +345,80 @@
       },
     ];
 
+    // ===== HELPERS =====
+
+    /** Returns color/level state for a metric value based on its thresholds. */
     function getState(metric, value) {
       if (value === null || value === undefined) return { color: 'gray', level: '\u2014' };
       let color = metric.defaultColor;
-      let level = metric.defaultLabel || '';
+      let level = metric.defaultLabel;
       for (const step of metric.thresholds) {
-        if (value >= step.value) {
-          color = step.color;
-          level = step.label || '';
-        }
+        if (value >= step.value) { color = step.color; level = step.label; }
       }
       return { color, level };
     }
 
+    /** Formats a numeric value to fixed decimals; returns em-dash if negative/missing. */
+    function fmtVal(v, dec) {
+      return parseFloat(v) >= 0 ? Number(v).toFixed(dec) : '\u2014';
+    }
+
+    /** Builds an Air4Thai metric card HTML string. */
+    function a4tCard(colorId, label, val, unit) {
+      return `
+        <div class="metric ${A4T_COLOR[colorId] || 'gray'}">
+          <div class="metric-label">${label}</div>
+          <div class="metric-value">${val}</div>
+          <div class="metric-unit">${unit}</div>
+          <div class="metric-level">${A4T_LABEL[colorId] || '\u2014'}</div>
+        </div>`;
+    }
+
+    /** Returns Bangkok-local { from, to } ISO strings for yesterday 7am -> today 7am. */
+    function get24hWindow() {
+      const BKK_OFFSET_MS = 7 * 3600000;
+      const bkNow  = new Date(Date.now() + BKK_OFFSET_MS);
+      const bkHour = bkNow.getUTCHours();
+      const midnightUTC = Date.UTC(
+        bkNow.getUTCFullYear(), bkNow.getUTCMonth(),
+        bkHour >= 7 ? bkNow.getUTCDate() : bkNow.getUTCDate() - 1
+      );
+      return {
+        from: new Date(midnightUTC - 86400000).toISOString().slice(0, 19),
+        to:   new Date(midnightUTC).toISOString().slice(0, 19),
+      };
+    }
+
+    /** Formats an ISO date string to "D Mon" in Bangkok time. */
+    function formatBkDate(isoStr) {
+      const ms = new Date(isoStr + 'Z').getTime() + 7 * 3600000;
+      const d  = new Date(ms);
+      const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return `${d.getUTCDate()} ${mo[d.getUTCMonth()]}`;
+    }
+
+    // ===== RENDER FUNCTIONS =====
+
+    /** Renders a single AirGradient sensor panel (real-time section).
+     *  Preserves the avg-section div on subsequent refreshes. */
     function renderPanel(panelEl, sensor, idx) {
-      let contentEl = panelEl.querySelector('.sensor-content');
-      if (!contentEl) {
+      // Build panel skeleton (incl. avg section) only on first render
+      if (!panelEl.querySelector('.sensor-content')) {
         const { from, to } = get24hWindow();
         panelEl.innerHTML = `
           <div class="sensor-content"></div>
           <div class="avg-section">
-            <div class="avg-title">24-Hour Average &mdash; ${formatBkDate(from)} 7am &rarr; ${formatBkDate(to)} 7am (AIT)</div>
+            <div class="avg-title">
+              24-Hour Average &mdash; ${formatBkDate(from)} 7am &rarr; ${formatBkDate(to)} 7am (AIT)
+            </div>
             <div class="avg-grid" id="avg-grid-${idx}">
-              <div style="grid-column:1/-1;text-align:center;font-size:0.8rem;color:#9ca3af;padding:6px 0">Loading&hellip;</div>
+              <div class="panel-msg">Loading&hellip;</div>
             </div>
           </div>`;
-        contentEl = panelEl.querySelector('.sensor-content');
       }
-      contentEl.innerHTML = `
+
+      // Update only the real-time content on every refresh
+      panelEl.querySelector('.sensor-content').innerHTML = `
         <div class="sensor-title">
           ${sensor.locationName}
           <span>${sensor.model} &nbsp;|&nbsp; S/N: ${sensor.serialno}</span>
@@ -368,93 +427,64 @@
         <div class="metrics avg-grid">
           ${METRICS.map(m => {
             const raw = sensor[m.key];
-            const val = raw !== undefined && raw !== null ? Number(raw).toFixed(m.dec) : '\u2014';
-            const state = getState(m, raw);
+            const val = raw != null ? Number(raw).toFixed(m.dec) : '\u2014';
+            const { color, level } = getState(m, raw);
             return `
-              <div class="metric ${state.color}">
+              <div class="metric ${color}">
                 <div class="metric-label">${m.label}</div>
                 <div class="metric-value">${val}</div>
                 <div class="metric-unit">${m.unit}</div>
-                <div class="metric-level">${state.level}</div>
+                <div class="metric-level">${level}</div>
               </div>`;
           }).join('')}
         </div>`;
     }
 
+    /** Renders the 24-hour average cards for a sensor panel. */
+    function renderAvgSection(idx, points) {
+      const gridEl = document.getElementById(`avg-grid-${idx}`);
+      if (!gridEl) return;
+      if (!points || !points.length) {
+        gridEl.innerHTML = `<div class="panel-msg">No data</div>`;
+        return;
+      }
+      gridEl.innerHTML = METRICS.map(m => {
+        const vals = points.map(p => p[m.key]).filter(v => v != null).map(Number);
+        const avg  = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+        const disp = avg != null ? avg.toFixed(m.dec) : '\u2014';
+        const { color, level } = getState(m, avg);
+        return `
+          <div class="metric ${color}">
+            <div class="metric-label">${m.label}</div>
+            <div class="metric-value">${disp}</div>
+            <div class="metric-unit">${m.unit}</div>
+            <div class="metric-level">${level}</div>
+          </div>`;
+      }).join('');
+    }
+
+    /** Renders the Air4Thai reference station panel. */
     function renderAir4ThaiPanel(data) {
       const panel = document.getElementById('panel-air4thai');
       if (!panel) return;
       const last = data.AQILast;
-      const pm25 = last.PM25;
-      const pm10 = last.PM10;
-      const aqi  = last.AQI;
-
-      const fmt = (v, dec) => parseFloat(v) >= 0 ? Number(v).toFixed(dec) : '\u2014';
-      const card = (colorId, label, val, unit) => `
-        <div class="metric ${A4T_COLOR[colorId] || 'gray'}">
-          <div class="metric-label">${label}</div>
-          <div class="metric-value">${val}</div>
-          <div class="metric-unit">${unit}</div>
-          <div class="metric-level">${A4T_LABEL[colorId] || '\u2014'}</div>
-        </div>`;
-
       panel.innerHTML = `
         <div class="sensor-title">
           ${data.nameEN.replace(/\s+/g, ' ').trim()}
           <span>Air4Thai / PCD &nbsp;|&nbsp; Last reading: ${last.date} ${last.time}</span>
         </div>
         <div class="metrics">
-          ${card(pm25.color_id, 'PM<sub>2.5</sub>', fmt(pm25.value, 1), '\u00b5g/m\u00b3')}
-          ${card(pm10.color_id, 'PM<sub>10</sub>',  fmt(pm10.value, 0), '\u00b5g/m\u00b3')}
-          ${card(aqi.color_id,  'AQI',    parseInt(aqi.aqi) >= 0 ? aqi.aqi : '\u2014', 'index')}
+          ${a4tCard(last.PM25.color_id, 'PM<sub>2.5</sub>', fmtVal(last.PM25.value, 1), '\u00b5g/m\u00b3')}
+          ${a4tCard(last.PM10.color_id, 'PM<sub>10</sub>',  fmtVal(last.PM10.value, 0), '\u00b5g/m\u00b3')}
+          ${a4tCard(last.AQI.color_id,  'AQI', parseInt(last.AQI.aqi) >= 0 ? last.AQI.aqi : '\u2014', 'index')}
         </div>`;
     }
 
+    // ===== DATA FETCHING =====
+
     let avgsInitialized = false;
 
-    function get24hWindow() {
-      const BANGKOK_OFFSET_MS = 7 * 3600000;
-      const bkNow = new Date(Date.now() + BANGKOK_OFFSET_MS);
-      const bkH   = bkNow.getUTCHours();
-      const midnightUTC = Date.UTC(
-        bkNow.getUTCFullYear(), bkNow.getUTCMonth(),
-        bkH >= 7 ? bkNow.getUTCDate() : bkNow.getUTCDate() - 1
-      );
-      return {
-        from: new Date(midnightUTC - 86400000).toISOString().slice(0, 19),
-        to:   new Date(midnightUTC).toISOString().slice(0, 19),
-      };
-    }
-
-    function formatBkDate(isoStr) {
-      const ms = new Date(isoStr + 'Z').getTime() + 7 * 3600000;
-      const d  = new Date(ms);
-      const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      return `${d.getUTCDate()} ${mo[d.getUTCMonth()]}`;
-    }
-
-    function renderAvgSection(idx, points) {
-      const gridEl = document.getElementById(`avg-grid-${idx}`);
-      if (!gridEl) return;
-      if (!points || !points.length) {
-        gridEl.innerHTML = `<div style="grid-column:1/-1;text-align:center;font-size:0.8rem;color:#9ca3af;padding:6px 0">No data</div>`;
-        return;
-      }
-      gridEl.innerHTML = METRICS.map(m => {
-        const vals  = points.map(p => p[m.key]).filter(v => v != null).map(Number);
-        const avg   = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
-        const disp  = avg != null ? avg.toFixed(m.dec) : '\u2014';
-        const state = getState(m, avg);
-        return `
-          <div class="metric ${state.color}">
-            <div class="metric-label">${m.label}</div>
-            <div class="metric-value">${disp}</div>
-            <div class="metric-unit">${m.unit}</div>
-            <div class="metric-level">${state.level}</div>
-          </div>`;
-      }).join('');
-    }
-
+    /** Fetches 24h historical data for all sensors and renders avg cards. Runs once per page load. */
     async function initAvg(sensors) {
       const { from, to } = get24hWindow();
       const results = await Promise.allSettled(
@@ -464,36 +494,31 @@
         })
       );
       sensors.forEach((_, i) => {
-        const gridEl = document.getElementById(`avg-grid-${i}`);
         if (results[i].status === 'fulfilled') {
           renderAvgSection(i, results[i].value);
-        } else if (gridEl) {
-          gridEl.innerHTML = `<div style="grid-column:1/-1;text-align:center;font-size:0.8rem;color:#9ca3af;padding:6px 0">Unavailable</div>`;
+        } else {
+          const gridEl = document.getElementById(`avg-grid-${i}`);
+          if (gridEl) gridEl.innerHTML = `<div class="panel-msg">Unavailable</div>`;
         }
       });
     }
 
+    /** Fetches current readings from AirGradient and updates all sensor panels. */
     async function fetchAirGradient() {
       try {
-        const data = await fetch(API_URL).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+        const data    = await fetch(API_URL).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
         const sensors = Array.isArray(data) ? data : (data.value || []);
+        const grid    = document.getElementById('dashboard');
+
         sensors.forEach((sensor, i) => {
-          const panel = document.getElementById(`panel-${i}`);
-          if (panel) renderPanel(panel, sensor, i);
-        });
-        if (sensors.length > 2) {
-          const grid = document.getElementById('dashboard');
-          for (let i = 2; i < sensors.length; i++) {
-            let panel = document.getElementById(`panel-${i}`);
-            if (!panel) {
-              panel = document.createElement('div');
-              panel.className = 'sensor-panel';
-              panel.id = `panel-${i}`;
-              grid.appendChild(panel);
-            }
-            renderPanel(panel, sensors[i], i);
+          let panel = document.getElementById(`panel-${i}`);
+          if (!panel) {
+            panel = Object.assign(document.createElement('div'), { className: 'sensor-panel', id: `panel-${i}` });
+            grid.appendChild(panel);
           }
-        }
+          renderPanel(panel, sensor, i);
+        });
+
         if (!avgsInitialized) {
           avgsInitialized = true;
           initAvg(sensors);
@@ -501,10 +526,11 @@
         document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleString()}`;
       } catch (err) {
         document.getElementById('last-updated').textContent = `AirGradient error: ${err.message}`;
-        console.error(err);
+        console.error('AirGradient fetch failed:', err);
       }
     }
 
+    /** Fetches Air4Thai reference data, trying each proxy in order until one succeeds. */
     async function fetchAir4Thai() {
       for (const url of AIR4THAI_PROXIES) {
         try {
@@ -515,10 +541,11 @@
           console.warn('Air4Thai proxy failed:', url, err.message);
         }
       }
-      const p = document.getElementById('panel-air4thai');
-      if (p) p.innerHTML = `<div class="sensor-title">Air4Thai (PCD)<span>Reference station unavailable</span></div>`;
+      const panel = document.getElementById('panel-air4thai');
+      if (panel) panel.innerHTML = `<div class="sensor-title">Air4Thai (PCD)<span>Reference station unavailable</span></div>`;
     }
 
+    // ===== INIT =====
     function fetchAndRender() {
       fetchAirGradient();
       fetchAir4Thai();
