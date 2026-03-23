@@ -273,7 +273,12 @@
     const TOKEN = '034709b8-1071-4f2f-b695-6af71c4281bf';
     const API_URL = `https://api.airgradient.com/public/api/v1/locations/measures/current?token=${TOKEN}`;
 
-    const AIR4THAI_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http://air4thai.pcd.go.th/services/getNewAQI_JSON.php?stationID=bkp74t');
+    const A4T_SOURCE = 'http://air4thai.pcd.go.th/services/getNewAQI_JSON.php?stationID=bkp74t';
+    const AIR4THAI_PROXIES = [
+      'https://api.allorigins.win/raw?url=' + encodeURIComponent(A4T_SOURCE),
+      'https://corsproxy.io/?' + encodeURIComponent(A4T_SOURCE),
+      'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(A4T_SOURCE),
+    ];
     const A4T_COLOR = { '1':'blue', '2':'green', '3':'yellow', '4':'orange', '5':'red' };
     const A4T_LABEL = { '1':'Very Good', '2':'Good', '3':'Moderate', '4':'Unhealthy (Sensitive)', '5':'Unhealthy' };
 
@@ -501,14 +506,17 @@
     }
 
     async function fetchAir4Thai() {
-      try {
-        const data = await fetch(AIR4THAI_URL).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
-        renderAir4ThaiPanel(data);
-      } catch (err) {
-        const p = document.getElementById('panel-air4thai');
-        if (p) p.innerHTML = `<div class="sensor-title">Air4Thai (PCD)<span>Reference station unavailable</span></div>`;
-        console.warn('Air4Thai fetch failed:', err);
+      for (const url of AIR4THAI_PROXIES) {
+        try {
+          const data = await fetch(url).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+          renderAir4ThaiPanel(data);
+          return;
+        } catch (err) {
+          console.warn('Air4Thai proxy failed:', url, err.message);
+        }
       }
+      const p = document.getElementById('panel-air4thai');
+      if (p) p.innerHTML = `<div class="sensor-title">Air4Thai (PCD)<span>Reference station unavailable</span></div>`;
     }
 
     function fetchAndRender() {
