@@ -130,103 +130,200 @@
       color: #9ca3af;
     }
 
+    .air4thai-panel { grid-column: span 2; }
+    .air4thai-panel .metrics { max-width: 480px; margin: 0 auto; }
+
+    .avg-section {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .avg-title {
+      font-size: 1.rem;
+      text-transform: none;
+      letter-spacing: 0.5px;
+      color: #374151;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .avg-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .avg-grid .metric { padding: 10px 6px; }
+    .avg-grid .metric-value { font-size: 1.6rem; }
+    .avg-grid .metric-label { font-size: 0.68rem; }
+    .avg-grid .metric-unit  { font-size: 0.68rem; }
+    .avg-grid .metric-level { font-size: 0.6rem; }
+
+    .who-reference {
+      margin: 0 16px 12px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+    .who-reference .who-heading {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1d4ed8;
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
+    .who-reference .who-items {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .who-reference .who-item {
+      background: #f0f9ff;
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+      border: 1px solid #bae6fd;
+    }
+    .who-reference .who-item .who-metric {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+    .who-reference .who-item .who-value {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #0369a1;
+      line-height: 1.1;
+    }
+    .who-reference .who-item .who-unit {
+      font-size: 0.68rem;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+    .who-reference .who-item .who-std {
+      font-size: 0.6rem;
+      color: #9ca3af;
+      margin-top: 3px;
+    }
+
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; }
       .metric-value { font-size: 1.8rem; }
+      .air4thai-panel { grid-column: span 1; }
+      .who-reference .who-items { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>🌿 Air Quality Monitor</h1>
+    <h1>Air Quality Monitor</h1>
     <div id="last-updated">Loading...</div>
   </header>
 
   <div class="grid" id="dashboard">
     <div class="sensor-panel" id="panel-0"></div>
     <div class="sensor-panel" id="panel-1"></div>
+    <div class="sensor-panel air4thai-panel" id="panel-air4thai">
+      <div class="sensor-title">Air4Thai (PCD)<span>Loading reference data...</span></div>
+    </div>
   </div>
 
-  <footer>Auto-refreshes every 60 seconds &nbsp;|&nbsp; Data from AirGradient</footer>
+  <div class="who-reference">
+    <div class="who-heading">WHO Guidelines — Recommended Safe Levels</div>
+    <div class="who-items">
+      <div class="who-item">
+        <div class="who-metric">PM<sub>2.5</sub></div>
+        <div class="who-value">15</div>
+        <div class="who-unit">&micro;g/m&sup3;</div>
+        <div class="who-std">WHO AQG 2021 (24h)</div>
+      </div>
+      <div class="who-item">
+        <div class="who-metric">PM<sub>10</sub></div>
+        <div class="who-value">45</div>
+        <div class="who-unit">&micro;g/m&sup3;</div>
+        <div class="who-std">WHO AQG 2021 (24h)</div>
+      </div>
+      <div class="who-item">
+        <div class="who-metric">CO<sub>2</sub></div>
+        <div class="who-value">&lt;1000</div>
+        <div class="who-unit">ppm</div>
+        <div class="who-std">WHO Indoor AQ</div>
+      </div>
+      <div class="who-item">
+        <div class="who-metric">TVOC</div>
+        <div class="who-value">&lt;300</div>
+        <div class="who-unit">ppb</div>
+        <div class="who-std">WHO IAQA 2010</div>
+      </div>
+      <div class="who-item">
+        <div class="who-metric">Temp</div>
+        <div class="who-value">18&ndash;24</div>
+        <div class="who-unit">&deg;C</div>
+        <div class="who-std">WHO Housing 2018</div>
+      </div>
+    </div>
+  </div>
+  <footer>Auto-refreshes every 60 seconds &nbsp;|&nbsp; Sensors: AirGradient &nbsp;|&nbsp; Reference: Air4Thai / PCD (Don Mueang District Office)</footer>
 
   <script>
     const TOKEN = '034709b8-1071-4f2f-b695-6af71c4281bf';
     const API_URL = `https://api.airgradient.com/public/api/v1/locations/measures/current?token=${TOKEN}`;
 
+    const AIR4THAI_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http://air4thai.pcd.go.th/services/getNewAQI_JSON.php?stationID=bkp74t');
+    const A4T_COLOR = { '1':'blue', '2':'green', '3':'yellow', '4':'orange', '5':'red' };
+    const A4T_LABEL = { '1':'Very Good', '2':'Good', '3':'Moderate', '4':'Unhealthy (Sensitive)', '5':'Unhealthy' };
+
     const METRICS = [
       {
-        key: 'pm02_corrected',
-        label: 'PM 2.5',
-        unit: '\u00b5g/m\u00b3',
-        // Thailand PCD AQI breakpoints (air4thai.pcd.go.th)
+        key: 'pm02_corrected', label: 'PM<sub>2.5</sub>', unit: '\u00b5g/m\u00b3', dec: 1,
         thresholds: [
           { value: 15,   color: 'green',  label: 'Good' },
           { value: 25,   color: 'yellow', label: 'Moderate' },
-          { value: 37.5, color: 'orange', label: 'Unhealthy (Sensitive)' },
+          { value: 37.5, color: 'orange', label: 'Unhealthy (Sens.)' },
           { value: 75,   color: 'red',    label: 'Unhealthy' },
         ],
-        defaultColor: 'blue',
-        defaultLabel: 'Very Good',
+        defaultColor: 'blue', defaultLabel: 'Very Good',
       },
       {
-        key: 'rco2_corrected',
-        label: 'CO\u2082',
-        unit: 'ppm',
+        key: 'pm10_corrected', label: 'PM<sub>10</sub>', unit: '\u00b5g/m\u00b3', dec: 0,
+        thresholds: [
+          { value: 50,  color: 'green',  label: 'Good' },
+          { value: 80,  color: 'yellow', label: 'Moderate' },
+          { value: 120, color: 'orange', label: 'Unhealthy (Sens.)' },
+          { value: 180, color: 'red',    label: 'Unhealthy' },
+        ],
+        defaultColor: 'blue', defaultLabel: 'Very Good',
+      },
+      {
+        key: 'rco2_corrected', label: 'CO<sub>2</sub>', unit: 'ppm', dec: 0,
         thresholds: [
           { value: 800,  color: 'yellow', label: 'Moderate' },
           { value: 1000, color: 'orange', label: 'Poor' },
           { value: 1500, color: 'red',    label: 'Very Poor' },
         ],
-        defaultColor: 'green',
-        defaultLabel: 'Good',
+        defaultColor: 'green', defaultLabel: 'Good',
       },
       {
-        key: 'atmp_corrected',
-        label: 'Temperature',
-        unit: '\u00b0C',
+        key: 'atmp_corrected', label: 'Temp', unit: '\u00b0C', dec: 1,
         thresholds: [
           { value: 18, color: 'green',  label: 'Comfortable' },
           { value: 28, color: 'yellow', label: 'Warm' },
           { value: 35, color: 'red',    label: 'Hot' },
         ],
-        defaultColor: 'blue',
-        defaultLabel: 'Cool',
+        defaultColor: 'blue', defaultLabel: 'Cool',
       },
       {
-        key: 'rhum_corrected',
-        label: 'Humidity',
-        unit: '%',
+        key: 'tvoc', label: 'TVOC', unit: 'ppb', dec: 0,
         thresholds: [
-          { value: 30, color: 'green',  label: 'Comfortable' },
-          { value: 65, color: 'yellow', label: 'Humid' },
-          { value: 80, color: 'red',    label: 'Very Humid' },
+          { value: 220,  color: 'yellow', label: 'Moderate' },
+          { value: 660,  color: 'orange', label: 'Poor' },
+          { value: 2200, color: 'red',    label: 'Very Poor' },
         ],
-        defaultColor: 'yellow',
-        defaultLabel: 'Dry',
-      },
-      {
-        key: 'tvocIndex',
-        label: 'TVOC Index',
-        unit: '',
-        thresholds: [
-          { value: 100, color: 'yellow', label: 'Moderate' },
-          { value: 250, color: 'orange', label: 'Poor' },
-          { value: 400, color: 'red',    label: 'Very Poor' },
-        ],
-        defaultColor: 'green',
-        defaultLabel: 'Good',
-      },
-      {
-        key: 'noxIndex',
-        label: 'NOx Index',
-        unit: '',
-        thresholds: [
-          { value: 20,  color: 'yellow', label: 'Moderate' },
-          { value: 50,  color: 'orange', label: 'Poor' },
-          { value: 150, color: 'red',    label: 'Very Poor' },
-        ],
-        defaultColor: 'green',
-        defaultLabel: 'Good',
+        defaultColor: 'green', defaultLabel: 'Good',
       },
     ];
 
@@ -243,17 +340,30 @@
       return { color, level };
     }
 
-    function renderPanel(panelEl, sensor) {
-      const locType = sensor.locationType === 'outdoor' ? '🌿 Outdoor' : '🏢 Indoor';
-      panelEl.innerHTML = `
+    function renderPanel(panelEl, sensor, idx) {
+      let contentEl = panelEl.querySelector('.sensor-content');
+      if (!contentEl) {
+        const { from, to } = get24hWindow();
+        panelEl.innerHTML = `
+          <div class="sensor-content"></div>
+          <div class="avg-section">
+            <div class="avg-title">24-Hour Average &mdash; ${formatBkDate(from)} 7am &rarr; ${formatBkDate(to)} 7am (AIT)</div>
+            <div class="avg-grid" id="avg-grid-${idx}">
+              <div style="grid-column:1/-1;text-align:center;font-size:0.8rem;color:#9ca3af;padding:6px 0">Loading&hellip;</div>
+            </div>
+          </div>`;
+        contentEl = panelEl.querySelector('.sensor-content');
+      }
+      contentEl.innerHTML = `
         <div class="sensor-title">
           ${sensor.locationName}
-          <span>${locType} &nbsp;|&nbsp; ${sensor.model} &nbsp;|&nbsp; S/N: ${sensor.serialno}</span>
+          <span>${sensor.model} &nbsp;|&nbsp; S/N: ${sensor.serialno}</span>
         </div>
-        <div class="metrics">
+        <div class="avg-title" style="margin-bottom:8px">Real-time</div>
+        <div class="metrics avg-grid">
           ${METRICS.map(m => {
             const raw = sensor[m.key];
-            const val = raw !== undefined && raw !== null ? Number(raw).toFixed(raw < 10 ? 1 : 0) : '\u2014';
+            const val = raw !== undefined && raw !== null ? Number(raw).toFixed(m.dec) : '\u2014';
             const state = getState(m, raw);
             return `
               <div class="metric ${state.color}">
@@ -266,21 +376,106 @@
         </div>`;
     }
 
-    async function fetchAndRender() {
+    function renderAir4ThaiPanel(data) {
+      const panel = document.getElementById('panel-air4thai');
+      if (!panel) return;
+      const last = data.AQILast;
+      const pm25 = last.PM25;
+      const pm10 = last.PM10;
+      const aqi  = last.AQI;
+
+      const fmt = (v, dec) => parseFloat(v) >= 0 ? Number(v).toFixed(dec) : '\u2014';
+      const card = (colorId, label, val, unit) => `
+        <div class="metric ${A4T_COLOR[colorId] || 'gray'}">
+          <div class="metric-label">${label}</div>
+          <div class="metric-value">${val}</div>
+          <div class="metric-unit">${unit}</div>
+          <div class="metric-level">${A4T_LABEL[colorId] || '\u2014'}</div>
+        </div>`;
+
+      panel.innerHTML = `
+        <div class="sensor-title">
+          ${data.nameEN.replace(/\s+/g, ' ').trim()}
+          <span>Air4Thai / PCD &nbsp;|&nbsp; Last reading: ${last.date} ${last.time}</span>
+        </div>
+        <div class="metrics">
+          ${card(pm25.color_id, 'PM<sub>2.5</sub>', fmt(pm25.value, 1), '\u00b5g/m\u00b3')}
+          ${card(pm10.color_id, 'PM<sub>10</sub>',  fmt(pm10.value, 0), '\u00b5g/m\u00b3')}
+          ${card(aqi.color_id,  'AQI',    parseInt(aqi.aqi) >= 0 ? aqi.aqi : '\u2014', 'index')}
+        </div>`;
+    }
+
+    let avgsInitialized = false;
+
+    function get24hWindow() {
+      const BANGKOK_OFFSET_MS = 7 * 3600000;
+      const bkNow = new Date(Date.now() + BANGKOK_OFFSET_MS);
+      const bkH   = bkNow.getUTCHours();
+      const midnightUTC = Date.UTC(
+        bkNow.getUTCFullYear(), bkNow.getUTCMonth(),
+        bkH >= 7 ? bkNow.getUTCDate() : bkNow.getUTCDate() - 1
+      );
+      return {
+        from: new Date(midnightUTC - 86400000).toISOString().slice(0, 19),
+        to:   new Date(midnightUTC).toISOString().slice(0, 19),
+      };
+    }
+
+    function formatBkDate(isoStr) {
+      const ms = new Date(isoStr + 'Z').getTime() + 7 * 3600000;
+      const d  = new Date(ms);
+      const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return `${d.getUTCDate()} ${mo[d.getUTCMonth()]}`;
+    }
+
+    function renderAvgSection(idx, points) {
+      const gridEl = document.getElementById(`avg-grid-${idx}`);
+      if (!gridEl) return;
+      if (!points || !points.length) {
+        gridEl.innerHTML = `<div style="grid-column:1/-1;text-align:center;font-size:0.8rem;color:#9ca3af;padding:6px 0">No data</div>`;
+        return;
+      }
+      gridEl.innerHTML = METRICS.map(m => {
+        const vals  = points.map(p => p[m.key]).filter(v => v != null).map(Number);
+        const avg   = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+        const disp  = avg != null ? avg.toFixed(m.dec) : '\u2014';
+        const state = getState(m, avg);
+        return `
+          <div class="metric ${state.color}">
+            <div class="metric-label">${m.label}</div>
+            <div class="metric-value">${disp}</div>
+            <div class="metric-unit">${m.unit}</div>
+            <div class="metric-level">${state.level}</div>
+          </div>`;
+      }).join('');
+    }
+
+    async function initAvg(sensors) {
+      const { from, to } = get24hWindow();
+      const results = await Promise.allSettled(
+        sensors.map(s => {
+          const url = `https://api.airgradient.com/public/api/v1/locations/${s.locationId}/measures/past?token=${TOKEN}&from=${from}&to=${to}`;
+          return fetch(url).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+        })
+      );
+      sensors.forEach((_, i) => {
+        const gridEl = document.getElementById(`avg-grid-${i}`);
+        if (results[i].status === 'fulfilled') {
+          renderAvgSection(i, results[i].value);
+        } else if (gridEl) {
+          gridEl.innerHTML = `<div style="grid-column:1/-1;text-align:center;font-size:0.8rem;color:#9ca3af;padding:6px 0">Unavailable</div>`;
+        }
+      });
+    }
+
+    async function fetchAirGradient() {
       try {
-        const res = await fetch(API_URL);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-
-        // AirGradient API returns array directly or {value: [...]}
+        const data = await fetch(API_URL).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
         const sensors = Array.isArray(data) ? data : (data.value || []);
-
         sensors.forEach((sensor, i) => {
           const panel = document.getElementById(`panel-${i}`);
-          if (panel) renderPanel(panel, sensor);
+          if (panel) renderPanel(panel, sensor, i);
         });
-
-        // Add extra panels if more than 2 sensors appear
         if (sensors.length > 2) {
           const grid = document.getElementById('dashboard');
           for (let i = 2; i < sensors.length; i++) {
@@ -291,16 +486,34 @@
               panel.id = `panel-${i}`;
               grid.appendChild(panel);
             }
-            renderPanel(panel, sensors[i]);
+            renderPanel(panel, sensors[i], i);
           }
         }
-
-        const now = new Date().toLocaleString();
-        document.getElementById('last-updated').textContent = `Last updated: ${now}`;
+        if (!avgsInitialized) {
+          avgsInitialized = true;
+          initAvg(sensors);
+        }
+        document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleString()}`;
       } catch (err) {
-        document.getElementById('last-updated').textContent = `Error: ${err.message}`;
+        document.getElementById('last-updated').textContent = `AirGradient error: ${err.message}`;
         console.error(err);
       }
+    }
+
+    async function fetchAir4Thai() {
+      try {
+        const data = await fetch(AIR4THAI_URL).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+        renderAir4ThaiPanel(data);
+      } catch (err) {
+        const p = document.getElementById('panel-air4thai');
+        if (p) p.innerHTML = `<div class="sensor-title">Air4Thai (PCD)<span>Reference station unavailable</span></div>`;
+        console.warn('Air4Thai fetch failed:', err);
+      }
+    }
+
+    function fetchAndRender() {
+      fetchAirGradient();
+      fetchAir4Thai();
     }
 
     fetchAndRender();
