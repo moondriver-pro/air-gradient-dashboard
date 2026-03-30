@@ -1,69 +1,211 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Air Quality Dashboard</title>
   <style>
     /* ===== RESET & BASE ===== */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    html,
     body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* ===== SLIDESHOW ===== */
+    #slideshow {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+      z-index: 1;
+    }
+
+    /* ===== DASHBOARD SLIDE ===== */
+    #slide-dashboard {
       background: #f0f4f8;
       color: #111827;
       font-family: 'Segoe UI', Arial, sans-serif;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+      /* NO scroll — everything must fit */
+    }
+
+    /* ===== VIDEO SLIDE ===== */
+    #slide-video {
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #yt-player-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    #yt-player {
+      width: 100%;
+      height: 100%;
+    }
+
+    #yt-player iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* ===== SLIDE INDICATORS ===== */
+    #slide-indicators {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 200;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+      transition: background 0.4s;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ===== PROGRESS BAR ===== */
+    #progress-bar-wrap {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #2563eb;
+      transition: background 0.5s;
+    }
+
+    /* ===== NEXT-SLIDE LABEL (video slide) ===== */
+    #next-label {
+      position: fixed;
+      top: 14px;
+      right: 18px;
+      background: rgba(0, 0, 0, 0.45);
+      color: rgba(255, 255, 255, 0.75);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      z-index: 200;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+
+    #next-label.visible {
+      opacity: 1;
     }
 
     /* ===== HEADER ===== */
     header {
       text-align: center;
-      padding: 18px 10px 8px;
+      padding: 6px 10px 4px;
+      flex-shrink: 0;
     }
+
     header h1 {
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: #2563eb;
       letter-spacing: 2px;
     }
+
     #last-updated {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: #6b7280;
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
     /* ===== LAYOUT GRID ===== */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      padding: 16px;
+      gap: 8px;
+      padding: 8px;
       flex: 1;
+      min-height: 0;
+      /* allow flex shrink */
+      overflow: hidden;
     }
 
     /* ===== SENSOR PANEL ===== */
     .sensor-panel {
       background: #ffffff;
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 10px;
+      padding: 10px 12px;
       border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      /* allow flex shrink */
+      overflow: hidden;
     }
+
     .sensor-title {
       text-align: center;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       font-weight: bold;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
       border-bottom: 1px solid #e2e8f0;
       color: #2563eb;
+      flex-shrink: 0;
     }
+
     .sensor-title span {
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       color: #6b7280;
       display: block;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     /* ===== METRIC CARDS ===== */
@@ -72,37 +214,60 @@
       grid-template-columns: 1fr 1fr 1fr;
       gap: 10px;
     }
+
     .metric {
       border-radius: 10px;
       padding: 14px 10px;
       text-align: center;
       transition: background 0.5s;
     }
-    .metric.green  { background: #dcfce7; }
-    .metric.yellow { background: #fef9c3; }
-    .metric.orange { background: #ffedd5; }
-    .metric.red    { background: #fee2e2; }
-    .metric.blue   { background: #dbeafe; }
-    .metric.gray   { background: #f1f5f9; }
+
+    .metric.green {
+      background: #dcfce7;
+    }
+
+    .metric.yellow {
+      background: #fef9c3;
+    }
+
+    .metric.orange {
+      background: #ffedd5;
+    }
+
+    .metric.red {
+      background: #fee2e2;
+    }
+
+    .metric.blue {
+      background: #dbeafe;
+    }
+
+    .metric.gray {
+      background: #f1f5f9;
+    }
 
     .metric-label {
-      font-size: 0.75rem;
+      font-size: 1.05rem;
+      font-weight: 700;
       color: #374151;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
       margin-bottom: 6px;
     }
+
     .metric-value {
-      font-size: 2.4rem;
+      font-size: 1.8rem;
       font-weight: bold;
       line-height: 1;
       color: #111827;
     }
+
     .metric-unit {
-      font-size: 0.75rem;
+      font-size: 0.88rem;
       color: #6b7280;
       margin-top: 4px;
     }
+
     .metric-level {
       font-size: 0.65rem;
       font-weight: 600;
@@ -113,257 +278,379 @@
       opacity: 0.75;
     }
 
-    /* ===== AIR4THAI PANEL ===== */
-    .air4thai-panel { grid-column: span 2; }
-    .air4thai-panel .metrics { max-width: 480px; margin: 0 auto; }
-
-    /* ===== 24-HOUR AVG SECTION ===== */
-    .avg-section {
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid #e2e8f0;
+    .metric.humidity .metric-value {
+      font-size: 2.2rem;
     }
-    .avg-title {
-      font-size: 0.9rem;
-      text-transform: none;
-      letter-spacing: 0.5px;
+
+    /* ===== AIR4THAI PANEL ===== */
+    .air4thai-panel {
+      grid-column: span 2;
+    }
+
+    .air4thai-panel .metrics {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 0 auto;
+    }
+
+    /* Square boxes for Air4Thai Don Muang values */
+    .air4thai-panel .metric {
+      width: 130px;
+      height: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+    }
+
+    /* ===== SUMMARY SECTIONS ===== */
+    .summary-section {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+
+    .summary-row+.summary-row {
+      margin-top: 6px;
+    }
+
+    .summary-title {
+      font-size: 0.72rem;
       color: #374151;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       font-weight: 700;
     }
-    .avg-grid {
+
+    .summary-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
     }
-    .avg-grid .metric       { padding: 10px 6px; }
-    .avg-grid .metric-value { font-size: 1.6rem; }
-    .avg-grid .metric-label { font-size: 0.68rem; }
-    .avg-grid .metric-unit  { font-size: 0.68rem; }
-    .avg-grid .metric-level { font-size: 0.6rem; }
+
+    .summary-grid .metric {
+      padding: 5px 4px;
+    }
+
+    .summary-grid .metric-value {
+      font-size: 1.2rem;
+    }
+
+    .summary-grid .metric-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+
+    .summary-grid .metric-unit {
+      font-size: 0.6rem;
+    }
+
+    .summary-grid .metric.humidity .metric-value {
+      font-size: 1.4rem;
+    }
 
     /* ===== WHO REFERENCE BAR ===== */
     .who-reference {
-      margin: 0 16px 12px;
+      margin: 0 8px 6px;
       background: #ffffff;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 14px 16px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      border-radius: 10px;
+      padding: 6px 12px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+      flex-shrink: 0;
     }
+
     .who-heading {
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: #1d4ed8;
       text-align: center;
-      margin-bottom: 10px;
-      letter-spacing: 0.3px;
+      margin-bottom: 5px;
     }
+
     .who-items {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
+      gap: 5px;
     }
+
     .who-item {
       background: #f0f9ff;
-      border-radius: 10px;
-      padding: 10px 8px;
+      border-radius: 8px;
+      padding: 5px 6px;
       text-align: center;
       border: 1px solid #bae6fd;
     }
+
     .who-metric {
-      font-size: 0.68rem;
+      font-size: 0.6rem;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       color: #374151;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
+
     .who-value {
-      font-size: 1.3rem;
+      font-size: 0.95rem;
       font-weight: bold;
       color: #0369a1;
       line-height: 1.1;
     }
+
     .who-unit {
-      font-size: 0.68rem;
+      font-size: 0.58rem;
       color: #6b7280;
-      margin-top: 2px;
-    }
-    .who-std {
-      font-size: 0.6rem;
-      color: #9ca3af;
-      margin-top: 3px;
+      margin-top: 1px;
     }
 
-    /* ===== PLACEHOLDER / STATUS MESSAGE ===== */
+    .who-std {
+      font-size: 0.55rem;
+      color: #9ca3af;
+      margin-top: 1px;
+    }
+
+    /* ===== MISC ===== */
     .panel-msg {
       grid-column: 1 / -1;
       text-align: center;
-      font-size: 0.8rem;
-      color: #9ca3af;
-      padding: 6px 0;
-    }
-
-    /* ===== FOOTER ===== */
-    footer {
-      text-align: center;
-      padding: 10px;
       font-size: 0.75rem;
       color: #9ca3af;
+      padding: 4px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 4px;
+      font-size: 0.65rem;
+      color: #9ca3af;
+      flex-shrink: 0;
     }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-      .metric-value { font-size: 1.8rem; }
-      .air4thai-panel { grid-column: span 1; }
-      .who-items { grid-template-columns: repeat(3, 1fr); }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-value {
+        font-size: 1.8rem;
+      }
+
+      .metric.humidity .metric-value {
+        font-size: 2.2rem;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .summary-grid .metric.humidity .metric-value {
+        font-size: 2rem;
+      }
+
+      .air4thai-panel {
+        grid-column: span 1;
+      }
+
+      .who-items {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
+
   </style>
 </head>
+
 <body>
 
-  <header>
-    <h1>Air Quality Monitor</h1>
-    <div id="last-updated">Loading...</div>
-  </header>
+  <div id="slideshow">
 
-  <div class="grid" id="dashboard">
-    <div class="sensor-panel" id="panel-0"></div>
-    <div class="sensor-panel" id="panel-1"></div>
-    <div class="sensor-panel air4thai-panel" id="panel-air4thai">
-      <div class="sensor-title">Air4Thai (PCD)<span>Loading reference data...</span></div>
+    <!-- ===== SLIDE 1: AIR QUALITY DASHBOARD ===== -->
+    <div class="slide active" id="slide-dashboard">
+      <header>
+        <h1>Air Quality Monitor</h1>
+        <div id="last-updated">Loading...</div>
+      </header>
+
+      <div class="grid" id="dashboard">
+        <div class="sensor-panel" id="panel-0"></div>
+        <div class="sensor-panel" id="panel-1"></div>
+        <div class="sensor-panel air4thai-panel" id="panel-air4thai">
+          <div class="sensor-title">Air4Thai (PCD)<span>Loading reference data...</span></div>
+        </div>
+      </div>
+
+      <div class="who-reference">
+        <div class="who-heading">WHO Guidelines &mdash; Recommended Safe Levels</div>
+        <div class="who-items">
+          <div class="who-item">
+            <div class="who-metric">PM<sub>2.5</sub></div>
+            <div class="who-value">15</div>
+            <div class="who-unit">&micro;g/m&sup3;</div>
+            <div class="who-std">WHO AQG 2021 (24h)</div>
+          </div>
+          <div class="who-item">
+            <div class="who-metric">PM<sub>10</sub></div>
+            <div class="who-value">45</div>
+            <div class="who-unit">&micro;g/m&sup3;</div>
+            <div class="who-std">WHO AQG 2021 (24h)</div>
+          </div>
+          <div class="who-item">
+            <div class="who-metric">CO<sub>2</sub></div>
+            <div class="who-value">&lt;1000</div>
+            <div class="who-unit">ppm</div>
+            <div class="who-std">WHO Indoor AQ</div>
+          </div>
+          <div class="who-item">
+            <div class="who-metric">TVOC</div>
+            <div class="who-value">&lt;300</div>
+            <div class="who-unit">ppb</div>
+            <div class="who-std">WHO IAQA 2010</div>
+          </div>
+          <div class="who-item">
+            <div class="who-metric">Temp</div>
+            <div class="who-value">18&ndash;24</div>
+            <div class="who-unit">&deg;C</div>
+            <div class="who-std">WHO Housing 2018</div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        Auto-refreshes every 60 seconds &nbsp;|&nbsp;
+        Sensors: AirGradient &nbsp;|&nbsp;
+        Reference: Air4Thai / PCD (Don Mueang District Office)
+      </footer>
     </div>
+
+    <!-- ===== SLIDE 2: YOUTUBE VIDEO ===== -->
+    <div class="slide" id="slide-video">
+      <div id="yt-player-container">
+        <div id="yt-player"></div>
+      </div>
+    </div>
+
+  </div><!-- /#slideshow -->
+
+  <!-- Slide indicator dots -->
+  <div id="slide-indicators">
+    <span class="dot active" title="Dashboard"></span>
+    <span class="dot" title="Video"></span>
   </div>
 
-  <div class="who-reference">
-    <div class="who-heading">WHO Guidelines &mdash; Recommended Safe Levels</div>
-    <div class="who-items">
-      <div class="who-item">
-        <div class="who-metric">PM<sub>2.5</sub></div>
-        <div class="who-value">15</div>
-        <div class="who-unit">&micro;g/m&sup3;</div>
-        <div class="who-std">WHO AQG 2021 (24h)</div>
-      </div>
-      <div class="who-item">
-        <div class="who-metric">PM<sub>10</sub></div>
-        <div class="who-value">45</div>
-        <div class="who-unit">&micro;g/m&sup3;</div>
-        <div class="who-std">WHO AQG 2021 (24h)</div>
-      </div>
-      <div class="who-item">
-        <div class="who-metric">CO<sub>2</sub></div>
-        <div class="who-value">&lt;1000</div>
-        <div class="who-unit">ppm</div>
-        <div class="who-std">WHO Indoor AQ</div>
-      </div>
-      <div class="who-item">
-        <div class="who-metric">TVOC</div>
-        <div class="who-value">&lt;300</div>
-        <div class="who-unit">ppb</div>
-        <div class="who-std">WHO IAQA 2010</div>
-      </div>
-      <div class="who-item">
-        <div class="who-metric">Temp</div>
-        <div class="who-value">18&ndash;24</div>
-        <div class="who-unit">&deg;C</div>
-        <div class="who-std">WHO Housing 2018</div>
-      </div>
-    </div>
+  <!-- Progress bar (fills during each slide's duration) -->
+  <div id="progress-bar-wrap">
+    <div id="progress-bar"></div>
   </div>
 
-  <footer>
-    Auto-refreshes every 60 seconds &nbsp;|&nbsp;
-    Sensors: AirGradient &nbsp;|&nbsp;
-    Reference: Air4Thai / PCD (Don Mueang District Office)
-  </footer>
+  <!-- "Returning to dashboard…" hint shown near end of video -->
+  <div id="next-label">↩ Returning to dashboard…</div>
 
   <script>
-    // ===== CONFIG =====
-    const TOKEN   = '034709b8-1071-4f2f-b695-6af71c4281bf';
+    // =========================================================
+    // SLIDESHOW CONFIG — adjust these values as needed
+    // =========================================================
+    const DASHBOARD_DURATION_SEC = 30;   // seconds to show dashboard
+    const VIDEO_ID = 'XL8QWefAop0';
+    const VIDEO_START_SEC = 0;   // start YouTube video at this timestamp
+    const MAX_VIDEO_DURATION_SEC = 300;  // fallback max: 5 min, then return to dashboard
+    // =========================================================
+
+    // ===== AIRGRADIENT CONFIG =====
+    const TOKEN = '034709b8-1071-4f2f-b695-6af71c4281bf';
     const API_URL = `https://api.airgradient.com/public/api/v1/locations/measures/current?token=${TOKEN}`;
 
     const A4T_SOURCE = 'http://air4thai.pcd.go.th/services/getNewAQI_JSON.php?stationID=bkp74t';
     const AIR4THAI_PROXIES = [
-      'https://api.allorigins.win/raw?url='      + encodeURIComponent(A4T_SOURCE),
-      'https://corsproxy.io/?'                   + encodeURIComponent(A4T_SOURCE),
+      'https://api.allorigins.win/raw?url=' + encodeURIComponent(A4T_SOURCE),
+      'https://corsproxy.io/?' + encodeURIComponent(A4T_SOURCE),
       'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(A4T_SOURCE),
     ];
 
-    const A4T_COLOR = { '1':'blue', '2':'green', '3':'yellow', '4':'orange', '5':'red' };
-    const A4T_LABEL = { '1':'Very Good', '2':'Good', '3':'Moderate', '4':'Unhealthy (Sensitive)', '5':'Unhealthy' };
+    const A4T_COLOR = { '1': 'blue', '2': 'green', '3': 'yellow', '4': 'orange', '5': 'red' };
+    const A4T_LABEL = { '1': 'Very Good', '2': 'Good', '3': 'Moderate', '4': 'Unhealthy (Sensitive)', '5': 'Unhealthy' };
 
     // ===== METRICS DEFINITION =====
     const METRICS = [
       {
         key: 'pm02_corrected', label: 'PM<sub>2.5</sub>', unit: '\u00b5g/m\u00b3', dec: 1,
         thresholds: [
-          { value: 15,   color: 'green',  label: 'Good' },
-          { value: 25,   color: 'yellow', label: 'Moderate' },
+          { value: 15, color: 'green', label: 'Good' },
+          { value: 25, color: 'yellow', label: 'Moderate' },
           { value: 37.5, color: 'orange', label: 'Unhealthy (Sens.)' },
-          { value: 75,   color: 'red',    label: 'Unhealthy' },
+          { value: 75, color: 'red', label: 'Unhealthy' },
         ],
         defaultColor: 'blue', defaultLabel: 'Very Good',
       },
       {
         key: 'pm10_corrected', label: 'PM<sub>10</sub>', unit: '\u00b5g/m\u00b3', dec: 0,
         thresholds: [
-          { value: 50,  color: 'green',  label: 'Good' },
-          { value: 80,  color: 'yellow', label: 'Moderate' },
+          { value: 50, color: 'green', label: 'Good' },
+          { value: 80, color: 'yellow', label: 'Moderate' },
           { value: 120, color: 'orange', label: 'Unhealthy (Sens.)' },
-          { value: 180, color: 'red',    label: 'Unhealthy' },
+          { value: 180, color: 'red', label: 'Unhealthy' },
         ],
         defaultColor: 'blue', defaultLabel: 'Very Good',
       },
       {
         key: 'rco2_corrected', label: 'CO<sub>2</sub>', unit: 'ppm', dec: 0,
         thresholds: [
-          { value: 800,  color: 'yellow', label: 'Moderate' },
+          { value: 800, color: 'yellow', label: 'Moderate' },
           { value: 1000, color: 'orange', label: 'Poor' },
-          { value: 1500, color: 'red',    label: 'Very Poor' },
+          { value: 1500, color: 'red', label: 'Very Poor' },
+        ],
+        defaultColor: 'green', defaultLabel: 'Good',
+      },
+      {
+        key: 'tvoc', label: 'TVOC', unit: 'ppb', dec: 0,
+        thresholds: [
+          { value: 220, color: 'yellow', label: 'Moderate' },
+          { value: 660, color: 'orange', label: 'Poor' },
+          { value: 2200, color: 'red', label: 'Very Poor' },
         ],
         defaultColor: 'green', defaultLabel: 'Good',
       },
       {
         key: 'atmp_corrected', label: 'Temp', unit: '\u00b0C', dec: 1,
         thresholds: [
-          { value: 18, color: 'green',  label: 'Comfortable' },
+          { value: 18, color: 'green', label: 'Comfortable' },
           { value: 28, color: 'yellow', label: 'Warm' },
-          { value: 35, color: 'red',    label: 'Hot' },
+          { value: 35, color: 'red', label: 'Hot' },
         ],
         defaultColor: 'blue', defaultLabel: 'Cool',
       },
       {
-        key: 'tvoc', label: 'TVOC', unit: 'ppb', dec: 0,
+        key: 'rhum', label: 'Humidity', unit: '%', dec: 0,
         thresholds: [
-          { value: 220,  color: 'yellow', label: 'Moderate' },
-          { value: 660,  color: 'orange', label: 'Poor' },
-          { value: 2200, color: 'red',    label: 'Very Poor' },
+          { value: 30, color: 'blue', label: 'Dry' },
+          { value: 40, color: 'green', label: 'Comfortable' },
+          { value: 60, color: 'yellow', label: 'Humid' },
+          { value: 75, color: 'orange', label: 'Very Humid' },
+          { value: 85, color: 'red', label: 'Wet' },
         ],
-        defaultColor: 'green', defaultLabel: 'Good',
+        defaultColor: 'blue', defaultLabel: 'Dry',
       },
     ];
 
-    // ===== HELPERS =====
+    const COLORED_METRICS = new Set(['pm02_corrected', 'pm10_corrected']);
 
-    /** Returns color/level state for a metric value based on its thresholds. */
+    // ===== HELPERS =====
     function getState(metric, value) {
       if (value === null || value === undefined) return { color: 'gray', level: '\u2014' };
-      let color = metric.defaultColor;
-      let level = metric.defaultLabel;
+      if (!COLORED_METRICS.has(metric.key)) return { color: 'gray', level: metric.defaultLabel };
+      let color = metric.defaultColor, level = metric.defaultLabel;
       for (const step of metric.thresholds) {
         if (value >= step.value) { color = step.color; level = step.label; }
       }
       return { color, level };
     }
 
-    /** Formats a numeric value to fixed decimals; returns em-dash if negative/missing. */
     function fmtVal(v, dec) {
       return parseFloat(v) >= 0 ? Number(v).toFixed(dec) : '\u2014';
     }
 
-    /** Builds an Air4Thai metric card HTML string. */
     function a4tCard(colorId, label, val, unit) {
       return `
         <div class="metric ${A4T_COLOR[colorId] || 'gray'}">
@@ -374,10 +661,9 @@
         </div>`;
     }
 
-    /** Returns Bangkok-local { from, to } ISO strings for yesterday 7am -> today 7am. */
     function get24hWindow() {
       const BKK_OFFSET_MS = 7 * 3600000;
-      const bkNow  = new Date(Date.now() + BKK_OFFSET_MS);
+      const bkNow = new Date(Date.now() + BKK_OFFSET_MS);
       const bkHour = bkNow.getUTCHours();
       const midnightUTC = Date.UTC(
         bkNow.getUTCFullYear(), bkNow.getUTCMonth(),
@@ -385,85 +671,83 @@
       );
       return {
         from: new Date(midnightUTC - 86400000).toISOString().slice(0, 19),
-        to:   new Date(midnightUTC).toISOString().slice(0, 19),
+        to: new Date(midnightUTC).toISOString().slice(0, 19),
       };
     }
 
-    /** Formats an ISO date string to "D Mon" in Bangkok time. */
+    function getHourlyWindow() {
+      const now = new Date();
+      return {
+        from: new Date(now.getTime() - 3600000).toISOString().slice(0, 19),
+        to: now.toISOString().slice(0, 19),
+      };
+    }
+
     function formatBkDate(isoStr) {
       const ms = new Date(isoStr + 'Z').getTime() + 7 * 3600000;
-      const d  = new Date(ms);
-      const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const d = new Date(ms);
+      const mo = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       return `${d.getUTCDate()} ${mo[d.getUTCMonth()]}`;
     }
 
     // ===== RENDER FUNCTIONS =====
-
-    /** Renders a single AirGradient sensor panel (real-time section).
-     *  Preserves the avg-section div on subsequent refreshes. */
-    function renderPanel(panelEl, sensor, idx) {
-      // Build panel skeleton (incl. avg section) only on first render
-      if (!panelEl.querySelector('.sensor-content')) {
-        const { from, to } = get24hWindow();
-        panelEl.innerHTML = `
-          <div class="sensor-content"></div>
-          <div class="avg-section">
-            <div class="avg-title">
-              24-Hour Average &mdash; ${formatBkDate(from)} 7am &rarr; ${formatBkDate(to)} 7am (AIT)
-            </div>
-            <div class="avg-grid" id="avg-grid-${idx}">
-              <div class="panel-msg">Loading&hellip;</div>
-            </div>
-          </div>`;
-      }
-
-      // Update only the real-time content on every refresh
-      panelEl.querySelector('.sensor-content').innerHTML = `
-        <div class="sensor-title">
-          ${sensor.locationName}
-          <span>${sensor.model} &nbsp;|&nbsp; S/N: ${sensor.serialno}</span>
-        </div>
-        <div class="avg-title" style="margin-bottom:8px">Real-time</div>
-        <div class="metrics avg-grid">
-          ${METRICS.map(m => {
-            const raw = sensor[m.key];
-            const val = raw != null ? Number(raw).toFixed(m.dec) : '\u2014';
-            const { color, level } = getState(m, raw);
-            return `
-              <div class="metric ${color}">
-                <div class="metric-label">${m.label}</div>
-                <div class="metric-value">${val}</div>
-                <div class="metric-unit">${m.unit}</div>
-                <div class="metric-level">${level}</div>
-              </div>`;
-          }).join('')}
-        </div>`;
-    }
-
-    /** Renders the 24-hour average cards for a sensor panel. */
-    function renderAvgSection(idx, points) {
-      const gridEl = document.getElementById(`avg-grid-${idx}`);
-      if (!gridEl) return;
-      if (!points || !points.length) {
-        gridEl.innerHTML = `<div class="panel-msg">No data</div>`;
-        return;
-      }
-      gridEl.innerHTML = METRICS.map(m => {
+    function renderMetricCards(points) {
+      if (!points || !points.length) return `<div class="panel-msg">No data</div>`;
+      return METRICS.map(m => {
         const vals = points.map(p => p[m.key]).filter(v => v != null).map(Number);
-        const avg  = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+        const avg = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
         const disp = avg != null ? avg.toFixed(m.dec) : '\u2014';
-        const { color, level } = getState(m, avg);
+        const { color } = getState(m, avg);
         return `
-          <div class="metric ${color}">
+          <div class="metric ${color} ${m.key === 'rhum' ? 'humidity' : ''}">
             <div class="metric-label">${m.label}</div>
             <div class="metric-value">${disp}</div>
             <div class="metric-unit">${m.unit}</div>
-            <div class="metric-level">${level}</div>
           </div>`;
       }).join('');
     }
 
-    /** Renders the Air4Thai reference station panel. */
+    function renderPanel(panelEl, sensor, idx) {
+      if (!panelEl.querySelector('.sensor-content')) {
+        panelEl.innerHTML = `
+          <div class="sensor-content"></div>
+          <div class="summary-section">
+            <div class="summary-row">
+              <div class="summary-title">Hourly Average (Last 60 Minutes)</div>
+              <div class="summary-grid" id="hourly-grid-${idx}">
+                <div class="panel-msg">Loading&hellip;</div>
+              </div>
+            </div>
+            <div class="summary-row">
+              <div class="summary-title" id="daily-title-${idx}">24-Hour Average</div>
+              <div class="summary-grid" id="avg-grid-${idx}">
+                <div class="panel-msg">Loading&hellip;</div>
+              </div>
+            </div>
+          </div>`;
+      }
+      panelEl.querySelector('.sensor-content').innerHTML = `
+        <div class="sensor-title">
+          ${sensor.locationName}
+          <span>${sensor.model} &nbsp;|&nbsp; S/N: ${sensor.serialno}</span>
+        </div>`;
+    }
+
+    function renderHourlySection(idx, points) {
+      const el = document.getElementById(`hourly-grid-${idx}`);
+      if (el) el.innerHTML = renderMetricCards(points);
+    }
+
+    function renderAvgSection(idx, points) {
+      const el = document.getElementById(`avg-grid-${idx}`);
+      if (el) el.innerHTML = renderMetricCards(points);
+      const titleEl = document.getElementById(`daily-title-${idx}`);
+      if (titleEl) {
+        const { from, to } = get24hWindow();
+        titleEl.innerHTML = `24-Hour Average &mdash; ${formatBkDate(from)} 7am &rarr; ${formatBkDate(to)} 7am (AIT)`;
+      }
+    }
+
     function renderAir4ThaiPanel(data) {
       const panel = document.getElementById('panel-air4thai');
       if (!panel) return;
@@ -475,18 +759,14 @@
         </div>
         <div class="metrics">
           ${a4tCard(last.PM25.color_id, 'PM<sub>2.5</sub>', fmtVal(last.PM25.value, 1), '\u00b5g/m\u00b3')}
-          ${a4tCard(last.PM10.color_id, 'PM<sub>10</sub>',  fmtVal(last.PM10.value, 0), '\u00b5g/m\u00b3')}
-          ${a4tCard(last.AQI.color_id,  'AQI', parseInt(last.AQI.aqi) >= 0 ? last.AQI.aqi : '\u2014', 'index')}
+          ${a4tCard(last.PM10.color_id, 'PM<sub>10</sub>', fmtVal(last.PM10.value, 0), '\u00b5g/m\u00b3')}
+          ${a4tCard(last.AQI.color_id, 'AQI', parseInt(last.AQI.aqi) >= 0 ? last.AQI.aqi : '\u2014', 'index')}
         </div>`;
     }
 
     // ===== DATA FETCHING =====
-
-    let avgsInitialized = false;
-
-    /** Fetches 24h historical data for all sensors and renders avg cards. Runs once per page load. */
-    async function initAvg(sensors) {
-      const { from, to } = get24hWindow();
+    async function updateSummarySection(sensors, windowGetter, renderSection, gridPrefix) {
+      const { from, to } = windowGetter();
       const results = await Promise.allSettled(
         sensors.map(s => {
           const url = `https://api.airgradient.com/public/api/v1/locations/${s.locationId}/measures/past?token=${TOKEN}&from=${from}&to=${to}`;
@@ -495,20 +775,19 @@
       );
       sensors.forEach((_, i) => {
         if (results[i].status === 'fulfilled') {
-          renderAvgSection(i, results[i].value);
+          renderSection(i, results[i].value);
         } else {
-          const gridEl = document.getElementById(`avg-grid-${i}`);
-          if (gridEl) gridEl.innerHTML = `<div class="panel-msg">Unavailable</div>`;
+          const el = document.getElementById(`${gridPrefix}-${i}`);
+          if (el) el.innerHTML = `<div class="panel-msg">Unavailable</div>`;
         }
       });
     }
 
-    /** Fetches current readings from AirGradient and updates all sensor panels. */
     async function fetchAirGradient() {
       try {
-        const data    = await fetch(API_URL).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+        const data = await fetch(API_URL).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
         const sensors = Array.isArray(data) ? data : (data.value || []);
-        const grid    = document.getElementById('dashboard');
+        const grid = document.getElementById('dashboard');
 
         sensors.forEach((sensor, i) => {
           let panel = document.getElementById(`panel-${i}`);
@@ -519,10 +798,10 @@
           renderPanel(panel, sensor, i);
         });
 
-        if (!avgsInitialized) {
-          avgsInitialized = true;
-          initAvg(sensors);
-        }
+        await Promise.all([
+          updateSummarySection(sensors, getHourlyWindow, renderHourlySection, 'hourly-grid'),
+          updateSummarySection(sensors, get24hWindow, renderAvgSection, 'avg-grid'),
+        ]);
         document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleString()}`;
       } catch (err) {
         document.getElementById('last-updated').textContent = `AirGradient error: ${err.message}`;
@@ -530,7 +809,6 @@
       }
     }
 
-    /** Fetches Air4Thai reference data, trying each proxy in order until one succeeds. */
     async function fetchAir4Thai() {
       for (const url of AIR4THAI_PROXIES) {
         try {
@@ -545,14 +823,146 @@
       if (panel) panel.innerHTML = `<div class="sensor-title">Air4Thai (PCD)<span>Reference station unavailable</span></div>`;
     }
 
-    // ===== INIT =====
+    // =========================================================
+    // YOUTUBE PLAYER
+    // =========================================================
+    let ytPlayer = null;
+    let ytReady = false;
+    let pendingPlay = false;
+
+    // Called automatically by YouTube API once loaded
+    window.onYouTubeIframeAPIReady = function () {
+      ytPlayer = new YT.Player('yt-player', {
+        videoId: VIDEO_ID,
+        playerVars: {
+          autoplay: 0,
+          start: VIDEO_START_SEC,
+          controls: 0,         // hide controls — clean TV display
+          rel: 0,              // no related videos at end
+          modestbranding: 1,   // minimal YouTube branding
+          iv_load_policy: 3,   // hide annotations
+          fs: 0,               // hide fullscreen button
+          disablekb: 1,        // disable keyboard shortcuts
+          playsinline: 1,
+        },
+        events: {
+          onReady: () => {
+            ytReady = true;
+            ytPlayer.setVolume(100);
+            ytPlayer.unMute();
+            if (pendingPlay) {
+              pendingPlay = false;
+              ytPlayer.seekTo(VIDEO_START_SEC, true);
+              ytPlayer.playVideo();
+            }
+          },
+          onStateChange: (e) => {
+            // Auto-return to dashboard when video finishes
+            if (e.data === YT.PlayerState.ENDED) {
+              goToSlide(0);
+            }
+          },
+        },
+      });
+    };
+
+    // Dynamically load YouTube IFrame API
+    (function loadYTApi() {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+    })();
+
+    // =========================================================
+    // SLIDESHOW ENGINE
+    // =========================================================
+    let currentSlide = 0;
+    let slideTimer = null;
+    let progressRaf = null;
+    let progressStart = 0;
+    let progressTotal = 0;
+
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const progressBar = document.getElementById('progress-bar');
+    const nextLabel = document.getElementById('next-label');
+
+    /** Animate progress bar over durationSec seconds. */
+    function startProgress(durationSec, color) {
+      cancelAnimationFrame(progressRaf);
+      progressBar.style.background = color;
+      progressBar.style.width = '0%';
+      progressBar.style.transition = 'none';
+      progressStart = performance.now();
+      progressTotal = durationSec * 1000;
+
+      function tick(now) {
+        const pct = Math.min(100, ((now - progressStart) / progressTotal) * 100);
+        progressBar.style.width = pct + '%';
+
+        // Show "returning" hint in last 10 s of video
+        if (currentSlide === 1 && pct >= (1 - 10000 / progressTotal) * 100) {
+          nextLabel.classList.add('visible');
+        }
+
+        if (pct < 100) progressRaf = requestAnimationFrame(tick);
+      }
+      progressRaf = requestAnimationFrame(tick);
+    }
+
+    /** Switch to a slide by index (0 = dashboard, 1 = video). */
+    function goToSlide(idx) {
+      // Stop timers
+      clearTimeout(slideTimer);
+      cancelAnimationFrame(progressRaf);
+      nextLabel.classList.remove('visible');
+
+      // Stop video if leaving video slide
+      if (currentSlide === 1 && ytPlayer && ytReady) {
+        ytPlayer.stopVideo();
+      }
+
+      // Swap active class
+      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      currentSlide = idx;
+
+      if (idx === 0) {
+        // Dashboard: show for DASHBOARD_DURATION_SEC then go to video
+        startProgress(DASHBOARD_DURATION_SEC, '#2563eb');
+        slideTimer = setTimeout(() => goToSlide(1), DASHBOARD_DURATION_SEC * 1000);
+
+      } else if (idx === 1) {
+        // Video: play from VIDEO_START_SEC, return when ended or after MAX_VIDEO_DURATION_SEC
+        if (ytPlayer && ytReady) {
+          ytPlayer.unMute();
+          ytPlayer.seekTo(VIDEO_START_SEC, true);
+          ytPlayer.playVideo();
+        } else {
+          pendingPlay = true; // play once API is ready
+        }
+        startProgress(MAX_VIDEO_DURATION_SEC, '#ef4444');
+        slideTimer = setTimeout(() => goToSlide(0), MAX_VIDEO_DURATION_SEC * 1000);
+      }
+    }
+
+    // Allow clicking dots to manually switch slides
+    dots.forEach((dot, i) => dot.addEventListener('click', () => goToSlide(i)));
+
+    // =========================================================
+    // INIT
+    // =========================================================
     function fetchAndRender() {
       fetchAirGradient();
       fetchAir4Thai();
     }
 
-    fetchAndRender();
-    setInterval(fetchAndRender, 60000);
+    fetchAndRender();                   // initial data load
+    setInterval(fetchAndRender, 60000); // refresh every 60 s
+
+    goToSlide(0);
   </script>
+
 </body>
+
 </html>
