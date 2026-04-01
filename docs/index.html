@@ -57,30 +57,6 @@
       /* NO scroll — everything must fit */
     }
 
-    /* ===== VIDEO SLIDE ===== */
-    #slide-video {
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #yt-player-container {
-      width: 100%;
-      height: 100%;
-    }
-
-    #yt-player {
-      width: 100%;
-      height: 100%;
-    }
-
-    #yt-player iframe {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
     /* ===== SLIDE INDICATORS ===== */
     #slide-indicators {
       position: fixed;
@@ -124,27 +100,6 @@
       transition: background 0.5s;
     }
 
-    /* ===== NEXT-SLIDE LABEL (video slide) ===== */
-    #next-label {
-      position: fixed;
-      top: 14px;
-      right: 18px;
-      background: rgba(0, 0, 0, 0.45);
-      color: rgba(255, 255, 255, 0.75);
-      font-family: 'Segoe UI', Arial, sans-serif;
-      font-size: 0.72rem;
-      padding: 4px 10px;
-      border-radius: 20px;
-      z-index: 200;
-      opacity: 0;
-      transition: opacity 0.5s;
-      pointer-events: none;
-    }
-
-    #next-label.visible {
-      opacity: 1;
-    }
-
     /* ===== HEADER ===== */
     header {
       text-align: center;
@@ -153,23 +108,23 @@
     }
 
     header h1 {
-      font-size: 1.5rem;
+      font-size: 1.9rem;
       color: #2563eb;
       letter-spacing: 2px;
     }
 
     #last-updated {
-      font-size: 0.75rem;
+      font-size: 0.88rem;
       color: #6b7280;
-      margin-top: 2px;
+      margin-top: 4px;
     }
 
     /* ===== LAYOUT GRID ===== */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      padding: 8px;
+      gap: 6px;
+      padding: 6px;
       flex: 1;
       min-height: 0;
       /* allow flex shrink */
@@ -180,7 +135,7 @@
     .sensor-panel {
       background: #ffffff;
       border-radius: 10px;
-      padding: 10px 12px;
+      padding: 8px 10px;
       border: 1px solid #e2e8f0;
       box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
       display: flex;
@@ -192,7 +147,7 @@
 
     .sensor-title {
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1.35rem;
       font-weight: bold;
       margin-bottom: 8px;
       padding-bottom: 6px;
@@ -202,22 +157,26 @@
     }
 
     .sensor-title span {
-      font-size: 0.72rem;
+      font-size: 0.84rem;
       color: #6b7280;
       display: block;
-      margin-top: 1px;
+      margin-top: 2px;
+    }
+
+    .sensor-title:empty {
+      display: none;
     }
 
     /* ===== METRIC CARDS ===== */
     .metrics {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
 
     .metric {
       border-radius: 10px;
-      padding: 14px 10px;
+      padding: 10px 8px;
       text-align: center;
       transition: background 0.5s;
     }
@@ -253,25 +212,25 @@
     }
 
     .metric-label {
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: #374151;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
     }
 
     .metric-value {
-      font-size: 1.8rem;
+      font-size: 1.55rem;
       font-weight: bold;
       line-height: 1;
       color: #111827;
     }
 
     .metric-unit {
-      font-size: 0.88rem;
+      font-size: 0.76rem;
       color: #6b7280;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .metric-level {
@@ -285,7 +244,7 @@
     }
 
     .metric.humidity .metric-value {
-      font-size: 2.2rem;
+      font-size: 1.9rem;
     }
 
     /* ===== AIR4THAI PANEL ===== */
@@ -293,89 +252,160 @@
       grid-column: span 2;
     }
 
-    .air4thai-panel .metrics {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin: 0 auto;
+    .air4thai-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 12px;
+      align-items: center;
+      flex: 1;
     }
 
-    /* Square boxes for Air4Thai Don Muang values */
-    .air4thai-panel .metric {
-      width: 120px;
-      height: 120px;
+    .air4thai-main {
+      min-width: 0;
+    }
+
+    .air4thai-main-layout {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+
+    .air4thai-group {
+      min-width: 0;
+    }
+
+    .air4thai-group.centered {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .air4thai-group-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #374151;
+      text-align: center;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .air4thai-panel .metrics,
+    .air4thai-group .metrics {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 6px;
+      gap: 10px;
+      margin: 0 auto;
+    }
+
+    /* Vertical stack for Rangsit and 24-hour values */
+    .air4thai-panel .metric,
+    .air4thai-group.centered .metric {
+      width: 178px;
+      min-height: 114px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 12px;
+    }
+
+    .air4thai-group:not(.centered) .metric {
+      width: 178px;
+      min-height: 114px;
+      padding: 15px 12px;
+    }
+
+    .air4thai-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-self: stretch;
+      justify-content: stretch;
+    }
+
+    .air4thai-scale-title {
+      display: none;
     }
 
     /* ===== SUMMARY SECTIONS ===== */
     .summary-section {
-      margin-top: 2px;
-      padding-top: 2px;
+      margin-top: 0;
+      padding-top: 0;
       flex-shrink: 0;
     }
 
     .summary-row+.summary-row {
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .summary-title {
-      font-size: 0.95rem;
+      font-size: 0.88rem;
       color: #374151;
       text-align: center;
-      margin-top: 10px;
-      margin-bottom: 8px;
+      margin-top: 6px;
+      margin-bottom: 6px;
       font-weight: 700;
     }
 
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 12px;
+      gap: 8px;
     }
 
     .summary-grid .metric {
-      padding: 12px 6px;
+      padding: 9px 5px;
     }
 
     .summary-grid .metric-value {
-      font-size: 1.6rem;
-      margin: 4px 0;
+      font-size: 1.35rem;
+      margin: 3px 0;
     }
 
     .summary-grid .metric-label {
-      font-size: 0.85rem;
+      font-size: 0.74rem;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.35px;
     }
 
     .summary-grid .metric-unit {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
     }
 
     .summary-grid .metric.humidity .metric-value {
-      font-size: 1.8rem;
+      font-size: 1.55rem;
     }
 
     .summary-grid .metric-24h {
-      padding: 6px 8px;
+      padding: 5px 6px;
     }
 
     .summary-grid .metric-24h .metric-value {
-      font-size: 2.1rem;
-      margin: 2px 0;
+      font-size: 1.7rem;
+      margin: 1px 0;
       line-height: 1.1;
     }
 
     .summary-grid .metric-24h .metric-label {
-      font-size: 1.05rem;
+      font-size: 0.88rem;
     }
 
     .summary-grid .metric-24h .metric-unit {
-      font-size: 0.85rem;
+      font-size: 0.72rem;
+    }
+
+    .summary-grid.avg-vertical {
+      grid-template-columns: 1fr;
+    }
+
+    .summary-grid.avg-vertical .metric {
+      grid-column: auto !important;
+      width: 100%;
     }
 
     /* ===== AQI COLOR BAR LEGEND ===== */
@@ -443,6 +473,54 @@
       border-bottom-right-radius: 8px;
     }
 
+    .aqi-bar-legend.vertical {
+      flex-direction: column;
+      margin: 0;
+      gap: 0;
+      flex: 1;
+    }
+
+    .aqi-bar-legend.vertical .aqi-legend-item {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 110px;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .aqi-bar-legend.vertical .aqi-legend-item + .aqi-legend-item {
+      margin-top: -1px;
+    }
+
+    .aqi-bar-legend.vertical .aqi-legend-label {
+      margin-bottom: 0;
+      text-align: left;
+      font-size: 0.82rem;
+      line-height: 1.2;
+    }
+
+    .aqi-bar-legend.vertical .aqi-legend-item div:last-child {
+      border-radius: 0;
+      padding: 9px 8px;
+      text-align: center;
+      font-size: 0.82rem;
+    }
+
+    .aqi-bar-legend.vertical .aqi-legend-item:first-child div:last-child {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .aqi-bar-legend.vertical .aqi-legend-item:last-child div:last-child {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
     /* ===== WHO REFERENCE BAR ===== */
     .who-reference {
       margin: 0 8px 6px;
@@ -455,11 +533,11 @@
     }
 
     .who-heading {
-      font-size: 0.72rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: #1d4ed8;
       text-align: center;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
 
     .who-items {
@@ -471,36 +549,30 @@
     .who-item {
       background: #f0f9ff;
       border-radius: 8px;
-      padding: 5px 6px;
+      padding: 7px 8px;
       text-align: center;
       border: 1px solid #bae6fd;
     }
 
     .who-metric {
-      font-size: 0.6rem;
+      font-size: 0.84rem;
       text-transform: uppercase;
       letter-spacing: 0.4px;
       color: #374151;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
 
     .who-value {
-      font-size: 0.95rem;
+      font-size: 1.45rem;
       font-weight: bold;
       color: #0369a1;
       line-height: 1.1;
     }
 
     .who-unit {
-      font-size: 0.58rem;
+      font-size: 0.78rem;
       color: #6b7280;
-      margin-top: 1px;
-    }
-
-    .who-std {
-      font-size: 0.55rem;
-      color: #9ca3af;
-      margin-top: 1px;
+      margin-top: 2px;
     }
 
     /* ===== MISC ===== */
@@ -521,33 +593,628 @@
     }
 
     /* ===== RESPONSIVE ===== */
-    @media (max-width: 900px) {
+    @media (max-width: 1440px), (max-height: 900px) {
+      header {
+        padding: 4px 10px 3px;
+      }
+
+      header h1 {
+        font-size: 1.6rem;
+      }
+
+      #last-updated {
+        font-size: 0.78rem;
+        margin-top: 2px;
+      }
+
       .grid {
-        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 5px;
+      }
+
+      .sensor-panel {
+        padding: 6px 8px;
+      }
+
+      .sensor-title {
+        font-size: 1.12rem;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+      }
+
+      .sensor-title span {
+        font-size: 0.72rem;
+      }
+
+      .metrics {
+        gap: 6px;
+      }
+
+      .metric {
+        padding: 8px 6px;
+      }
+
+      .metric-label {
+        font-size: 0.84rem;
+        margin-bottom: 3px;
       }
 
       .metric-value {
-        font-size: 1.8rem;
+        font-size: 1.35rem;
+      }
+
+      .metric-unit {
+        font-size: 0.68rem;
+        margin-top: 2px;
       }
 
       .metric.humidity .metric-value {
-        font-size: 2.2rem;
+        font-size: 1.65rem;
+      }
+
+      .summary-row + .summary-row {
+        margin-top: 3px;
+      }
+
+      .summary-title {
+        font-size: 0.8rem;
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+
+      .summary-grid {
+        gap: 6px;
+      }
+
+      .summary-grid .metric {
+        padding: 7px 4px;
+      }
+
+      .summary-grid .metric-value {
+        font-size: 1.18rem;
+        margin: 2px 0;
+      }
+
+      .summary-grid .metric-label {
+        font-size: 0.68rem;
+      }
+
+      .summary-grid .metric-unit {
+        font-size: 0.6rem;
+      }
+
+      .summary-grid .metric.humidity .metric-value {
+        font-size: 1.35rem;
+      }
+
+      .summary-grid .metric-24h {
+        padding: 4px 5px;
+      }
+
+      .summary-grid .metric-24h .metric-value {
+        font-size: 1.45rem;
+      }
+
+      .summary-grid .metric-24h .metric-label {
+        font-size: 0.78rem;
+      }
+
+      .summary-grid .metric-24h .metric-unit {
+        font-size: 0.66rem;
+      }
+
+      .air4thai-layout {
+        grid-template-columns: minmax(0, 1fr) 190px;
+        gap: 10px;
+      }
+
+      .air4thai-main-layout {
+        gap: 10px;
+      }
+
+      .air4thai-panel .metrics,
+      .air4thai-group .metrics {
+        gap: 10px;
+      }
+
+      .air4thai-panel .metric,
+      .air4thai-group.centered .metric {
+        width: 146px;
+        min-height: 96px;
+        padding: 10px 8px;
+      }
+
+      .air4thai-group:not(.centered) .metric {
+        width: 146px;
+        min-height: 96px;
+        padding: 10px 8px;
+      }
+
+      .air4thai-group-title {
+        font-size: 0.74rem;
+        margin-bottom: 6px;
+      }
+
+      .air4thai-scale-title {
+        font-size: 0.72rem;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-item {
+        grid-template-columns: minmax(0, 1fr) 92px;
+        gap: 10px;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-label {
+        font-size: 0.74rem;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-item div:last-child {
+        padding: 7px 6px;
+        font-size: 0.74rem;
+      }
+
+      .who-reference {
+        padding: 5px 10px;
+      }
+
+      .who-heading {
+        font-size: 0.92rem;
+        margin-bottom: 6px;
+      }
+
+      .who-items {
+        gap: 4px;
+      }
+
+      .who-item {
+        padding: 6px 6px;
+      }
+
+      .who-metric {
+        font-size: 0.72rem;
+      }
+
+      .who-value {
+        font-size: 1.2rem;
+      }
+
+      .who-unit,
+      .who-std {
+        font-size: 0.68rem;
+      }
+
+      footer {
+        font-size: 0.58rem;
+        padding: 3px;
+      }
+    }
+
+    @media (max-width: 1360px) {
+      .air4thai-layout {
+        grid-template-columns: minmax(0, 1fr) 176px;
+        gap: 8px;
+      }
+
+      .air4thai-main-layout {
+        gap: 8px;
+      }
+
+      .air4thai-group-title {
+        font-size: 0.68rem;
+        margin-bottom: 5px;
+      }
+
+      .air4thai-panel .metrics,
+      .air4thai-group .metrics {
+        gap: 8px;
+      }
+
+      .air4thai-panel .metric,
+      .air4thai-group .metric {
+        width: 114px;
+        min-height: 76px;
+        padding: 8px 6px;
+      }
+
+      .air4thai-scale-title {
+        font-size: 0.68rem;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-item {
+        grid-template-columns: minmax(0, 1fr) 86px;
+        gap: 8px;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-label {
+        font-size: 0.68rem;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-item div:last-child {
+        padding: 6px 4px;
+        font-size: 0.68rem;
+      }
+    }
+
+    @media (max-width: 1280px), (max-height: 820px) {
+      header {
+        padding: 3px 8px 2px;
+      }
+
+      header h1 {
+        font-size: 1.42rem;
+        letter-spacing: 1.2px;
+      }
+
+      #last-updated {
+        font-size: 0.72rem;
+        margin-top: 1px;
+      }
+
+      .grid {
+        gap: 4px;
+        padding: 4px;
+      }
+
+      .sensor-panel {
+        padding: 5px 7px;
+      }
+
+      .sensor-title {
+        font-size: 1rem;
+        margin-bottom: 4px;
+        padding-bottom: 3px;
+      }
+
+      .sensor-title span {
+        font-size: 0.66rem;
+      }
+
+      .metrics {
+        gap: 5px;
+      }
+
+      .metric {
+        padding: 7px 5px;
+      }
+
+      .metric-label {
+        font-size: 0.76rem;
+        letter-spacing: 0.25px;
+      }
+
+      .metric-value {
+        font-size: 1.18rem;
+      }
+
+      .metric-unit {
+        font-size: 0.62rem;
+      }
+
+      .metric.humidity .metric-value {
+        font-size: 1.42rem;
+      }
+
+      .summary-title {
+        font-size: 0.74rem;
+        margin-top: 3px;
+        margin-bottom: 3px;
+      }
+
+      .summary-grid {
+        gap: 5px;
+      }
+
+      .summary-grid .metric {
+        padding: 6px 3px;
+      }
+
+      .summary-grid .metric-value {
+        font-size: 1.02rem;
+      }
+
+      .summary-grid .metric-label {
+        font-size: 0.62rem;
+      }
+
+      .summary-grid .metric-unit {
+        font-size: 0.55rem;
+      }
+
+      .summary-grid .metric.humidity .metric-value {
+        font-size: 1.18rem;
+      }
+
+      .summary-grid .metric-24h {
+        padding: 3px 4px;
+      }
+
+      .summary-grid .metric-24h .metric-value {
+        font-size: 1.26rem;
+      }
+
+      .summary-grid .metric-24h .metric-label {
+        font-size: 0.68rem;
+      }
+
+      .summary-grid .metric-24h .metric-unit {
+        font-size: 0.58rem;
+      }
+
+      .air4thai-layout {
+        grid-template-columns: minmax(0, 1fr) 168px;
+        gap: 8px;
+      }
+
+      .air4thai-main-layout {
+        gap: 8px;
+      }
+
+      .air4thai-panel .metrics,
+      .air4thai-group .metrics {
+        gap: 8px;
+      }
+
+      .air4thai-panel .metric,
+      .air4thai-group.centered .metric {
+        width: 126px;
+        min-height: 86px;
+        padding: 9px 7px;
+      }
+
+      .air4thai-group:not(.centered) .metric {
+        width: 126px;
+        min-height: 86px;
+        padding: 9px 7px;
+      }
+
+      .air4thai-group-title {
+        font-size: 0.66rem;
+        margin-bottom: 5px;
+      }
+
+      .air4thai-scale-title {
+        font-size: 0.66rem;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-item {
+        grid-template-columns: minmax(0, 1fr) 82px;
+        gap: 8px;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-label {
+        font-size: 0.66rem;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-item div:last-child {
+        padding: 6px 4px;
+        font-size: 0.66rem;
+      }
+
+      .who-reference {
+        padding: 4px 8px;
+      }
+
+      .who-heading {
+        font-size: 0.82rem;
+        margin-bottom: 5px;
+      }
+
+      .who-items {
+        gap: 3px;
+      }
+
+      .who-item {
+        padding: 5px 4px;
+      }
+
+      .who-metric {
+        font-size: 0.64rem;
+        margin-bottom: 2px;
+      }
+
+      .who-value {
+        font-size: 1rem;
+      }
+
+      .who-unit,
+      .who-std {
+        font-size: 0.58rem;
+        margin-top: 1px;
+      }
+
+      footer {
+        font-size: 0.54rem;
+        padding: 2px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      #slide-dashboard {
+        display: block;
+        overflow-y: auto;
+        min-height: 100vh;
+      }
+
+      header {
+        padding: 6px 8px 4px;
+      }
+
+      header h1 {
+        font-size: 1.28rem;
+        letter-spacing: 0.8px;
+      }
+
+      #last-updated {
+        font-size: 0.72rem;
+        margin-top: 2px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 8px;
+        flex: none;
+        overflow: visible;
+        align-content: start;
+      }
+
+      .sensor-panel {
+        padding: 8px;
+        overflow: visible;
+        min-height: auto;
+      }
+
+      #panel-0 {
+        order: 1;
+      }
+
+      #panel-1 {
+        order: 2;
+      }
+
+      #panel-air4thai {
+        order: 3;
+      }
+
+      .sensor-title {
+        font-size: 1rem;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+      }
+
+      .sensor-title span {
+        font-size: 0.7rem;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .metric {
+        padding: 10px 8px;
+      }
+
+      .metrics .metric:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+      }
+
+      .metric-value {
+        font-size: 1.45rem;
+      }
+
+      .metric.humidity .metric-value {
+        font-size: 1.65rem;
+      }
+
+      .summary-title {
+        font-size: 0.84rem;
+        margin-top: 4px;
+        margin-bottom: 4px;
       }
 
       .summary-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .summary-grid .metric {
+        padding: 8px 6px;
+      }
+
+      .summary-grid .metric-value {
+        font-size: 1.15rem;
+      }
+
+      .summary-grid .metric-label {
+        font-size: 0.7rem;
+      }
+
+      .summary-grid .metric-unit {
+        font-size: 0.62rem;
       }
 
       .summary-grid .metric.humidity .metric-value {
-        font-size: 2rem;
+        font-size: 1.35rem;
       }
 
       .air4thai-panel {
         grid-column: span 1;
       }
 
+      .air4thai-layout {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .air4thai-main-layout {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .air4thai-group,
+      .air4thai-group.centered {
+        align-items: center;
+      }
+
+      .air4thai-group-title {
+        font-size: 0.82rem;
+        margin-bottom: 6px;
+      }
+
+      .air4thai-panel .metrics,
+      .air4thai-group .metrics {
+        width: 100%;
+        gap: 8px;
+      }
+
+      .air4thai-scale {
+        max-width: 360px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .air4thai-panel .metric,
+      .air4thai-group .metric {
+        width: min(100%, 220px);
+        min-height: 74px;
+        padding: 8px 6px;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-item {
+        grid-template-columns: minmax(0, 1fr) 92px;
+        gap: 10px;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-label {
+        font-size: 0.72rem;
+      }
+
+      .aqi-bar-legend.vertical .aqi-legend-item div:last-child {
+        font-size: 0.72rem;
+      }
+
       .who-items {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      footer {
+        padding: 6px 4px 10px;
+      }
+
+      #slide-indicators {
+        bottom: 14px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .who-items {
+        grid-template-columns: 1fr;
+      }
+
+      .air4thai-panel .metric,
+      .air4thai-group .metric {
+        width: min(100%, 240px);
       }
     }
   </style>
@@ -559,17 +1226,29 @@
 
     <!-- ===== SLIDE 1: IMAGE 1 ===== -->
     <div class="slide active slide-img" id="slide-img-1"
-      style="background: #000 url('images/1.jpg') no-repeat center center; background-size: contain;">
+      style="background: #000 url('images/1.png') no-repeat center center; background-size: contain;">
     </div>
     
     <div class="slide slide-img" id="slide-img-2"
-      style="background: #000 url('images/2.jpg') no-repeat center center; background-size: contain;">
+      style="background: #000 url('images/2.png') no-repeat center center; background-size: contain;">
+    </div>
+
+    <div class="slide slide-img" id="slide-img-3"
+      style="background: #000 url('images/3.png') no-repeat center center; background-size: contain;">
+    </div>
+
+    <div class="slide slide-img" id="slide-img-4"
+      style="background: #000 url('images/4.png') no-repeat center center; background-size: contain;">
+    </div>
+
+    <div class="slide slide-img" id="slide-img-5"
+      style="background: #000 url('images/5.png') no-repeat center center; background-size: contain;">
     </div>
 
     <!-- ===== SLIDE 3: AIR QUALITY DASHBOARD ===== -->
     <div class="slide" id="slide-dashboard">
       <header>
-        <h1>Your Today Air Quality</h1>
+        <h1>Air Quality Today</h1>
         <div id="last-updated">Loading...</div>
       </header>
 
@@ -578,32 +1257,38 @@
         <div class="sensor-panel" id="panel-1"></div>
         <div class="sensor-panel air4thai-panel" id="panel-air4thai">
           <div class="sensor-title">Air4Thai (PCD)<span>Loading reference data...</span></div>
+          <div class="air4thai-layout">
+            <div class="air4thai-main"></div>
+            <div class="air4thai-scale">
+              <div class="air4thai-scale-title">AQI Scale</div>
+              <div class="aqi-bar-legend vertical">
+                <div class="aqi-legend-item">
+                  <div class="aqi-legend-label">Excellent</div>
+                  <div class="aqi-bg-blue">0 - 25</div>
+                </div>
+                <div class="aqi-legend-item">
+                  <div class="aqi-legend-label">Satisfactory</div>
+                  <div class="aqi-bg-green">26 - 50</div>
+                </div>
+                <div class="aqi-legend-item">
+                  <div class="aqi-legend-label">Moderate</div>
+                  <div class="aqi-bg-yellow">51 - 100</div>
+                </div>
+                <div class="aqi-legend-item">
+                  <div class="aqi-legend-label">Unhealthy</div>
+                  <div class="aqi-bg-orange">101 - 200</div>
+                </div>
+                <div class="aqi-legend-item">
+                  <div class="aqi-legend-label">Very Unhealthy</div>
+                  <div class="aqi-bg-red">201 Above</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="who-reference">
-        <div class="aqi-bar-legend">
-          <div class="aqi-legend-item">
-            <div class="aqi-legend-label">Excellent</div>
-            <div class="aqi-bg-blue">0 - 25</div>
-          </div>
-          <div class="aqi-legend-item">
-            <div class="aqi-legend-label">Satisfactory</div>
-            <div class="aqi-bg-green">26 - 50</div>
-          </div>
-          <div class="aqi-legend-item">
-            <div class="aqi-legend-label">Moderate</div>
-            <div class="aqi-bg-yellow">51 - 100</div>
-          </div>
-          <div class="aqi-legend-item">
-            <div class="aqi-legend-label">Unhealthy</div>
-            <div class="aqi-bg-orange">101 - 200</div>
-          </div>
-          <div class="aqi-legend-item">
-            <div class="aqi-legend-label">Very Unhealthy</div>
-            <div class="aqi-bg-red">201 Above</div>
-          </div>
-        </div>
         <div class="who-heading" style="margin-top: 4px;">Thailand National Guidelines &mdash; Safe
           Levels (PCD)</div>
         <div class="who-items" style="margin-bottom: 8px;">
@@ -611,33 +1296,28 @@
             <div class="who-metric">PM<sub>2.5</sub></div>
             <div class="who-value">37.5</div>
             <div class="who-unit">&micro;g/m&sup3;</div>
-            <div class="who-std">PCD (24h Avg)</div>
           </div>
           <div class="who-item">
             <div class="who-metric">PM<sub>10</sub></div>
             <div class="who-value">120</div>
             <div class="who-unit">&micro;g/m&sup3;</div>
-            <div class="who-std">PCD (24h Avg)</div>
           </div>
           <div class="who-item">
             <div class="who-metric">AQI</div>
             <div class="who-value">&le; 100</div>
             <div class="who-unit">index</div>
-            <div class="who-std">PCD Satisfactory</div>
           </div>
           <div class="who-item">
             <div class="who-metric">CO<sub>2</sub></div>
             <div class="who-value">&lt;1000</div>
             <div class="who-unit">ppm</div>
-            <div class="who-std">Thai Dept Health</div>
           </div>
           <div class="who-item">
             <div class="who-metric">TVOC</div>
             <div class="who-value">&lt;300</div>
             <div class="who-unit">ppb</div>
-            <div class="who-std">Thai Dept Health</div>
           </div>
-        </div>v>
+        </div>
 
         <div class="who-heading">WHO Guidelines &mdash; Recommended Safe Levels</div>
         <div class="who-items">
@@ -645,31 +1325,26 @@
             <div class="who-metric">PM<sub>2.5</sub></div>
             <div class="who-value">15</div>
             <div class="who-unit">&micro;g/m&sup3;</div>
-            <div class="who-std">WHO AQG 2021 (24h)</div>
           </div>
           <div class="who-item">
             <div class="who-metric">PM<sub>10</sub></div>
             <div class="who-value">45</div>
             <div class="who-unit">&micro;g/m&sup3;</div>
-            <div class="who-std">WHO AQG 2021 (24h)</div>
           </div>
           <div class="who-item">
             <div class="who-metric">CO<sub>2</sub></div>
             <div class="who-value">&lt;1000</div>
             <div class="who-unit">ppm</div>
-            <div class="who-std">WHO Indoor AQ</div>
           </div>
           <div class="who-item">
             <div class="who-metric">TVOC</div>
             <div class="who-value">&lt;300</div>
             <div class="who-unit">ppb</div>
-            <div class="who-std">WHO IAQA 2010</div>
           </div>
           <div class="who-item">
             <div class="who-metric">Temp</div>
             <div class="who-value">18&ndash;24</div>
             <div class="who-unit">&deg;C</div>
-            <div class="who-std">WHO Housing 2018</div>
           </div>
         </div>
       </div>
@@ -677,15 +1352,8 @@
       <footer>
         Auto-refreshes every 60 seconds &nbsp;|&nbsp;
         Sensors: AirGradient &nbsp;|&nbsp;
-        Reference: Air4Thai / PCD (Don Mueang District Office)
+        Reference Station (Bangkok University, Rangsit Campus)
       </footer>
-    </div>
-
-    <!-- ===== SLIDE 2: YOUTUBE VIDEO ===== -->
-    <div class="slide" id="slide-video">
-      <div id="yt-player-container">
-        <div id="yt-player"></div>
-      </div>
     </div>
 
   </div><!-- /#slideshow -->
@@ -694,18 +1362,16 @@
   <div id="slide-indicators">
     <span class="dot active" title="Image 1"></span>
     <span class="dot" title="Image 2"></span>
+    <span class="dot" title="Image 3"></span>
+    <span class="dot" title="Image 4"></span>
+    <span class="dot" title="Image 5"></span>
     <span class="dot" title="Dashboard"></span>
-    <span class="dot" title="Video 1"></span>
-    <span class="dot" title="Video 2"></span>
   </div>
 
   <!-- Progress bar (fills during each slide's duration) -->
   <div id="progress-bar-wrap">
     <div id="progress-bar"></div>
   </div>
-
-  <!-- "Returning to dashboard…" hint shown near end of video -->
-  <div id="next-label">↩ Returning to dashboard…</div>
 
   <script>
     // =========================================================
@@ -714,9 +1380,10 @@
     const PLAYLIST = [
       { id: 'slide-img-1', duration: 10, color: '#9ca3af' },
       { id: 'slide-img-2', duration: 10, color: '#9ca3af' },
-      { id: 'slide-dashboard', duration: 60, color: '#2563eb' },
-      { id: 'slide-video', duration: 300, color: '#ef4444', videoId: 'XL8QWefAop0' },
-      { id: 'slide-video', duration: 300, color: '#ef4444', videoId: '3zI84KOX_QM' }
+      { id: 'slide-img-3', duration: 10, color: '#9ca3af' },
+      { id: 'slide-img-4', duration: 10, color: '#9ca3af' },
+      { id: 'slide-img-5', duration: 10, color: '#9ca3af' },
+      { id: 'slide-dashboard', duration: 120, color: '#2563eb' }
     ];
     // =========================================================
 
@@ -724,7 +1391,7 @@
     const TOKEN = '034709b8-1071-4f2f-b695-6af71c4281bf';
     const API_URL = `https://api.airgradient.com/public/api/v1/locations/measures/current?token=${TOKEN}`;
 
-    const A4T_SOURCE = 'http://air4thai.pcd.go.th/services/getNewAQI_JSON.php?stationID=bkp74t';
+    const A4T_SOURCE = 'http://air4thai.pcd.go.th/services/getNewAQI_JSON.php?stationID=20t';
     const AIR4THAI_PROXIES = [
       'https://api.allorigins.win/raw?url=' + encodeURIComponent(A4T_SOURCE),
       'https://corsproxy.io/?' + encodeURIComponent(A4T_SOURCE),
@@ -852,8 +1519,9 @@
     }
 
     // ===== RENDER FUNCTIONS =====
-    function renderMetricCards(points, is24h = false) {
+    function renderMetricCards(points, is24h = false, options = {}) {
       if (!points || !points.length) return `<div class="panel-msg">No data</div>`;
+      const { neutral24h = false, show24hAqi = true } = options;
 
       const metricsToRender = is24h ? METRICS.filter(m => m.key === 'pm02_corrected' || m.key === 'pm10_corrected') : METRICS;
 
@@ -862,10 +1530,11 @@
         const avg = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
         const disp = avg != null ? avg.toFixed(m.dec) : '\u2014';
         const { color } = getState(m, avg);
+        const cardColor = is24h && neutral24h ? 'gray' : color;
         const spanCss = is24h ? 'style="grid-column: span 2;"' : '';
         const c24 = is24h ? 'metric-24h' : '';
         return `
-          <div class="metric ${color} ${m.key === 'rhum' ? 'humidity' : ''} ${c24}" ${spanCss}>
+          <div class="metric ${cardColor} ${m.key === 'rhum' ? 'humidity' : ''} ${c24}" ${spanCss}>
             <div class="metric-label">${m.label}</div>
             <div class="metric-value">${disp}</div>
             <div class="metric-unit">${m.unit}</div>
@@ -873,7 +1542,7 @@
       }).join('');
 
       // Inject explicitly added 24-hour AQI card block for the 24h panel
-      if (is24h) {
+      if (is24h && show24hAqi) {
         const pm25Vals = points.map(p => p.pm02_corrected).filter(v => v != null).map(Number);
         const avg25 = pm25Vals.length ? pm25Vals.reduce((a, b) => a + b, 0) / pm25Vals.length : null;
 
@@ -892,7 +1561,7 @@
           <div class="metric ${aqiColor} metric-24h" style="grid-column: span 2;">
             <div class="metric-label">AQI</div>
             <div class="metric-value">${aqiVal}</div>
-            <div class="metric-unit">index</div>
+            <div class="metric-unit"></div>
           </div>`;
       }
 
@@ -905,14 +1574,8 @@
           <div class="sensor-content"></div>
           <div class="summary-section">
             <div class="summary-row">
-              <div class="summary-title">Hourly Average (Last 60 Minutes)</div>
+              <div class="summary-title">Hourly Average</div>
               <div class="summary-grid" id="hourly-grid-${idx}">
-                <div class="panel-msg">Loading&hellip;</div>
-              </div>
-            </div>
-            <div class="summary-row">
-              <div class="summary-title" id="daily-title-${idx}">24-Hour Average</div>
-              <div class="summary-grid" id="avg-grid-${idx}">
                 <div class="panel-msg">Loading&hellip;</div>
               </div>
             </div>
@@ -931,12 +1594,10 @@
     }
 
     function renderAvgSection(idx, points) {
-      const el = document.getElementById(`avg-grid-${idx}`);
-      if (el) el.innerHTML = renderMetricCards(points, true);
-      const titleEl = document.getElementById(`daily-title-${idx}`);
-      if (titleEl) {
-        const { from, to } = get24hWindow();
-        titleEl.innerHTML = `24-Hour Average &mdash; ${formatBkDate(from)} 7am &rarr; ${formatBkDate(to)} 7am (AIT)`;
+      if (!window._avgPoints) window._avgPoints = {};
+      window._avgPoints[idx] = points;
+      if (window._air4thaiData) {
+        renderAir4ThaiPanel(window._air4thaiData);
       }
     }
 
@@ -983,18 +1644,36 @@
     function renderAir4ThaiPanel(data) {
       const panel = document.getElementById('panel-air4thai');
       if (!panel) return;
+      const main = panel.querySelector('.air4thai-main');
+      const title = panel.querySelector('.sensor-title');
+      if (!main || !title) return;
 
       const last = data.AQILast;
 
-      panel.innerHTML = `
-        <div class="sensor-title">
-          ${data.nameEN.replace(/\s+/g, ' ').trim()}
-          <span>Air4Thai / PCD &nbsp;|&nbsp; Last reading: ${last.date} ${last.time}</span>
-        </div>
-        <div class="metrics">
-          ${a4tCard(last.PM25.color_id, 'PM<sub>2.5</sub>', fmtVal(last.PM25.value, 1), '\u00b5g/m\u00b3')}
-          ${a4tCard(last.PM10.color_id, 'PM<sub>10</sub>', fmtVal(last.PM10.value, 0), '\u00b5g/m\u00b3')}
-          ${a4tCard(last.AQI.color_id, 'AQI', parseInt(last.AQI.aqi) >= 0 ? last.AQI.aqi : '\u2014', 'index')}
+      title.innerHTML = '';
+
+      const avgPoints = window._avgPoints || {};
+      const outdoor24h = renderMetricCards(avgPoints[0], true, { neutral24h: false, show24hAqi: true });
+      const indoor24h = renderMetricCards(avgPoints[1], true, { neutral24h: true, show24hAqi: false });
+
+      main.innerHTML = `
+        <div class="air4thai-main-layout">
+          <div class="air4thai-group">
+            <div class="air4thai-group-title">Outdoor 24-Hour Average</div>
+            <div class="metrics">${outdoor24h}</div>
+          </div>
+          <div class="air4thai-group centered">
+            <div class="air4thai-group-title">Reference Station</div>
+            <div class="metrics">
+              ${a4tCard(last.PM25.color_id, 'PM<sub>2.5</sub>', fmtVal(last.PM25.value, 1), '\u00b5g/m\u00b3')}
+              ${a4tCard(last.PM10.color_id, 'PM<sub>10</sub>', fmtVal(last.PM10.value, 0), '\u00b5g/m\u00b3')}
+              ${a4tCard(last.AQI.color_id, 'AQI', parseInt(last.AQI.aqi) >= 0 ? last.AQI.aqi : '\u2014', '')}
+            </div>
+          </div>
+          <div class="air4thai-group">
+            <div class="air4thai-group-title">Indoor 24-Hour Average</div>
+            <div class="metrics">${indoor24h}</div>
+          </div>
         </div>`;
     }
 
@@ -1061,6 +1740,7 @@
             if (!r.ok) throw new Error(`HTTP ${r.status}`);
             return r.json();
           });
+          window._air4thaiData = data;
           renderAir4ThaiPanel(data);
           return;
         } catch (err) {
@@ -1068,56 +1748,13 @@
         }
       }
       const panel = document.getElementById('panel-air4thai');
-      if (panel) panel.innerHTML = `<div class="sensor-title">Air4Thai (PCD)<span>Reference station unavailable</span></div>`;
+      if (panel) {
+        const title = panel.querySelector('.sensor-title');
+        const main = panel.querySelector('.air4thai-main');
+        if (title) title.innerHTML = `Air4Thai (PCD)<span>Reference station unavailable</span>`;
+        if (main) main.innerHTML = '';
+      }
     }
-
-    // =========================================================
-    // YOUTUBE PLAYER
-    // =========================================================
-    let ytPlayer = null;
-    let ytReady = false;
-    let pendingPlay = false;
-
-    // Called automatically by YouTube API once loaded
-    window.onYouTubeIframeAPIReady = function () {
-      ytPlayer = new YT.Player('yt-player', {
-        videoId: PLAYLIST[3].videoId, // fallback init
-        playerVars: {
-          autoplay: 0,
-          start: 0,
-          controls: 0,         // hide controls 
-          rel: 0,              // no related videos
-          modestbranding: 1,
-          iv_load_policy: 3,
-          fs: 0,
-          disablekb: 1,
-          playsinline: 1,
-        },
-        events: {
-          onReady: () => {
-            ytReady = true;
-            ytPlayer.mute(); // Muting completely requested by user
-            if (pendingPlay) {
-              pendingPlay = false;
-              ytPlayer.loadVideoById({ videoId: PLAYLIST[currentSlide].videoId });
-            }
-          },
-          onStateChange: (e) => {
-            // Instantly snap to next slide when video truly finishes
-            if (e.data === YT.PlayerState.ENDED) {
-              goToSlide((currentSlide + 1) % PLAYLIST.length);
-            }
-          },
-        },
-      });
-    };
-
-    // Dynamically load YouTube IFrame API
-    (function loadYTApi() {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      document.head.appendChild(tag);
-    })();
 
     // =========================================================
     // SLIDESHOW ENGINE
@@ -1131,7 +1768,6 @@
     const getSlides = () => Array.from(new Set(PLAYLIST.map(p => document.getElementById(p.id))));
     const dots = document.querySelectorAll('.dot');
     const progressBar = document.getElementById('progress-bar');
-    const nextLabel = document.getElementById('next-label');
 
     /** Animate progress bar over durationSec seconds. */
     function startProgress(durationSec, color) {
@@ -1154,12 +1790,6 @@
     function goToSlide(idx) {
       clearTimeout(slideTimer);
       cancelAnimationFrame(progressRaf);
-      nextLabel.classList.remove('visible');
-
-      const wasVideo = PLAYLIST[currentSlide].id === 'slide-video';
-      if (wasVideo && ytPlayer && ytReady) {
-        ytPlayer.pauseVideo();
-      }
 
       currentSlide = idx;
       const tSlide = PLAYLIST[idx];
@@ -1170,15 +1800,6 @@
       if (activeEl) activeEl.classList.add('active');
 
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-
-      if (tSlide.id === 'slide-video') {
-        if (ytPlayer && ytReady) {
-          ytPlayer.loadVideoById({ videoId: tSlide.videoId });
-          ytPlayer.mute();
-        } else {
-          pendingPlay = true;
-        }
-      }
 
       startProgress(tSlide.duration, tSlide.color);
       slideTimer = setTimeout(() => goToSlide((idx + 1) % PLAYLIST.length), tSlide.duration * 1000);
