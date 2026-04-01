@@ -46,6 +46,21 @@
       z-index: 1;
     }
 
+    .slide-video {
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+      display: block;
+    }
+
     /* ===== DASHBOARD SLIDE ===== */
     #slide-dashboard {
       background: #f0f4f8;
@@ -1237,12 +1252,24 @@
       style="background: #000 url('images/3.png') no-repeat center center; background-size: contain;">
     </div>
 
-    <div class="slide slide-img" id="slide-img-4"
-      style="background: #000 url('images/4.png') no-repeat center center; background-size: contain;">
+    <div class="slide slide-video" id="slide-video-4">
+      <video muted playsinline preload="metadata">
+        <source src="images/4.mp4" type="video/mp4">
+      </video>
     </div>
 
     <div class="slide slide-img" id="slide-img-5"
       style="background: #000 url('images/5.png') no-repeat center center; background-size: contain;">
+    </div>
+
+    <div class="slide slide-img" id="slide-img-6"
+      style="background: #000 url('images/6.png') no-repeat center center; background-size: contain;">
+    </div>
+
+    <div class="slide slide-video" id="slide-video-7">
+      <video muted playsinline preload="metadata">
+        <source src="images/7.mp4" type="video/mp4">
+      </video>
     </div>
 
     <!-- ===== SLIDE 3: AIR QUALITY DASHBOARD ===== -->
@@ -1363,8 +1390,10 @@
     <span class="dot active" title="Image 1"></span>
     <span class="dot" title="Image 2"></span>
     <span class="dot" title="Image 3"></span>
-    <span class="dot" title="Image 4"></span>
+    <span class="dot" title="Video 4"></span>
     <span class="dot" title="Image 5"></span>
+    <span class="dot" title="Image 6"></span>
+    <span class="dot" title="Video 7"></span>
     <span class="dot" title="Dashboard"></span>
   </div>
 
@@ -1381,8 +1410,10 @@
       { id: 'slide-img-1', duration: 10, color: '#9ca3af' },
       { id: 'slide-img-2', duration: 10, color: '#9ca3af' },
       { id: 'slide-img-3', duration: 10, color: '#9ca3af' },
-      { id: 'slide-img-4', duration: 10, color: '#9ca3af' },
+      { id: 'slide-video-4', duration: 30, color: '#9ca3af', isVideo: true },
       { id: 'slide-img-5', duration: 10, color: '#9ca3af' },
+      { id: 'slide-img-6', duration: 10, color: '#9ca3af' },
+      { id: 'slide-video-7', duration: 30, color: '#9ca3af', isVideo: true },
       { id: 'slide-dashboard', duration: 120, color: '#2563eb' }
     ];
     // =========================================================
@@ -1764,10 +1795,28 @@
     let progressRaf = null;
     let progressStart = 0;
     let progressTotal = 0;
+    const slideVideos = Array.from(document.querySelectorAll('.slide-video video'));
 
     const getSlides = () => Array.from(new Set(PLAYLIST.map(p => document.getElementById(p.id))));
     const dots = document.querySelectorAll('.dot');
     const progressBar = document.getElementById('progress-bar');
+
+    slideVideos.forEach(video => {
+      video.addEventListener('ended', () => {
+        if (video.closest('.slide')?.classList.contains('active')) {
+          goToSlide((currentSlide + 1) % PLAYLIST.length);
+        }
+      });
+    });
+
+    function getSlideDurationSec(slideConfig) {
+      if (!slideConfig.isVideo) return slideConfig.duration;
+      const videoEl = document.querySelector(`#${slideConfig.id} video`);
+      if (videoEl && Number.isFinite(videoEl.duration) && videoEl.duration > 0) {
+        return videoEl.duration;
+      }
+      return slideConfig.duration;
+    }
 
     /** Animate progress bar over durationSec seconds. */
     function startProgress(durationSec, color) {
@@ -1791,6 +1840,15 @@
       clearTimeout(slideTimer);
       cancelAnimationFrame(progressRaf);
 
+      const previousSlide = PLAYLIST[currentSlide];
+      if (previousSlide?.isVideo) {
+        const previousVideo = document.querySelector(`#${previousSlide.id} video`);
+        if (previousVideo) {
+          previousVideo.pause();
+          previousVideo.currentTime = 0;
+        }
+      }
+
       currentSlide = idx;
       const tSlide = PLAYLIST[idx];
 
@@ -1801,8 +1859,17 @@
 
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
 
-      startProgress(tSlide.duration, tSlide.color);
-      slideTimer = setTimeout(() => goToSlide((idx + 1) % PLAYLIST.length), tSlide.duration * 1000);
+      if (tSlide.isVideo) {
+        const videoEl = document.querySelector(`#${tSlide.id} video`);
+        if (videoEl) {
+          videoEl.currentTime = 0;
+          videoEl.play().catch(() => {});
+        }
+      }
+
+      const durationSec = getSlideDurationSec(tSlide);
+      startProgress(durationSec, tSlide.color);
+      slideTimer = setTimeout(() => goToSlide((idx + 1) % PLAYLIST.length), durationSec * 1000);
     }
 
     // Allow clicking dots to manually switch slides
