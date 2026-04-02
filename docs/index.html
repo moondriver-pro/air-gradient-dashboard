@@ -265,29 +265,36 @@
     /* ===== AIR4THAI PANEL ===== */
     .air4thai-panel {
       grid-column: span 2;
+      position: relative;
     }
 
     .air4thai-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 220px;
-      gap: 12px;
-      align-items: center;
+      position: relative;
+      display: block;
       flex: 1;
+      min-height: 100%;
     }
 
     .air4thai-main {
       min-width: 0;
+      width: min(100%, 1120px);
+      max-width: calc(100% - 250px);
+      margin: 0 auto;
     }
 
     .air4thai-main-layout {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(3, 164px);
+      gap: 0;
       align-items: start;
+      justify-items: center;
+      justify-content: space-between;
+      width: 100%;
     }
 
     .air4thai-group {
       min-width: 0;
+      width: 100%;
     }
 
     .air4thai-group.centered {
@@ -298,13 +305,15 @@
     }
 
     .air4thai-group-title {
-      font-size: 0.82rem;
+      font-size: 1.02rem;
       font-weight: 700;
       color: #374151;
       text-align: center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
     .air4thai-panel .metrics,
@@ -313,34 +322,39 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       margin: 0 auto;
     }
 
     /* Vertical stack for Rangsit and 24-hour values */
     .air4thai-panel .metric,
     .air4thai-group.centered .metric {
-      width: 178px;
-      min-height: 114px;
+      width: 164px;
+      min-height: 102px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 15px 12px;
+      padding: 12px 10px;
     }
 
     .air4thai-group:not(.centered) .metric {
-      width: 178px;
-      min-height: 114px;
-      padding: 15px 12px;
+      width: 164px;
+      min-height: 102px;
+      padding: 12px 10px;
     }
 
     .air4thai-scale {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 220px;
       display: flex;
       flex-direction: column;
       gap: 0;
-      align-self: stretch;
       justify-content: stretch;
+      height: 330px;
     }
 
     .air4thai-scale-title {
@@ -1043,6 +1057,48 @@
       }
     }
 
+    @media (max-width: 1200px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .air4thai-panel {
+        grid-column: span 2;
+      }
+
+      .air4thai-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .air4thai-main {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+      }
+
+      .air4thai-main-layout {
+        grid-template-columns: repeat(3, minmax(140px, 1fr));
+        gap: 14px;
+      }
+
+      .air4thai-scale {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-width: 460px;
+        height: auto;
+        margin: 0 auto;
+      }
+
+      .air4thai-panel .metric,
+      .air4thai-group.centered .metric,
+      .air4thai-group:not(.centered) .metric {
+        width: min(100%, 160px);
+      }
+    }
+
     @media (max-width: 900px) {
       #slide-dashboard {
         display: block;
@@ -1158,8 +1214,15 @@
       }
 
       .air4thai-layout {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 10px;
+      }
+
+      .air4thai-main {
+        width: 100%;
+        max-width: none;
+        margin: 0;
       }
 
       .air4thai-main-layout {
@@ -1184,8 +1247,11 @@
       }
 
       .air4thai-scale {
+        position: static;
+        transform: none;
         max-width: 360px;
         width: 100%;
+        height: auto;
         margin: 0 auto;
       }
 
@@ -1316,8 +1382,7 @@
       </div>
 
       <div class="who-reference">
-        <div class="who-heading" style="margin-top: 4px;">Thailand National Guidelines &mdash; Safe
-          Levels (PCD)</div>
+        <div class="who-heading" style="margin-top: 4px;">Thailand National Guidelines</div>
         <div class="who-items" style="margin-bottom: 8px;">
           <div class="who-item">
             <div class="who-metric">PM<sub>2.5</sub></div>
@@ -1346,7 +1411,7 @@
           </div>
         </div>
 
-        <div class="who-heading">WHO Guidelines &mdash; Recommended Safe Levels</div>
+        <div class="who-heading">WHO Guidelines</div>
         <div class="who-items">
           <div class="who-item">
             <div class="who-metric">PM<sub>2.5</sub></div>
@@ -1694,7 +1759,7 @@
             <div class="metrics">${outdoor24h}</div>
           </div>
           <div class="air4thai-group centered">
-            <div class="air4thai-group-title">Reference Station</div>
+            <div class="air4thai-group-title">Reference Station (Rangsit Region)</div>
             <div class="metrics">
               ${a4tCard(last.PM25.color_id, 'PM<sub>2.5</sub>', fmtVal(last.PM25.value, 1), '\u00b5g/m\u00b3')}
               ${a4tCard(last.PM10.color_id, 'PM<sub>10</sub>', fmtVal(last.PM10.value, 0), '\u00b5g/m\u00b3')}
