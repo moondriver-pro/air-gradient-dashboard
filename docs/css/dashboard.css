@@ -2196,6 +2196,578 @@
       }
     }
 
+    /* ===== PPT DASHBOARD REDESIGN ===== */
+    .ppt-dashboard-slide {
+      background: #ffffff;
+      color: #111827;
+      overflow: hidden;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .ppt-dashboard-shell {
+      min-height: 100%;
+      padding: 10px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ppt-topbar {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: start;
+      gap: 12px;
+    }
+
+    .ppt-title-wrap {
+      justify-self: center;
+      text-align: center;
+    }
+
+    .ppt-dashboard-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 4.4vw, 4.1rem);
+      font-weight: 800;
+      line-height: 0.95;
+      color: #4f83da;
+      text-shadow: 0 3px 0 #dbe7fb, 0 6px 10px rgba(35, 64, 134, 0.28);
+      letter-spacing: 0.02em;
+    }
+
+    .ppt-last-updated {
+      justify-self: end;
+      align-self: center;
+      font-size: 0.92rem;
+      color: #111827;
+      white-space: nowrap;
+      padding-top: 6px;
+    }
+
+    .ppt-top-grid {
+      display: grid;
+      grid-template-columns: 1.03fr 1.03fr 0.84fr 0.42fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .ppt-bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .ppt-panel,
+    .ppt-guideline-panel {
+      background: #ffffff;
+      border: 1.5px solid #d7dee9;
+      border-radius: 28px;
+      box-shadow: 0 2px 8px rgba(148, 163, 184, 0.16);
+      overflow: hidden;
+    }
+
+    .ppt-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 12px 12px;
+    }
+
+    .ppt-panel-header {
+      padding: 2px 0 10px;
+      border-bottom: 1px solid #dbe3ef;
+      margin-bottom: 4px;
+    }
+
+    .ppt-panel-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .ppt-panel-icon {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      color: #222222;
+      margin-top: 2px;
+    }
+
+    .ppt-panel-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ppt-panel-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #5f97db;
+      text-shadow: 1px 1px 0 rgba(17, 24, 39, 0.18);
+      line-height: 1.15;
+    }
+
+    .ppt-panel-title-secondary {
+      margin-top: 2px;
+    }
+
+    .ppt-panel-subtitle {
+      margin-top: 2px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.25;
+    }
+
+    .ppt-panel-section-title {
+      margin: 4px 0 10px;
+      text-align: center;
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #5f97db;
+      line-height: 1.1;
+    }
+
+    .ppt-hourly-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .ppt-average-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 2px;
+    }
+
+    .ppt-average-grid-two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ppt-average-grid-three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .ppt-reference-stack {
+      display: grid;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .ppt-metric-card,
+    .ppt-guideline-card {
+      position: relative;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 74px;
+      color: #111827;
+    }
+
+    .ppt-metric-card-tall {
+      min-height: 176px;
+    }
+
+    .ppt-metric-card-wide {
+      min-height: 100px;
+    }
+
+    .ppt-metric-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #111827;
+    }
+
+    .ppt-metric-value {
+      margin-top: 8px;
+      font-size: 2rem;
+      line-height: 0.95;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .ppt-metric-unit {
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: #374151;
+    }
+
+    .ppt-metric-icon {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      width: 24px;
+      height: 24px;
+      color: #6d5bd3;
+      opacity: 0.95;
+    }
+
+    .ppt-metric-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ppt-fill-green {
+      background: #92d050;
+    }
+
+    .ppt-fill-blue {
+      background: #19a8df;
+    }
+
+    .ppt-fill-yellow {
+      background: #fff200;
+    }
+
+    .ppt-fill-orange {
+      background: #f5822a;
+    }
+
+    .ppt-fill-red {
+      background: #ff110f;
+      color: #ffffff;
+    }
+
+    .ppt-fill-red .ppt-metric-label,
+    .ppt-fill-red .ppt-metric-value,
+    .ppt-fill-red .ppt-metric-unit {
+      color: #ffffff;
+    }
+
+    .ppt-fill-neutral {
+      background: #ececec;
+    }
+
+    .ppt-panel-reference .ppt-panel-title,
+    .ppt-panel-reference .ppt-panel-title-secondary {
+      line-height: 1.08;
+    }
+
+    .ppt-scale-panel {
+      padding: 16px 4px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .ppt-scale-title {
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #5f97db;
+      line-height: 1.2;
+    }
+
+    .ppt-scale-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .ppt-scale-item {
+      min-height: 62px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #111827;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .ppt-scale-item.aqi-bg-blue {
+      background: #19a8df;
+    }
+
+    .ppt-scale-item.aqi-bg-green {
+      background: #92d050;
+    }
+
+    .ppt-scale-item.aqi-bg-yellow {
+      background: #fff200;
+    }
+
+    .ppt-scale-item.aqi-bg-orange {
+      background: #f5822a;
+    }
+
+    .ppt-scale-item.aqi-bg-red {
+      background: #ff110f;
+      color: #ffffff;
+    }
+
+    .ppt-guideline-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 0 0 10px;
+    }
+
+    .ppt-guideline-header {
+      min-height: 54px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: #111827;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .ppt-guideline-header-who {
+      background: #87bfcb;
+    }
+
+    .ppt-guideline-header-thai {
+      background: #172ca8;
+      color: #ffffff;
+    }
+
+    .ppt-guideline-title {
+      font-size: 0.92rem;
+      font-weight: 400;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .ppt-guideline-badge {
+      flex-shrink: 0;
+    }
+
+    .ppt-guideline-badge-who {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid #1d9bf0;
+      color: #1d9bf0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.58rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .ppt-guideline-badge-flag {
+      width: 34px;
+      height: 24px;
+      border-radius: 4px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr 1fr 2fr 1fr 1fr;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+    }
+
+    .ppt-flag-line.flag-red {
+      background: #dc2626;
+    }
+
+    .ppt-flag-line.flag-white {
+      background: #ffffff;
+    }
+
+    .ppt-flag-line.flag-blue {
+      background: #1d4ed8;
+    }
+
+    .ppt-panel-section-title-guideline {
+      margin: 8px 0 10px;
+    }
+
+    .ppt-guideline-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      padding: 0 12px 0;
+    }
+
+    .ppt-guideline-card {
+      min-height: 80px;
+      padding: 12px 10px;
+    }
+
+    .ppt-guideline-card .ppt-metric-value {
+      font-size: 1.52rem;
+    }
+
+    @media (max-width: 1380px), (max-height: 840px) {
+      .ppt-dashboard-shell {
+        padding: 8px 10px 10px;
+        gap: 8px;
+      }
+
+      .ppt-top-grid,
+      .ppt-bottom-grid {
+        gap: 10px;
+      }
+
+      .ppt-panel {
+        padding: 8px 10px 10px;
+      }
+
+      .ppt-panel-title {
+        font-size: 0.98rem;
+      }
+
+      .ppt-panel-subtitle,
+      .ppt-last-updated {
+        font-size: 0.7rem;
+      }
+
+      .ppt-panel-section-title,
+      .ppt-scale-title {
+        font-size: 0.9rem;
+      }
+
+      .ppt-metric-card {
+        min-height: 66px;
+      }
+
+      .ppt-metric-card-tall {
+        min-height: 148px;
+      }
+
+      .ppt-metric-card-wide {
+        min-height: 86px;
+      }
+
+      .ppt-metric-value {
+        font-size: 1.72rem;
+      }
+
+      .ppt-guideline-card .ppt-metric-value {
+        font-size: 1.34rem;
+      }
+
+      .ppt-scale-item {
+        min-height: 56px;
+        font-size: 0.88rem;
+      }
+    }
+
+    @media (max-width: 1160px) {
+      .ppt-dashboard-slide {
+        overflow-y: auto;
+      }
+
+      .ppt-dashboard-shell {
+        min-height: 100vh;
+      }
+
+      .ppt-topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .ppt-topbar-spacer {
+        display: none;
+      }
+
+      .ppt-title-wrap,
+      .ppt-last-updated {
+        justify-self: center;
+        text-align: center;
+      }
+
+      .ppt-top-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .ppt-panel-reference {
+        order: 3;
+      }
+
+      .ppt-scale-panel {
+        order: 4;
+        grid-column: span 2;
+        padding: 0;
+      }
+
+      .ppt-scale-list {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 820px) {
+      .ppt-top-grid,
+      .ppt-bottom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ppt-scale-panel {
+        grid-column: auto;
+      }
+
+      .ppt-scale-list {
+        grid-template-columns: 1fr;
+      }
+
+      .ppt-hourly-grid,
+      .ppt-average-grid-three,
+      .ppt-average-grid-two,
+      .ppt-guideline-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .ppt-panel-reference .ppt-reference-stack {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .ppt-dashboard-shell {
+        padding: 8px;
+      }
+
+      .ppt-dashboard-title {
+        font-size: 2.3rem;
+      }
+
+      .ppt-last-updated {
+        white-space: normal;
+        font-size: 0.75rem;
+      }
+
+      .ppt-hourly-grid,
+      .ppt-average-grid-three,
+      .ppt-average-grid-two,
+      .ppt-guideline-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ppt-panel-title-row {
+        align-items: center;
+      }
+
+      .ppt-panel-icon {
+        width: 28px;
+        height: 28px;
+      }
+
+      .ppt-metric-card-tall {
+        min-height: 118px;
+      }
+    }
+
     /* ===== EVENT SLIDE ===== */
     .slide-event-shell {
       width: 100%;
