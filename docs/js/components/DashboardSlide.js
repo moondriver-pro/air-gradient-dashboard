@@ -6,15 +6,15 @@ const pm25Metric = METRICS.find((metric) => metric.key === "pm02_corrected");
 const pm10Metric = METRICS.find((metric) => metric.key === "pm10_corrected");
 
 const STANDARD_WHO_ITEMS = [
-  { label: "PM2.5", value: "15", unit: "\u00b5g/m\u00b3", color: "green" },
-  { label: "PM10", value: "45", unit: "\u00b5g/m\u00b3", color: "blue" },
-  { label: "AQI", value: "\u2264 100", unit: "index", color: "yellow" },
+  { label: "PM\u2082.\u2085", value: "15", unit: "\u00b5g/m\u00b3", color: "green" },
+  { label: "PM\u2081\u2080", value: "45", unit: "\u00b5g/m\u00b3", color: "blue" },
+  { label: "AQI", value: "\u2264 100", unit: "", color: "yellow" },
 ];
 
 const STANDARD_THAI_ITEMS = [
-  { label: "PM2.5", value: "\u2264 37.5", unit: "\u00b5g/m\u00b3", color: "green" },
-  { label: "PM10", value: "\u2264 120", unit: "\u00b5g/m\u00b3", color: "blue" },
-  { label: "AQI", value: "\u2264 100", unit: "index", color: "yellow" },
+  { label: "PM\u2082.\u2085", value: "\u2264 37.5", unit: "\u00b5g/m\u00b3", color: "green" },
+  { label: "PM\u2081\u2080", value: "\u2264 120", unit: "\u00b5g/m\u00b3", color: "blue" },
+  { label: "AQI", value: "\u2264 100", unit: "", color: "yellow" },
 ];
 
 function averageMetric(points, key) {
@@ -48,16 +48,16 @@ function buildSensorSummary(sensor, options = {}) {
   if (!sensor) {
     return {
       hourly: [
-        { key: "pm25", label: "PM2.5", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "green" },
-        { key: "pm10", label: "PM10", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "blue" },
+        { key: "pm25", label: "PM\u2082.\u2085", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "green" },
+        { key: "pm10", label: "PM\u2081\u2080", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "blue" },
         { key: "temp", label: "TEMP", value: "\u2014", unit: "\u00b0C", fill: "neutral", icon: "temp" },
-        { key: "co2", label: "CO2", value: "\u2014", unit: "ppm", fill: "neutral" },
+        { key: "co2", label: "CO\u2082", value: "\u2014", unit: "ppm", fill: "neutral" },
         { key: "tvoc", label: "TVOC", value: "\u2014", unit: "ppb", fill: "neutral" },
         { key: "humidity", label: "HUMIDITY", value: "\u2014", unit: "%", fill: "neutral" },
       ],
       average: [
-        { key: "avg-pm25", label: "PM2.5", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "green" },
-        { key: "avg-pm10", label: "PM10", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "blue" },
+        { key: "avg-pm25", label: "PM\u2082.\u2085", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "green" },
+        { key: "avg-pm10", label: "PM\u2081\u2080", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "blue" },
         ...(include24hAqi ? [{ key: "avg-aqi", label: "AQI", value: "\u2014", unit: "", fill: "yellow" }] : []),
       ],
     };
@@ -66,6 +66,18 @@ function buildSensorSummary(sensor, options = {}) {
   const pm25 = sensor.pm02_corrected != null ? Number(sensor.pm02_corrected) : null;
   const pm10 = sensor.pm10_corrected != null ? Number(sensor.pm10_corrected) : null;
   const temp = sensor.atmp_corrected != null ? Number(sensor.atmp_corrected) : null;
+  const hourlyPm25 = averageMetric(sensor.hourlyPoints, "pm02_corrected");
+  const hourlyPm10 = averageMetric(sensor.hourlyPoints, "pm10_corrected");
+  const hourlyTemp = averageMetric(sensor.hourlyPoints, "atmp_corrected");
+  const hourlyCo2 = averageMetric(sensor.hourlyPoints, "rco2_corrected");
+  const hourlyTvoc = averageMetric(sensor.hourlyPoints, "tvoc");
+  const hourlyHumidity = averageMetric(sensor.hourlyPoints, "rhum");
+  const displayHourlyPm25 = hourlyPm25 != null ? hourlyPm25 : pm25;
+  const displayHourlyPm10 = hourlyPm10 != null ? hourlyPm10 : pm10;
+  const displayHourlyTemp = hourlyTemp != null ? hourlyTemp : temp;
+  const displayHourlyCo2 = hourlyCo2 != null ? hourlyCo2 : (sensor.rco2_corrected != null ? Number(sensor.rco2_corrected) : null);
+  const displayHourlyTvoc = hourlyTvoc != null ? hourlyTvoc : (sensor.tvoc != null ? Number(sensor.tvoc) : null);
+  const displayHourlyHumidity = hourlyHumidity != null ? hourlyHumidity : (sensor.rhum != null ? Number(sensor.rhum) : null);
   const avgPm25 = averageMetric(sensor.avgPoints, "pm02_corrected");
   const avgPm10 = averageMetric(sensor.avgPoints, "pm10_corrected");
   const avgAqi = calculateAQI(avgPm25);
@@ -74,44 +86,44 @@ function buildSensorSummary(sensor, options = {}) {
     hourly: [
       {
         key: "pm25",
-        label: "PM2.5",
-        value: pm25 != null ? formatNumber(pm25, 1) : "\u2014",
+        label: "PM\u2082.\u2085",
+        value: displayHourlyPm25 != null ? formatNumber(displayHourlyPm25, 1) : "\u2014",
         unit: "\u00b5g/m\u00b3",
-        fill: getState(pm25Metric, pm25).color,
+        fill: getState(pm25Metric, displayHourlyPm25).color,
       },
       {
         key: "pm10",
-        label: "PM10",
-        value: pm10 != null ? formatNumber(pm10, 0) : "\u2014",
+        label: "PM\u2081\u2080",
+        value: displayHourlyPm10 != null ? formatNumber(displayHourlyPm10, 0) : "\u2014",
         unit: "\u00b5g/m\u00b3",
-        fill: getState(pm10Metric, pm10).color,
+        fill: getState(pm10Metric, displayHourlyPm10).color,
       },
       {
         key: "temp",
         label: "TEMP",
-        value: temp != null ? formatNumber(temp, 1) : "\u2014",
+        value: displayHourlyTemp != null ? formatNumber(displayHourlyTemp, 1) : "\u2014",
         unit: "\u00b0C",
         fill: "neutral",
         icon: "temp",
       },
       {
         key: "co2",
-        label: "CO2",
-        value: sensor.rco2_corrected != null ? formatNumber(sensor.rco2_corrected, 0) : "\u2014",
+        label: "CO\u2082",
+        value: displayHourlyCo2 != null ? formatNumber(displayHourlyCo2, 0) : "\u2014",
         unit: "ppm",
         fill: "neutral",
       },
       {
         key: "tvoc",
         label: "TVOC",
-        value: sensor.tvoc != null ? formatNumber(sensor.tvoc, 0) : "\u2014",
+        value: displayHourlyTvoc != null ? formatNumber(displayHourlyTvoc, 0) : "\u2014",
         unit: "ppb",
         fill: "neutral",
       },
       {
         key: "humidity",
         label: "HUMIDITY",
-        value: sensor.rhum != null ? formatNumber(sensor.rhum, 0) : "\u2014",
+        value: displayHourlyHumidity != null ? formatNumber(displayHourlyHumidity, 0) : "\u2014",
         unit: "%",
         fill: "neutral",
       },
@@ -119,14 +131,14 @@ function buildSensorSummary(sensor, options = {}) {
     average: [
       {
         key: "avg-pm25",
-        label: "PM2.5",
+        label: "PM\u2082.\u2085",
         value: avgPm25 != null ? formatNumber(avgPm25, 1) : "\u2014",
         unit: "\u00b5g/m\u00b3",
         fill: getState(pm25Metric, avgPm25).color,
       },
       {
         key: "avg-pm10",
-        label: "PM10",
+        label: "PM\u2081\u2080",
         value: avgPm10 != null ? formatNumber(avgPm10, 0) : "\u2014",
         unit: "\u00b5g/m\u00b3",
         fill: getState(pm10Metric, avgPm10).color,
@@ -155,14 +167,14 @@ function buildReferenceSummary(data) {
   return [
     {
       key: "ref-pm25",
-      label: "PM2.5",
+      label: "PM\u2082.\u2085",
       value: last?.PM25?.value != null ? formatNumber(last.PM25.value, 1) : "\u2014",
       unit: "\u00b5g/m\u00b3",
       fill: pm25Color,
     },
     {
       key: "ref-pm10",
-      label: "PM10",
+      label: "PM\u2081\u2080",
       value: last?.PM10?.value != null ? formatNumber(last.PM10.value, 0) : "\u2014",
       unit: "\u00b5g/m\u00b3",
       fill: pm10Color,
@@ -188,8 +200,11 @@ function ThermometerIcon() {
 function OutdoorIcon() {
   return html`
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 18a4 4 0 0 1-.45-7.97A6.5 6.5 0 0 1 18.4 8.2 4.5 4.5 0 1 1 18.5 18H6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-      <path d="M10 4V2M5.7 5.7 4.2 4.2M14.3 5.7l1.5-1.5M3 10H1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+      <path d="M17 18a4 4 0 0 0 0-8 5.02 5.02 0 0 0-9.7-1.33A3.5 3.5 0 0 0 7.5 18H17Z"></path>
+      <path d="M12 2v2"></path>
+      <path d="m4.93 4.93 1.41 1.41"></path>
+      <path d="M2 12h2"></path>
+      <path d="m19.07 4.93-1.41 1.41"></path>
     </svg>
   `;
 }
@@ -197,8 +212,9 @@ function OutdoorIcon() {
 function IndoorIcon() {
   return html`
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 10.5 12 3l9 7.5M5.5 9.5V20h5.5v-5h2v5H18.5V9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-      <path d="M8 20v-4h2v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+      <path d="m3 10 9-7 9 7"></path>
+      <path d="M5 9.5V20h14V9.5"></path>
+      <path d="M9 20v-6h6v6"></path>
     </svg>
   `;
 }
@@ -213,7 +229,15 @@ function PinIcon() {
 }
 
 function WhoBadge() {
-  return html`<div className="ppt-guideline-badge ppt-guideline-badge-who">WHO</div>`;
+  return html`
+    <div className="ppt-guideline-badge ppt-guideline-badge-who">
+      <img
+        src="images/WHO.png"
+        alt="World Health Organization logo"
+        loading="lazy"
+      />
+    </div>
+  `;
 }
 
 function ThailandBadge() {
@@ -334,16 +358,22 @@ function GuidelinePanel({ theme, badge, title, items }) {
   `;
 }
 
+function getHourlyUpdateTimestamp() {
+  const now = new Date();
+  now.setMinutes(0, 0, 0);
+  return now;
+}
+
 export function DashboardSlide({ sensors, air4thaiData }) {
-  const [currentDateTime, setCurrentDateTime] = useState(() => new Date());
+  const [lastUpdatedTime, setLastUpdatedTime] = useState(() => getHourlyUpdateTimestamp());
   const indoorSummary = useMemo(() => buildSensorSummary(sensors[1] || null, { include24hAqi: false }), [sensors]);
   const outdoorSummary = useMemo(() => buildSensorSummary(sensors[0] || null, { include24hAqi: true }), [sensors]);
   const referenceItems = useMemo(() => buildReferenceSummary(air4thaiData), [air4thaiData]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentDateTime(new Date());
-    }, 1000);
+      setLastUpdatedTime(getHourlyUpdateTimestamp());
+    }, 60000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -356,7 +386,16 @@ export function DashboardSlide({ sensors, air4thaiData }) {
           <div className="ppt-title-wrap">
             <h1 className="ppt-dashboard-title">Air Quality Today</h1>
           </div>
-          <div className="ppt-last-updated">Last updated: ${currentDateTime.toLocaleString()}</div>
+          <div className="ppt-last-updated">
+            Last updated: ${lastUpdatedTime.toLocaleString(undefined, {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            })}
+          </div>
         </div>
 
         <div className="ppt-top-grid">
@@ -384,13 +423,13 @@ export function DashboardSlide({ sensors, air4thaiData }) {
           <${GuidelinePanel}
             theme="who"
             badge=${html`<${WhoBadge} />`}
-            title="WHO Emission Guideline"
+            title="WHO Global Air Quality Guidelines (2021)"
             items=${STANDARD_WHO_ITEMS}
           />
           <${GuidelinePanel}
             theme="thai"
             badge=${html`<${ThailandBadge} />`}
-            title="National Ambient Air Quality Standards"
+            title="Thailand National Ambient Air Quality Standard (NAAQS) (2023)"
             items=${STANDARD_THAI_ITEMS}
           />
         </div>

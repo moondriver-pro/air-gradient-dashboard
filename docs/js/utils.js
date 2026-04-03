@@ -42,10 +42,22 @@ export function get24hWindow() {
 }
 
 export function getHourlyWindow() {
-  const now = new Date();
+  const offsetMs = 7 * 3600000;
+  const bkNow = new Date(Date.now() + offsetMs);
+  const currentHourStartUtc = Date.UTC(
+    bkNow.getUTCFullYear(),
+    bkNow.getUTCMonth(),
+    bkNow.getUTCDate(),
+    bkNow.getUTCHours(),
+    0,
+    0,
+  );
+  const prevHourStartUtc = currentHourStartUtc - 3600000;
+  const prevHourEndUtc = currentHourStartUtc - 1000;
+
   return {
-    from: new Date(now.getTime() - 3600000).toISOString().slice(0, 19),
-    to: now.toISOString().slice(0, 19),
+    from: new Date(prevHourStartUtc).toISOString().slice(0, 19),
+    to: new Date(prevHourEndUtc).toISOString().slice(0, 19),
   };
 }
 
