@@ -2341,6 +2341,11 @@
       gap: 10px;
     }
 
+    /* Force hourly cards to neutral style regardless of metric color state. */
+    .ppt-hourly-grid .ppt-metric-card {
+      background: #ececec !important;
+    }
+
     .ppt-average-grid {
       display: grid;
       gap: 14px;
