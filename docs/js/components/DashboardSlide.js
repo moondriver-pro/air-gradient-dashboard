@@ -6,13 +6,13 @@ const pm25Metric = METRICS.find((metric) => metric.key === "pm02_corrected");
 const pm10Metric = METRICS.find((metric) => metric.key === "pm10_corrected");
 
 const STANDARD_WHO_ITEMS = [
-  { label: "PM\u2082.\u2085", value: "15", unit: "\u00b5g/m\u00b3", color: "green" },
-  { label: "PM\u2081\u2080", value: "45", unit: "\u00b5g/m\u00b3", color: "blue" },
+  { label: "PM\u2082.\u2085", value: "\u2264 15", unit: "\u00b5g/m\u00b3", color: "neutral" },
+  { label: "PM\u2081\u2080", value: "\u2264 45", unit: "\u00b5g/m\u00b3", color: "neutral" },
 ];
 
 const STANDARD_THAI_ITEMS = [
-  { label: "PM\u2082.\u2085", value: "\u2264 37.5", unit: "\u00b5g/m\u00b3", color: "green" },
-  { label: "PM\u2081\u2080", value: "\u2264 120", unit: "\u00b5g/m\u00b3", color: "blue" },
+  { label: "PM\u2082.\u2085", value: "37.5", unit: "\u00b5g/m\u00b3", color: "neutral" },
+  { label: "PM\u2081\u2080", value: "120", unit: "\u00b5g/m\u00b3", color: "neutral" },
 ];
 
 function averageMetric(points, key) {
@@ -64,8 +64,8 @@ function buildSensorSummary(sensor, options = {}) {
   if (!sensor) {
     return {
       hourly: [
-        { key: "pm25", label: "PM\u2082.\u2085", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "gray" },
-        { key: "pm10", label: "PM\u2081\u2080", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "gray" },
+        { key: "pm25", label: "PM\u2082.\u2085", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "neutral" },
+        { key: "pm10", label: "PM\u2081\u2080", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "neutral" },
         { key: "temp", label: "TEMP", value: "\u2014", unit: "\u00b0C", fill: "neutral", icon: "temp" },
         { key: "co2", label: "CO\u2082", value: "\u2014", unit: "ppm", fill: "neutral" },
         { key: "tvoc", label: "TVOC", value: "\u2014", unit: "ppb", fill: "neutral" },
@@ -105,14 +105,14 @@ function buildSensorSummary(sensor, options = {}) {
         label: "PM\u2082.\u2085",
         value: displayHourlyPm25 != null ? formatNumber(displayHourlyPm25, 1) : "\u2014",
         unit: "\u00b5g/m\u00b3",
-        fill: getState(pm25Metric, displayHourlyPm25).color,
+        fill: "neutral",
       },
       {
         key: "pm10",
         label: "PM\u2081\u2080",
         value: displayHourlyPm10 != null ? formatNumber(displayHourlyPm10, 0) : "\u2014",
         unit: "\u00b5g/m\u00b3",
-        fill: getState(pm10Metric, displayHourlyPm10).color,
+        fill: "neutral",
       },
       {
         key: "temp",
