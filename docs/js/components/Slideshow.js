@@ -122,21 +122,21 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
         `;
       })}
 
+      <div id="slide-indicators">
+        ${slides.map(
+          (slide, index) => html`
+            <span
+              key=${slide.key}
+              className=${`dot ${index === currentIndex ? "active" : ""}`}
+              title=${slide.title}
+              onClick=${() => setCurrentIndex(index)}
+            ></span>
+          `,
+        )}
+      </div>
+
       ${!isDashboardSlide
         ? html`
-            <div id="slide-indicators">
-              ${slides.map(
-                (slide, index) => html`
-                  <span
-                    key=${slide.key}
-                    className=${`dot ${index === currentIndex ? "active" : ""}`}
-                    title=${slide.title}
-                    onClick=${() => setCurrentIndex(index)}
-                  ></span>
-                `,
-              )}
-            </div>
-
             <div id="progress-bar-wrap">
               <div
                 id="progress-bar"
