@@ -2206,10 +2206,10 @@
 
     .ppt-dashboard-shell {
       min-height: 100%;
-      padding: 10px 12px 12px;
+      padding: 10px 12px 8px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .ppt-topbar {
@@ -2254,7 +2254,7 @@
     .ppt-bottom-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
       align-items: stretch;
     }
 
@@ -2504,7 +2504,9 @@
       font-weight: 800;
       color: #111827;
       border: 1px solid rgba(148, 163, 184, 0.18);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      box-shadow: none;
+      overflow: hidden;
+      background-clip: padding-box;
     }
 
     .ppt-scale-item.aqi-bg-blue {
@@ -2531,11 +2533,11 @@
     .ppt-guideline-panel {
       display: flex;
       flex-direction: column;
-      padding: 0 0 10px;
+      padding: 0 0 6px;
     }
 
     .ppt-guideline-header {
-      min-height: 54px;
+      min-height: 44px;
       padding: 0 16px;
       display: flex;
       align-items: center;
@@ -2546,12 +2548,12 @@
     }
 
     .ppt-guideline-header-who {
-      background: #87bfcb;
+      background: transparent;
     }
 
     .ppt-guideline-header-thai {
-      background: #172ca8;
-      color: #ffffff;
+      background: transparent;
+      color: #111827;
     }
 
     .ppt-guideline-title {
@@ -2607,23 +2609,27 @@
     }
 
     .ppt-panel-section-title-guideline {
-      margin: 8px 0 10px;
+      margin: 6px 0 8px;
     }
 
     .ppt-guideline-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
+      gap: 12px;
       padding: 0 12px 0;
     }
 
+    .ppt-guideline-grid-two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .ppt-guideline-card {
-      min-height: 80px;
-      padding: 12px 10px;
+      min-height: 70px;
+      padding: 10px 8px;
     }
 
     .ppt-guideline-card .ppt-metric-value {
-      font-size: 1.82rem;
+      font-size: 1.68rem;
     }
 
     @media (max-width: 1380px), (max-height: 840px) {

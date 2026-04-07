@@ -16,7 +16,7 @@ export function buildPlaylist(eventPayload) {
   const activeEvents = Array.isArray(eventPayload?.events)
     ? eventPayload.events
         .filter((event) => event?.enabled)
-        .map((event, index) => ({
+        .map((event, index) => ({   
           key: `slide-event-${index + 1}`,
           type: "event",
           duration: Number(event.duration) > 0 ? Number(event.duration) : 20,

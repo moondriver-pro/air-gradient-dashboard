@@ -8,13 +8,11 @@ const pm10Metric = METRICS.find((metric) => metric.key === "pm10_corrected");
 const STANDARD_WHO_ITEMS = [
   { label: "PM\u2082.\u2085", value: "15", unit: "\u00b5g/m\u00b3", color: "green" },
   { label: "PM\u2081\u2080", value: "45", unit: "\u00b5g/m\u00b3", color: "blue" },
-  { label: "AQI", value: "\u2264 100", unit: "", color: "yellow" },
 ];
 
 const STANDARD_THAI_ITEMS = [
   { label: "PM\u2082.\u2085", value: "\u2264 37.5", unit: "\u00b5g/m\u00b3", color: "green" },
   { label: "PM\u2081\u2080", value: "\u2264 120", unit: "\u00b5g/m\u00b3", color: "blue" },
-  { label: "AQI", value: "\u2264 100", unit: "", color: "yellow" },
 ];
 
 function averageMetric(points, key) {
@@ -23,6 +21,24 @@ function averageMetric(points, key) {
     return null;
   }
   return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function parseDisplayNumber(value) {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  const text = String(value).trim();
+  if (!text || text === "-" || text === "--" || text === "\u2014") {
+    return null;
+  }
+
+  const parsed = Number(text);
+  if (!Number.isFinite(parsed)) {
+    return null;
+  }
+
+  return parsed;
 }
 
 function getFillClass(color) {
@@ -48,17 +64,17 @@ function buildSensorSummary(sensor, options = {}) {
   if (!sensor) {
     return {
       hourly: [
-        { key: "pm25", label: "PM\u2082.\u2085", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "green" },
-        { key: "pm10", label: "PM\u2081\u2080", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "blue" },
+        { key: "pm25", label: "PM\u2082.\u2085", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "gray" },
+        { key: "pm10", label: "PM\u2081\u2080", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "gray" },
         { key: "temp", label: "TEMP", value: "\u2014", unit: "\u00b0C", fill: "neutral", icon: "temp" },
         { key: "co2", label: "CO\u2082", value: "\u2014", unit: "ppm", fill: "neutral" },
         { key: "tvoc", label: "TVOC", value: "\u2014", unit: "ppb", fill: "neutral" },
         { key: "humidity", label: "HUMIDITY", value: "\u2014", unit: "%", fill: "neutral" },
       ],
       average: [
-        { key: "avg-pm25", label: "PM\u2082.\u2085", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "green" },
-        { key: "avg-pm10", label: "PM\u2081\u2080", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "blue" },
-        ...(include24hAqi ? [{ key: "avg-aqi", label: "AQI", value: "\u2014", unit: "", fill: "yellow" }] : []),
+        { key: "avg-pm25", label: "PM\u2082.\u2085", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "gray" },
+        { key: "avg-pm10", label: "PM\u2081\u2080", value: "\u2014", unit: "\u00b5g/m\u00b3", fill: "gray" },
+        ...(include24hAqi ? [{ key: "avg-aqi", label: "AQI", value: "\u2014", unit: "", fill: "gray" }] : []),
       ],
     };
   }
@@ -160,29 +176,32 @@ function buildSensorSummary(sensor, options = {}) {
 
 function buildReferenceSummary(data) {
   const last = data?.AQILast;
-  const pm25Color = A4T_COLOR[last?.PM25?.color_id] || "green";
-  const pm10Color = A4T_COLOR[last?.PM10?.color_id] || "blue";
-  const aqiColor = A4T_COLOR[last?.AQI?.color_id] || getAQILevel(Number(last?.AQI?.aqi)).color;
+  const pm25Number = parseDisplayNumber(last?.PM25?.value);
+  const pm10Number = parseDisplayNumber(last?.PM10?.value);
+  const aqiNumber = parseDisplayNumber(last?.AQI?.aqi);
+  const pm25Color = pm25Number != null ? A4T_COLOR[last?.PM25?.color_id] || "gray" : "gray";
+  const pm10Color = pm10Number != null ? A4T_COLOR[last?.PM10?.color_id] || "gray" : "gray";
+  const aqiColor = aqiNumber != null ? A4T_COLOR[last?.AQI?.color_id] || getAQILevel(aqiNumber).color : "gray";
 
   return [
     {
       key: "ref-pm25",
       label: "PM\u2082.\u2085",
-      value: last?.PM25?.value != null ? formatNumber(last.PM25.value, 1) : "\u2014",
+      value: pm25Number != null ? formatNumber(pm25Number, 1) : "\u2014",
       unit: "\u00b5g/m\u00b3",
       fill: pm25Color,
     },
     {
       key: "ref-pm10",
       label: "PM\u2081\u2080",
-      value: last?.PM10?.value != null ? formatNumber(last.PM10.value, 0) : "\u2014",
+      value: pm10Number != null ? formatNumber(pm10Number, 0) : "\u2014",
       unit: "\u00b5g/m\u00b3",
       fill: pm10Color,
     },
     {
       key: "ref-aqi",
       label: "AQI",
-      value: last?.AQI?.aqi != null ? String(last.AQI.aqi) : "\u2014",
+      value: aqiNumber != null ? String(Math.round(aqiNumber)) : "\u2014",
       unit: "",
       fill: aqiColor,
     },
@@ -343,7 +362,7 @@ function GuidelinePanel({ theme, badge, title, items }) {
         <div className="ppt-guideline-title">${title}</div>
       </div>
       <div className="ppt-panel-section-title ppt-panel-section-title-guideline">24 Hour Avg Air Quality</div>
-      <div className="ppt-guideline-grid">
+      <div className=${`ppt-guideline-grid ${items.length === 2 ? "ppt-guideline-grid-two" : ""}`}>
         ${items.map(
           (item) => html`
             <div key=${item.label} className=${`ppt-guideline-card ${getFillClass(item.color)}`}>

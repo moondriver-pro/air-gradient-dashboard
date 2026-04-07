@@ -43,17 +43,15 @@ export function get24hWindow() {
 
 export function getHourlyWindow() {
   const offsetMs = 7 * 3600000;
-  const bkNow = new Date(Date.now() + offsetMs);
-  const currentHourStartUtc = Date.UTC(
-    bkNow.getUTCFullYear(),
-    bkNow.getUTCMonth(),
-    bkNow.getUTCDate(),
-    bkNow.getUTCHours(),
-    0,
-    0,
-  );
-  const prevHourStartUtc = currentHourStartUtc - 3600000;
-  const prevHourEndUtc = currentHourStartUtc - 1000;
+  // Compute the last completed clock-hour in Bangkok (UTC+7),
+  // then convert back to UTC timestamps for the API request.
+  const nowBkMs = Date.now() + offsetMs;
+  const currentHourStartBkMs = Math.floor(nowBkMs / 3600000) * 3600000;
+  const prevHourStartBkMs = currentHourStartBkMs - 3600000;
+  const prevHourEndBkMs = currentHourStartBkMs - 1000;
+
+  const prevHourStartUtc = prevHourStartBkMs - offsetMs;
+  const prevHourEndUtc = prevHourEndBkMs - offsetMs;
 
   return {
     from: new Date(prevHourStartUtc).toISOString().slice(0, 19),

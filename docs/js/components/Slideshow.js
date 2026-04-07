@@ -79,6 +79,9 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
     };
   }, [currentIndex, slides]);
 
+  const currentSlide = slides[currentIndex];
+  const isDashboardSlide = currentSlide?.type === "dashboard";
+
   return html`
     <div id="slideshow">
       ${slides.map((slide, index) => {
@@ -119,28 +122,32 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
         `;
       })}
 
-      <div id="slide-indicators">
-        ${slides.map(
-          (slide, index) => html`
-            <span
-              key=${slide.key}
-              className=${`dot ${index === currentIndex ? "active" : ""}`}
-              title=${slide.title}
-              onClick=${() => setCurrentIndex(index)}
-            ></span>
-          `,
-        )}
-      </div>
+      ${!isDashboardSlide
+        ? html`
+            <div id="slide-indicators">
+              ${slides.map(
+                (slide, index) => html`
+                  <span
+                    key=${slide.key}
+                    className=${`dot ${index === currentIndex ? "active" : ""}`}
+                    title=${slide.title}
+                    onClick=${() => setCurrentIndex(index)}
+                  ></span>
+                `,
+              )}
+            </div>
 
-      <div id="progress-bar-wrap">
-        <div
-          id="progress-bar"
-          style=${{
-            width: `${progress}%`,
-            background: slides[currentIndex].color,
-          }}
-        ></div>
-      </div>
+            <div id="progress-bar-wrap">
+              <div
+                id="progress-bar"
+                style=${{
+                  width: `${progress}%`,
+                  background: slides[currentIndex].color,
+                }}
+              ></div>
+            </div>
+          `
+        : null}
     </div>
   `;
 }
