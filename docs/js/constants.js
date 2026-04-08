@@ -3,6 +3,7 @@ export const BASE_PLAYLIST = [
   { key: "slide-img-aqc-team", type: "image", src: "images/aqc_team.png", duration: 5, color: "#9ca3af", title: "AQC Team" },
   { key: "slide-img-slide1", type: "image", src: "images/Slide1.PNG", duration: 5, color: "#9ca3af", title: "Slide 1" },
   { key: "slide-img-slide2", type: "image", src: "images/Slide2.PNG", duration: 5, color: "#9ca3af", title: "Slide 2" },
+  { key: "slide-dashboard-1", type: "dashboard", duration: 120, color: "#2563eb", title: "Dashboard 1" },
   { key: "slide-img-slide3", type: "image", src: "images/Slide3.PNG", duration: 5, color: "#9ca3af", title: "Slide 3" },
   { key: "slide-img-slide4", type: "image", src: "images/Slide4.PNG", duration: 5, color: "#9ca3af", title: "Slide 4" },
   { key: "slide-img-slide5", type: "image", src: "images/Slide5.PNG", duration: 5, color: "#9ca3af", title: "Slide 5" },
@@ -12,10 +13,15 @@ export const BASE_PLAYLIST = [
   { key: "slide-img-slide8", type: "image", src: "images/Slide8.PNG", duration: 5, color: "#9ca3af", title: "Slide 8" },
   { key: "slide-img-slide9", type: "image", src: "images/Slide9.PNG", duration: 5, color: "#9ca3af", title: "Slide 9" },
   { key: "slide-video-4", type: "video", src: "images/4.mp4", duration: 30, color: "#9ca3af", title: "Video 4" },
-  { key: "slide-dashboard-a", type: "dashboard", duration: 120, color: "#2563eb", title: "Dashboard" },
+  { key: "slide-dashboard-2", type: "dashboard", duration: 120, color: "#2563eb", title: "Dashboard 2" },
   { key: "slide-img-gic-team", type: "image", src: "images/gic_team.png", duration: 5, color: "#9ca3af", title: "GIC Team" },
   { key: "slide-video-gic2", type: "video", src: "images/gic2.mp4", duration: 30, color: "#9ca3af", title: "GIC2 Video" },
-  { key: "slide-dashboard-b", type: "dashboard", duration: 120, color: "#2563eb", title: "Dashboard" },
+  { key: "slide-img-12", type: "image", src: "images/12.png", duration: 5, color: "#9ca3af", title: "Slide 12" },
+  { key: "slide-img-13", type: "image", src: "images/13.jpg", duration: 5, color: "#9ca3af", title: "Slide 13" },
+  { key: "slide-img-14", type: "image", src: "images/14.png", duration: 5, color: "#9ca3af", title: "Slide 14" },
+  { key: "slide-img-15", type: "image", src: "images/15.jpg", duration: 5, color: "#9ca3af", title: "Slide 15" },
+  { key: "slide-img-16", type: "image", src: "images/16.png", duration: 5, color: "#9ca3af", title: "Slide 16" },
+  { key: "slide-dashboard-3", type: "dashboard", duration: 120, color: "#2563eb", title: "Dashboard 3" },
 ];
 
 export function buildPlaylist(eventPayload) {
