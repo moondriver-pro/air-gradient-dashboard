@@ -38,6 +38,23 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
   const rafRef = useRef(null);
 
   useEffect(() => {
+    const onKeyDown = (event) => {
+      if (!slides.length) return;
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        setCurrentIndex((index) => (index + 1) % slides.length);
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        setCurrentIndex((index) => (index - 1 + slides.length) % slides.length);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [slides.length]);
+
+  useEffect(() => {
     const currentSlide = slides[currentIndex];
 
     Object.entries(videoRefs.current).forEach(([key, video]) => {
