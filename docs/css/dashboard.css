@@ -18,6 +18,7 @@
       width: 100vw;
       height: 100vh;
       position: relative;
+      --media-safe-margin: clamp(22px, 3.2vw, 64px);
     }
 
     .slide {
@@ -38,11 +39,29 @@
       z-index: 1;
     }
 
+    .slide-img,
     .slide-video {
       background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: var(--media-safe-margin);
+      box-sizing: border-box;
+    }
+
+    .slide-media-frame {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    .slide-media-frame-image {
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: contain;
     }
 
     .slide-video video {
@@ -51,6 +70,12 @@
       object-fit: contain;
       background: #000;
       display: block;
+    }
+
+    @media (max-width: 768px) {
+      #slideshow {
+        --media-safe-margin: clamp(10px, 2.4vw, 18px);
+      }
     }
 
     /* ===== DASHBOARD SLIDE ===== */

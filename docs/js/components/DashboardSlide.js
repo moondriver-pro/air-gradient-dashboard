@@ -291,6 +291,11 @@ function getHourlyUpdateTimestamp() {
   return now;
 }
 
+function withNeutralFill(item) {
+  if (!item) return item;
+  return { ...item, fill: "neutral" };
+}
+
 export function DashboardSlide({ sensors, air4thaiData }) {
   const [lastUpdatedTime, setLastUpdatedTime] = useState(() => getHourlyUpdateTimestamp());
 
@@ -329,6 +334,9 @@ export function DashboardSlide({ sensors, air4thaiData }) {
         .filter(Boolean),
     [indoorSummary],
   );
+
+  const outdoorAvgNeutral = useMemo(() => outdoorAvg.map(withNeutralFill), [outdoorAvg]);
+  const indoorAvgNeutral = useMemo(() => indoorAvg.map(withNeutralFill), [indoorAvg]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -387,12 +395,12 @@ export function DashboardSlide({ sensors, air4thaiData }) {
             <div className="final-section-title">24 Hour Avg Air Quality</div>
           <div className="final-avg-row">
             <div className="final-avg-grid final-avg-grid-three final-avg-grid-left">
-              ${outdoorAvg.map(
+              ${outdoorAvgNeutral.map(
                 (item) => html`<${FinalCard} key=${`out-avg-${item.key}`} item=${item} compact=${true} variant="primary" />`,
               )}
             </div>
             <div className="final-avg-grid final-avg-grid-two final-avg-grid-right">
-              ${indoorAvg.map(
+              ${indoorAvgNeutral.map(
                 (item) => html`<${FinalCard} key=${`in-avg-${item.key}`} item=${item} compact=${true} variant="primary" />`,
               )}
               </div>

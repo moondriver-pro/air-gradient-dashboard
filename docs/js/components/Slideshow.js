@@ -1,28 +1,31 @@
 import { html, useEffect, useRef, useState } from "../react-shim.js";
-import { DashboardSlide } from "./DashboardSlide.js?v=20260408ca";
-import { EventSlide } from "./EventSlide.js?v=20260408ca";
+import { DashboardSlide } from "./DashboardSlide.js?v=20260408cf";
+import { EventSlide } from "./EventSlide.js?v=20260408cf";
 // To switch back to the previous dashboard layout later, import
 // DashboardSlideLegacy from "./DashboardSlideLegacy.js" and use it below instead.
 
 function MediaSlide({ slide, isActive, videoRef, onEnded }) {
   if (slide.type === "image") {
     return html`
-      <div
-        className=${`slide slide-img ${isActive ? "active" : ""}`}
-        style=${{
-          background: `#000 url('${slide.src}') no-repeat center center`,
-          backgroundSize: "contain",
-        }}
-      ></div>
+      <div className=${`slide slide-img ${isActive ? "active" : ""}`}>
+        <div
+          className="slide-media-frame slide-media-frame-image"
+          style=${{
+            backgroundImage: `url('${slide.src}')`,
+          }}
+        ></div>
+      </div>
     `;
   }
 
   if (slide.type === "video") {
     return html`
       <div className=${`slide slide-video ${isActive ? "active" : ""}`}>
-        <video muted playsInline preload="metadata" ref=${videoRef} onEnded=${onEnded}>
-          <source src=${slide.src} type="video/mp4" />
-        </video>
+        <div className="slide-media-frame">
+          <video muted playsInline preload="metadata" ref=${videoRef} onEnded=${onEnded}>
+            <source src=${slide.src} type="video/mp4" />
+          </video>
+        </div>
       </div>
     `;
   }
