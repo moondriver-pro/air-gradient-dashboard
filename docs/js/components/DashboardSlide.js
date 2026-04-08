@@ -12,11 +12,11 @@ const PM24H_DECISION_TABLES = [
     key: "pm25",
     title: "PM<sub>2.5</sub> (Average 24h)",
     rows: [
-      { range: "0 - 15.0", className: "aqi-bg-blue" },
-      { range: "15.1 - 25.0", className: "aqi-bg-green" },
-      { range: "25.1 - 37.5", className: "aqi-bg-yellow" },
-      { range: "37.6 - 75.0", className: "aqi-bg-orange" },
-      { range: "75.1 Above", className: "aqi-bg-red" },
+      { range: "0 - 15", className: "aqi-bg-blue" },
+      { range: "16 - 25", className: "aqi-bg-green" },
+      { range: "26 - 37", className: "aqi-bg-yellow" },
+      { range: "38 - 75", className: "aqi-bg-orange" },
+      { range: "76 Above", className: "aqi-bg-red" },
     ],
   },
   {

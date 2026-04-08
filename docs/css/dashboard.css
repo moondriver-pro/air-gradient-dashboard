@@ -3148,6 +3148,14 @@
       line-height: 1.06;
     }
 
+    .final-block-hourly .final-section-title {
+      font-size: clamp(1.38rem, 1.9vw, 2.11rem);
+    }
+
+    .final-block-avg .final-section-title {
+      font-size: clamp(1.38rem, 1.9vw, 2.11rem);
+    }
+
     .final-hourly-row,
     .final-avg-row {
       display: grid;
@@ -3167,7 +3175,7 @@
     }
 
     .final-hourly-chip {
-      min-height: 50px;
+      min-height: 60px;
       border-radius: 10px;
       border: 1px solid #cfd4dc;
       background: linear-gradient(180deg, #ececec 0%, #e3e3e3 100%);
@@ -3182,7 +3190,7 @@
     }
 
     .final-hourly-label {
-      font-size: clamp(0.72rem, 0.86vw, 0.95rem);
+      font-size: clamp(0.94rem, 1.12vw, 1.24rem);
       font-weight: 700;
       color: #1c1c1c;
       line-height: 1.02;
@@ -3200,7 +3208,7 @@
 
     .final-hourly-reading {
       margin-top: 2px;
-      font-size: clamp(0.8rem, 0.95vw, 1.1rem);
+      font-size: clamp(1.04rem, 1.24vw, 1.43rem);
       font-weight: 700;
       color: #1f2937;
       line-height: 1;
@@ -3216,7 +3224,7 @@
     }
 
     .final-hourly-unit {
-      font-size: clamp(0.58rem, 0.68vw, 0.74rem);
+      font-size: clamp(0.75rem, 0.88vw, 0.96rem);
       font-weight: 600;
       color: #475569;
     }
@@ -3309,7 +3317,7 @@
 
     .final-decision-title {
       text-align: left;
-      font-size: clamp(0.74rem, 0.9vw, 0.9rem);
+      font-size: clamp(0.89rem, 1.08vw, 1.08rem);
       color: #5d95d9;
       font-weight: 800;
       line-height: 1.08;
@@ -3355,7 +3363,7 @@
     }
 
     .final-decision-range {
-      font-size: clamp(0.84rem, 0.96vw, 1.04rem);
+      font-size: clamp(1.01rem, 1.15vw, 1.25rem);
       font-weight: 700;
       color: #1f2937;
       white-space: nowrap;
@@ -3442,7 +3450,7 @@
 
     .final-middle-title {
       text-align: center;
-      font-size: clamp(0.94rem, 1.16vw, 1.3rem);
+      font-size: clamp(1.41rem, 1.74vw, 1.95rem);
       color: #5d95d9;
       font-weight: 800;
       text-transform: uppercase;
@@ -3576,13 +3584,13 @@
     /* Exact middle section sizing:
        top PM cards shorter, bottom AQI card taller. */
     .final-middle-grid-top .final-card-primary.final-card-compact {
-      min-height: 40px;
+      min-height: 52px;
       padding-top: 5px;
       padding-bottom: 5px;
     }
 
     .final-middle-grid-bottom .final-card-primary.final-card-wide {
-      min-height: 100px;
+      min-height: 104px;
       padding-top: 10px;
       padding-bottom: 10px;
     }
@@ -3590,17 +3598,17 @@
     /* Slightly larger text for Outdoor/Reference 24-hour cards */
     .final-middle-grid-top .final-card-primary .final-card-label,
     .final-middle-grid-bottom .final-card-primary .final-card-label {
-      font-size: clamp(1rem, 1.2vw, 1.3rem);
+      font-size: clamp(1.3rem, 1.56vw, 1.69rem);
     }
 
     .final-middle-grid-top .final-card-primary .final-card-value,
     .final-middle-grid-bottom .final-card-primary .final-card-value {
-      font-size: clamp(1.24rem, 1.56vw, 1.8rem);
+      font-size: clamp(1.61rem, 2.03vw, 2.34rem);
     }
 
     .final-middle-grid-top .final-card-primary .final-card-unit,
     .final-middle-grid-bottom .final-card-primary .final-card-unit {
-      font-size: clamp(0.76rem, 0.9vw, 1rem);
+      font-size: clamp(0.99rem, 1.17vw, 1.3rem);
     }
 
     .final-card-primary .final-card-label {
@@ -3613,6 +3621,22 @@
 
     .final-card-primary .final-card-unit {
       font-size: clamp(0.64rem, 0.74vw, 0.82rem);
+    }
+
+    .final-block-avg .final-card-primary .final-card-label {
+      font-size: clamp(1.09rem, 1.27vw, 1.4rem);
+    }
+
+    .final-block-avg .final-card-primary.final-card-compact {
+      min-height: 78px;
+    }
+
+    .final-block-avg .final-card-primary .final-card-value {
+      font-size: clamp(1.4rem, 1.74vw, 2.05rem);
+    }
+
+    .final-block-avg .final-card-primary .final-card-unit {
+      font-size: clamp(0.83rem, 0.96vw, 1.07rem);
     }
 
     .final-card-guideline .final-card-label {
@@ -3829,7 +3853,7 @@
     }
 
     .final-guideline-header-title {
-      font-size: clamp(0.96rem, 1.22vw, 1.4rem);
+      font-size: clamp(1.25rem, 1.59vw, 1.82rem);
       font-weight: 700;
       color: #5d95d9;
       line-height: 1.1;
@@ -3917,8 +3941,16 @@
         font-size: clamp(0.94rem, 1.16vw, 1.32rem);
       }
 
+      .final-block-hourly .final-section-title {
+        font-size: clamp(1.22rem, 1.51vw, 1.72rem);
+      }
+
+      .final-block-avg .final-section-title {
+        font-size: clamp(1.22rem, 1.51vw, 1.72rem);
+      }
+
       .final-hourly-chip {
-        min-height: 44px;
+        min-height: 54px;
       }
 
       .final-hourly-grid {
@@ -3926,15 +3958,15 @@
       }
 
       .final-hourly-label {
-        font-size: clamp(0.64rem, 0.74vw, 0.82rem);
+        font-size: clamp(0.83rem, 0.96vw, 1.07rem);
       }
 
       .final-hourly-reading {
-        font-size: clamp(0.72rem, 0.84vw, 0.96rem);
+        font-size: clamp(0.94rem, 1.09vw, 1.25rem);
       }
 
       .final-hourly-unit {
-        font-size: clamp(0.54rem, 0.62vw, 0.66rem);
+        font-size: clamp(0.7rem, 0.81vw, 0.86rem);
       }
 
       .final-card,
@@ -3955,8 +3987,24 @@
         font-size: clamp(0.66rem, 0.74vw, 0.82rem);
       }
 
+      .final-block-avg .final-card-primary.final-card-compact {
+        min-height: 76px;
+      }
+
+      .final-block-avg .final-card-primary .final-card-label {
+        font-size: clamp(1.08rem, 1.26vw, 1.38rem);
+      }
+
+      .final-block-avg .final-card-primary .final-card-value {
+        font-size: clamp(1.38rem, 1.71vw, 2.02rem);
+      }
+
+      .final-block-avg .final-card-primary .final-card-unit {
+        font-size: clamp(0.84rem, 0.96vw, 1.08rem);
+      }
+
       .final-middle-title {
-        font-size: clamp(0.82rem, 0.94vw, 1.04rem);
+        font-size: clamp(1.23rem, 1.41vw, 1.56rem);
       }
 
       .final-middle-wrap {
@@ -3982,11 +4030,11 @@
       }
 
       .final-decision-title {
-        font-size: clamp(0.7rem, 0.8vw, 0.84rem);
+        font-size: clamp(0.84rem, 0.96vw, 1.01rem);
       }
 
       .final-decision-range {
-        font-size: clamp(0.74rem, 0.82vw, 0.9rem);
+        font-size: clamp(0.89rem, 0.98vw, 1.08rem);
       }
 
       .final-middle-block-right .final-middle-title {
@@ -4038,7 +4086,7 @@
       }
 
       .final-guideline-header-title {
-        font-size: clamp(0.84rem, 1.02vw, 1.12rem);
+        font-size: clamp(1.09rem, 1.33vw, 1.46rem);
       }
 
       .final-guideline-subtitle {
@@ -4259,26 +4307,50 @@
         font-size: clamp(0.92rem, 4.6vw, 1.22rem);
       }
 
+      .final-block-hourly .final-section-title {
+        font-size: clamp(1.2rem, 6vw, 1.59rem);
+      }
+
+      .final-block-avg .final-section-title {
+        font-size: clamp(1.2rem, 6vw, 1.59rem);
+      }
+
       .final-hourly-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
       }
 
       .final-hourly-chip {
-        min-height: 54px;
+        min-height: 60px;
         padding: 8px 6px;
       }
 
       .final-hourly-label {
-        font-size: clamp(0.66rem, 3vw, 0.8rem);
+        font-size: clamp(0.86rem, 3.9vw, 1.04rem);
       }
 
       .final-hourly-reading {
-        font-size: clamp(0.78rem, 3.6vw, 0.95rem);
+        font-size: clamp(1.01rem, 4.68vw, 1.24rem);
       }
 
       .final-hourly-unit {
-        font-size: clamp(0.54rem, 2.4vw, 0.66rem);
+        font-size: clamp(0.7rem, 3.12vw, 0.86rem);
+      }
+
+      .final-block-avg .final-card-primary.final-card-compact {
+        min-height: 70px;
+      }
+
+      .final-block-avg .final-card-primary .final-card-label {
+        font-size: clamp(0.96rem, 4.4vw, 1.18rem);
+      }
+
+      .final-block-avg .final-card-primary .final-card-value {
+        font-size: clamp(1.26rem, 5.2vw, 1.6rem);
+      }
+
+      .final-block-avg .final-card-primary .final-card-unit {
+        font-size: clamp(0.74rem, 3.2vw, 0.92rem);
       }
 
       .final-avg-grid-three,
@@ -4363,7 +4435,7 @@
       }
 
       .final-guideline-header-title {
-        font-size: clamp(0.82rem, 3.7vw, 1rem);
+        font-size: clamp(1.07rem, 4.81vw, 1.3rem);
       }
 
       .final-guideline-header-title-thai {
