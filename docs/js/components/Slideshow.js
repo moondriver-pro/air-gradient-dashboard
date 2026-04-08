@@ -1,6 +1,6 @@
 import { html, useEffect, useRef, useState } from "../react-shim.js";
-import { DashboardSlide } from "./DashboardSlide.js?v=20260408cf";
-import { EventSlide } from "./EventSlide.js?v=20260408cf";
+import { DashboardSlide } from "./DashboardSlide.js?v=20260408cj";
+import { EventSlide } from "./EventSlide.js?v=20260408cj";
 // To switch back to the previous dashboard layout later, import
 // DashboardSlideLegacy from "./DashboardSlideLegacy.js" and use it below instead.
 
@@ -40,16 +40,31 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
   const timeoutRef = useRef(null);
   const rafRef = useRef(null);
 
+  const goNext = () => {
+    if (!slides.length) return;
+    setCurrentIndex((index) => (index + 1) % slides.length);
+  };
+
+  const goPrev = () => {
+    if (!slides.length) return;
+    setCurrentIndex((index) => (index - 1 + slides.length) % slides.length);
+  };
+
+  const goTo = (targetIndex) => {
+    if (!slides.length) return;
+    setCurrentIndex(targetIndex);
+  };
+
   useEffect(() => {
     const onKeyDown = (event) => {
       if (!slides.length) return;
 
       if (event.key === "ArrowRight") {
         event.preventDefault();
-        setCurrentIndex((index) => (index + 1) % slides.length);
+        goNext();
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
-        setCurrentIndex((index) => (index - 1 + slides.length) % slides.length);
+        goPrev();
       }
     };
 
@@ -89,9 +104,7 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
     };
 
     rafRef.current = requestAnimationFrame(tick);
-    timeoutRef.current = setTimeout(() => {
-      setCurrentIndex((index) => (index + 1) % slides.length);
-    }, durationSec * 1000);
+    timeoutRef.current = setTimeout(() => goNext(), durationSec * 1000);
 
     return () => {
       clearTimeout(timeoutRef.current);
@@ -135,7 +148,7 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
             }}
             onEnded=${() => {
               if (index === currentIndex) {
-                setCurrentIndex((current) => (current + 1) % slides.length);
+                goNext();
               }
             }}
           />
@@ -149,7 +162,7 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
               key=${slide.key}
               className=${`dot ${index === currentIndex ? "active" : ""}`}
               title=${slide.title}
-              onClick=${() => setCurrentIndex(index)}
+              onClick=${() => goTo(index)}
             ></span>
           `,
         )}
