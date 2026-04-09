@@ -5,32 +5,8 @@ import { calculateAQI, formatNumber, getAQILevel, getState } from "../utils.js";
 const pm25Metric = METRICS.find((metric) => metric.key === "pm02_corrected");
 const pm10Metric = METRICS.find((metric) => metric.key === "pm10_corrected");
 
-const WHO_TITLE = "WHO Global Air Quality Guidelines (2021)";
-const THAI_TITLE = "Thailand National Ambient Air Quality Standards";
-const PM24H_DECISION_TABLES = [
-  {
-    key: "pm25",
-    title: "PM<sub>2.5</sub> (Average 24h)",
-    rows: [
-      { range: "0 - 15", className: "aqi-bg-blue" },
-      { range: "16 - 25", className: "aqi-bg-green" },
-      { range: "26 - 37", className: "aqi-bg-yellow" },
-      { range: "38 - 75", className: "aqi-bg-orange" },
-      { range: "76 Above", className: "aqi-bg-red" },
-    ],
-  },
-  {
-    key: "pm10",
-    title: "PM<sub>10</sub> (Average 24h)",
-    rows: [
-      { range: "0 - 50", className: "aqi-bg-blue" },
-      { range: "51 - 80", className: "aqi-bg-green" },
-      { range: "81 - 120", className: "aqi-bg-yellow" },
-      { range: "121 - 180", className: "aqi-bg-orange" },
-      { range: "181 Above", className: "aqi-bg-red" },
-    ],
-  },
-];
+const WHO_TITLE = "WHO Global Air Quality Guidelines, 24-h";
+const THAI_TITLE = "Thailand NAAQS, 24-h";
 
 function averageMetric(points, key) {
   const values = (points || []).map((point) => point[key]).filter((value) => value != null).map(Number);
@@ -46,29 +22,12 @@ function parseDisplayNumber(value) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function getFillClass(color) {
-  switch (color) {
-    case "blue":
-      return "final-fill-blue";
-    case "green":
-      return "final-fill-green";
-    case "yellow":
-      return "final-fill-yellow";
-    case "orange":
-      return "final-fill-orange";
-    case "red":
-      return "final-fill-red";
-    default:
-      return "final-fill-neutral";
-  }
-}
-
 function getMetricLabelHtml(key) {
   if (key.includes("pm25")) return "PM<sub>2.5</sub>";
   if (key.includes("pm10")) return "PM<sub>10</sub>";
   if (key.includes("co2")) return "CO<sub>2</sub>";
   if (key.includes("tvoc")) return "TVOC";
-  if (key.includes("humidity")) return "HUMIDITY";
+  if (key.includes("humidity")) return "RH";
   if (key.includes("temp")) return "TEMP";
   if (key.includes("aqi")) return "AQI";
   return key.toUpperCase();
@@ -80,17 +39,17 @@ function buildSensorSummary(sensor, options = {}) {
   if (!sensor) {
     return {
       hourly: [
-        { key: "pm25", label: "PM2.5", value: "—", unit: "µg/m³", fill: "neutral" },
-        { key: "pm10", label: "PM10", value: "—", unit: "µg/m³", fill: "neutral" },
-        { key: "co2", label: "CO2", value: "—", unit: "ppm", fill: "neutral" },
-        { key: "tvoc", label: "TVOC", value: "—", unit: "ppb", fill: "neutral" },
-        { key: "temp", label: "TEMP", value: "—", unit: "°C", fill: "neutral" },
-        { key: "humidity", label: "HUMIDITY", value: "—", unit: "%", fill: "neutral" },
+        { key: "pm25", value: "—", unit: "µg/m³", fill: "neutral" },
+        { key: "pm10", value: "—", unit: "µg/m³", fill: "neutral" },
+        { key: "co2", value: "—", unit: "ppm", fill: "neutral" },
+        { key: "tvoc", value: "—", unit: "ppb", fill: "neutral" },
+        { key: "temp", value: "—", unit: "°C", fill: "neutral" },
+        { key: "humidity", value: "—", unit: "%", fill: "neutral" },
       ],
       average: [
-        { key: "avg-pm25", label: "PM2.5", value: "—", unit: "µg/m³", fill: "gray" },
-        { key: "avg-pm10", label: "PM10", value: "—", unit: "µg/m³", fill: "gray" },
-        ...(include24hAqi ? [{ key: "avg-aqi", label: "AQI", value: "—", unit: "", fill: "gray" }] : []),
+        { key: "avg-pm25", value: "—", unit: "µg/m³", fill: "gray" },
+        { key: "avg-pm10", value: "—", unit: "µg/m³", fill: "gray" },
+        ...(include24hAqi ? [{ key: "avg-aqi", value: "—", unit: "", fill: "gray" }] : []),
       ],
     };
   }
@@ -108,24 +67,22 @@ function buildSensorSummary(sensor, options = {}) {
 
   return {
     hourly: [
-      { key: "pm25", label: "PM2.5", value: hourlyPm25 != null ? formatNumber(hourlyPm25, 1) : "—", unit: "µg/m³", fill: "neutral" },
-      { key: "pm10", label: "PM10", value: hourlyPm10 != null ? formatNumber(hourlyPm10, 0) : "—", unit: "µg/m³", fill: "neutral" },
-      { key: "co2", label: "CO2", value: hourlyCo2 != null ? formatNumber(hourlyCo2, 0) : "—", unit: "ppm", fill: "neutral" },
-      { key: "tvoc", label: "TVOC", value: hourlyTvoc != null ? formatNumber(hourlyTvoc, 0) : "—", unit: "ppb", fill: "neutral" },
-      { key: "temp", label: "TEMP", value: hourlyTemp != null ? formatNumber(hourlyTemp, 1) : "—", unit: "°C", fill: "neutral" },
-      { key: "humidity", label: "HUMIDITY", value: hourlyHumidity != null ? formatNumber(hourlyHumidity, 0) : "—", unit: "%", fill: "neutral" },
+      { key: "pm25", value: hourlyPm25 != null ? formatNumber(hourlyPm25, 1) : "—", unit: "µg/m³", fill: "neutral" },
+      { key: "pm10", value: hourlyPm10 != null ? formatNumber(hourlyPm10, 0) : "—", unit: "µg/m³", fill: "neutral" },
+      { key: "co2", value: hourlyCo2 != null ? formatNumber(hourlyCo2, 0) : "—", unit: "ppm", fill: "neutral" },
+      { key: "tvoc", value: hourlyTvoc != null ? formatNumber(hourlyTvoc, 0) : "—", unit: "ppb", fill: "neutral" },
+      { key: "temp", value: hourlyTemp != null ? formatNumber(hourlyTemp, 1) : "—", unit: "°C", fill: "neutral" },
+      { key: "humidity", value: hourlyHumidity != null ? formatNumber(hourlyHumidity, 0) : "—", unit: "%", fill: "neutral" },
     ],
     average: [
       {
         key: "avg-pm25",
-        label: "PM2.5",
         value: avgPm25 != null ? formatNumber(avgPm25, 1) : "—",
         unit: "µg/m³",
         fill: getState(pm25Metric, avgPm25).color,
       },
       {
         key: "avg-pm10",
-        label: "PM10",
         value: avgPm10 != null ? formatNumber(avgPm10, 0) : "—",
         unit: "µg/m³",
         fill: getState(pm10Metric, avgPm10).color,
@@ -134,7 +91,6 @@ function buildSensorSummary(sensor, options = {}) {
         ? [
             {
               key: "avg-aqi",
-              label: "AQI",
               value: avgAqi != null ? String(avgAqi) : "—",
               unit: "",
               fill: getAQILevel(avgAqi).color,
@@ -154,21 +110,18 @@ function buildReferenceSummary(data) {
   return [
     {
       key: "ref-pm25",
-      label: "PM2.5",
       value: pm25Number != null ? formatNumber(pm25Number, 1) : "—",
       unit: "µg/m³",
       fill: pm25Number != null ? A4T_COLOR[last?.PM25?.color_id] || "gray" : "gray",
     },
     {
       key: "ref-pm10",
-      label: "PM10",
       value: pm10Number != null ? formatNumber(pm10Number, 0) : "—",
       unit: "µg/m³",
       fill: pm10Number != null ? A4T_COLOR[last?.PM10?.color_id] || "gray" : "gray",
     },
     {
       key: "ref-aqi",
-      label: "AQI",
       value: aqiNumber != null ? String(Math.round(aqiNumber)) : "—",
       unit: "",
       fill: aqiNumber != null ? A4T_COLOR[last?.AQI?.color_id] || getAQILevel(aqiNumber).color : "gray",
@@ -200,7 +153,7 @@ function IndoorIcon() {
 
 function WhoBadge() {
   return html`
-    <div className="final-guideline-logo final-guideline-logo-who">
+    <div className="f2-guideline-logo f2-guideline-logo-who">
       <img src="images/WHO.png" alt="WHO logo" loading="lazy" />
     </div>
   `;
@@ -208,12 +161,12 @@ function WhoBadge() {
 
 function ThailandBadge() {
   return html`
-    <div className="final-guideline-logo final-guideline-logo-flag">
-      <span className="final-flag-line flag-red"></span>
-      <span className="final-flag-line flag-white"></span>
-      <span className="final-flag-line flag-blue"></span>
-      <span className="final-flag-line flag-white"></span>
-      <span className="final-flag-line flag-red"></span>
+    <div className="f2-guideline-logo f2-guideline-logo-flag">
+      <span className="f2-flag-line flag-red"></span>
+      <span className="f2-flag-line flag-white"></span>
+      <span className="f2-flag-line flag-blue"></span>
+      <span className="f2-flag-line flag-white"></span>
+      <span className="f2-flag-line flag-red"></span>
     </div>
   `;
 }
@@ -222,78 +175,55 @@ function findMetricByKey(items, keyPart) {
   return items.find((item) => item.key.includes(keyPart));
 }
 
-function FinalCard({ item, compact = false, wide = false, variant = "metric" }) {
-  return html`
-    <div
-      className=${`final-card final-card-${variant} ${getFillClass(item.fill)} ${compact ? "final-card-compact" : ""} ${wide ? "final-card-wide" : ""}`}
-    >
-      <div className="final-card-label" dangerouslySetInnerHTML=${{ __html: getMetricLabelHtml(item.key) }}></div>
-      <div className="final-card-value">${item.value}</div>
-      ${item.unit ? html`<div className="final-card-unit">${item.unit}</div>` : null}
-    </div>
-  `;
-}
-
-function HourlyLabelCard({ item }) {
-  return html`
-    <div className="final-hourly-chip">
-      <div className="final-hourly-label" dangerouslySetInnerHTML=${{ __html: getMetricLabelHtml(item.key) }}></div>
-      <div className="final-hourly-reading">
-        <span className="final-hourly-value">${item.value}</span>
-        ${item.unit ? html`<span className="final-hourly-unit">${item.unit}</span>` : null}
-      </div>
-    </div>
-  `;
-}
-
-function HeadingBlock({ title, subtitle, icon }) {
-  return html`
-    <div className="final-heading-block">
-      <div className="final-heading-title-row">
-        <div className="final-heading-icon">${icon}</div>
-        <div className="final-heading-title">${title}</div>
-      </div>
-      <div className="final-heading-subtitle">${subtitle}</div>
-    </div>
-  `;
-}
-
-function DecisionColorTable({ table }) {
-  const alignClass = table.key === "pm10" ? "final-decision-table-right" : "final-decision-table-left";
-  const isRightTable = table.key === "pm10";
-  return html`
-    <aside className=${`final-decision-table ${alignClass}`} aria-label=${`${table.key} 24-hour decision color table`}>
-      <div className="final-decision-title" dangerouslySetInnerHTML=${{ __html: table.title }}></div>
-      <div className="final-decision-rows">
-        ${table.rows.map(
-          (row) => html`
-            <div key=${`${table.key}-${row.range}`} className=${`final-decision-row ${isRightTable ? "final-decision-row-right" : "final-decision-row-left"}`}>
-              ${isRightTable
-                ? html`
-                    <span className="final-decision-range">${row.range}</span>
-                    <span className=${`final-decision-dot ${row.className}`}></span>
-                  `
-                : html`
-                    <span className=${`final-decision-dot ${row.className}`}></span>
-                    <span className="final-decision-range">${row.range}</span>
-                  `}
-            </div>
-          `,
-        )}
-      </div>
-    </aside>
-  `;
-}
-
 function getHourlyUpdateTimestamp() {
   const now = new Date();
   now.setMinutes(0, 0, 0);
   return now;
 }
 
-function withNeutralFill(item) {
-  if (!item) return item;
-  return { ...item, fill: "neutral" };
+function getToneClass(fill) {
+  switch (fill) {
+    case "blue":
+      return "f2-tone-blue";
+    case "green":
+      return "f2-tone-green";
+    case "yellow":
+      return "f2-tone-yellow";
+    case "orange":
+      return "f2-tone-orange";
+    case "red":
+      return "f2-tone-red";
+    default:
+      return "f2-tone-neutral";
+  }
+}
+
+function Final2MetricChip({ item, showValue = false }) {
+  return html`
+    <div className=${`f2-metric-chip ${getToneClass(item?.fill)}`}>
+      <div className="f2-chip-label" dangerouslySetInnerHTML=${{ __html: getMetricLabelHtml(item?.key || "") }}></div>
+      ${showValue
+        ? html`
+            <div className="f2-chip-reading">
+              <span className="f2-chip-value">${item?.value ?? "—"}</span>
+              ${item?.unit ? html`<span className="f2-chip-unit">${item.unit}</span>` : null}
+            </div>
+          `
+        : null}
+    </div>
+  `;
+}
+
+function Final2HourlyChip({ item }) {
+  return html`
+    <div className="f2-hourly-chip">
+      <div className="f2-hourly-chip-label" dangerouslySetInnerHTML=${{ __html: getMetricLabelHtml(item?.key || "") }}></div>
+      <div className="f2-hourly-chip-reading">
+        <span className="f2-hourly-chip-value">${item?.value ?? "—"}</span>
+        ${item?.unit ? html`<span className="f2-hourly-chip-unit">${item.unit}</span>` : null}
+      </div>
+    </div>
+  `;
 }
 
 export function DashboardSlide({ sensors, air4thaiData }) {
@@ -319,206 +249,132 @@ export function DashboardSlide({ sensors, air4thaiData }) {
     [indoorSummary],
   );
 
-  const outdoorAvg = useMemo(
-    () =>
-      ["pm25", "pm10", "aqi"]
-        .map((key) => findMetricByKey(outdoorSummary.average, key))
-        .filter(Boolean),
+  const outdoorAmbient = useMemo(
+    () => [
+      findMetricByKey(outdoorSummary.average, "pm25") || { key: "avg-pm25", value: "—", unit: "µg/m³", fill: "gray" },
+      findMetricByKey(outdoorSummary.average, "pm10") || { key: "avg-pm10", value: "—", unit: "µg/m³", fill: "gray" },
+      findMetricByKey(outdoorSummary.average, "aqi") || { key: "avg-aqi", value: "—", unit: "", fill: "gray" },
+    ],
     [outdoorSummary],
   );
 
-  const indoorAvg = useMemo(
-    () =>
-      ["pm25", "pm10"]
-        .map((key) => findMetricByKey(indoorSummary.average, key))
-        .filter(Boolean),
-    [indoorSummary],
+  const referenceAmbient = useMemo(
+    () => [
+      referenceItems[0] || { key: "ref-pm25", value: "—", unit: "µg/m³", fill: "gray" },
+      referenceItems[1] || { key: "ref-pm10", value: "—", unit: "µg/m³", fill: "gray" },
+      referenceItems[2] || { key: "ref-aqi", value: "—", unit: "", fill: "gray" },
+    ],
+    [referenceItems],
   );
-
-  const outdoorAvgNeutral = useMemo(() => outdoorAvg.map(withNeutralFill), [outdoorAvg]);
-  const indoorAvgNeutral = useMemo(() => indoorAvg.map(withNeutralFill), [indoorAvg]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setLastUpdatedTime(getHourlyUpdateTimestamp());
     }, 60000);
-
     return () => clearInterval(intervalId);
   }, []);
 
   return html`
-    <div className="slide-dashboard final-dashboard-slide">
-      <div className="final-dashboard-shell">
-        <div className="final-topbar">
-          <h1 className="final-main-title">Air Quality Today</h1>
-          <div className="final-last-updated">
-            Last updated: ${lastUpdatedTime.toLocaleString(undefined, {
-              year: "numeric",
-              month: "numeric",
-              day: "numeric",
-              hour: "numeric",
-              minute: "2-digit",
-              hour12: true,
-            })}
+    <div className="slide-dashboard f2-dashboard-slide">
+      <div className="f2-dashboard-shell">
+        <header className="f2-topbar">
+          <h1 className="f2-main-title">Air Quality Today</h1>
+        </header>
+
+        <section className="f2-hourly-row">
+          <article className="f2-hourly-panel f2-hourly-panel-outdoor">
+            <div className="f2-hourly-panel-head">
+              <span className="f2-hourly-icon"><${OutdoorIcon} /></span>
+              <span className="f2-hourly-title">OUTDOOR AIR (GIC), Hourly</span>
+            </div>
+            <div className="f2-panel-divider"></div>
+            <div className="f2-hourly-grid">
+              ${outdoorHourly.map((item) => html`<${Final2HourlyChip} key=${`f2-out-hour-${item.key}`} item=${item} />`)}
+            </div>
+          </article>
+
+          <article className="f2-hourly-panel f2-hourly-panel-indoor">
+            <div className="f2-hourly-panel-head">
+              <span className="f2-hourly-icon"><${IndoorIcon} /></span>
+              <span className="f2-hourly-title">INDOOR AIR (2<sup>nd</sup> Floor), Hourly</span>
+            </div>
+            <div className="f2-panel-divider"></div>
+            <div className="f2-hourly-grid">
+              ${indoorHourly.map((item) => html`<${Final2HourlyChip} key=${`f2-in-hour-${item.key}`} item=${item} />`)}
+            </div>
+          </article>
+        </section>
+
+        <div className="f2-main-divider"></div>
+
+        <section className="f2-ambient-section">
+          <h2 className="f2-section-title">24-h Ambient Air Quality</h2>
+          <div className="f2-ambient-row">
+            <article className="f2-ambient-group">
+              <h3 className="f2-ambient-subtitle">Last 24-h Outdoor (GIC)</h3>
+              <div className="f2-ambient-cards">
+                ${outdoorAmbient.map((item) => html`<${Final2MetricChip} showValue=${true} key=${`f2-out-24-${item.key}`} item=${item} />`)}
+              </div>
+            </article>
+
+            <article className="f2-ambient-group">
+              <h3 className="f2-ambient-subtitle">24-h Reference Station (RANGSIT)</h3>
+              <div className="f2-ambient-cards">
+                ${referenceAmbient.map((item) => html`<${Final2MetricChip} showValue=${true} key=${`f2-ref-24-${item.key}`} item=${item} />`)}
+              </div>
+            </article>
           </div>
-        </div>
+        </section>
 
-        <div className="final-headings-row">
-          <${HeadingBlock}
-            title="Outdoor Air Quality"
-            subtitle="AIT, GIC Building"
-            icon=${html`<${OutdoorIcon} />`}
-          />
-          <${HeadingBlock}
-            title="Indoor Air Quality"
-            subtitle="AIT, GIC Building (2nd Floor)"
-            icon=${html`<${IndoorIcon} />`}
-          />
-        </div>
-
-        <div className="final-content">
-          <section className="final-block final-block-hourly">
-            <div className="final-divider"></div>
-            <div className="final-section-title">Hourly Air Quality</div>
-        <div className="final-hourly-row">
-          <div className="final-hourly-grid final-hourly-grid-left">
-            ${outdoorHourly.map((item) => html`<${HourlyLabelCard} key=${`out-${item.key}`} item=${item} />`)}
+        <section className="f2-scale-section">
+          <div className="f2-scale-divider" aria-hidden="true"></div>
+          <div className="f2-scale-label-row">
+            ${AQI_LEGEND.map((item) => html`<div key=${`${item.label}-f2-label`} className="f2-scale-label">${item.label}</div>`)}
           </div>
-          <div className="final-hourly-grid final-hourly-grid-right">
-            ${indoorHourly.map((item) => html`<${HourlyLabelCard} key=${`in-${item.key}`} item=${item} />`)}
+          <div className="f2-scale-bar">
+            ${AQI_LEGEND.map(
+              (item) => html`<div key=${`${item.label}-f2-range`} className=${`f2-scale-segment ${item.className}`}>${item.range}</div>`,
+            )}
           </div>
-        </div>
-          </section>
+        </section>
 
-          <section className="final-block final-block-avg">
-            <div className="final-divider"></div>
-            <div className="final-section-title">24 Hour Avg Air Quality</div>
-          <div className="final-avg-row">
-            <div className="final-avg-grid final-avg-grid-three final-avg-grid-left">
-              ${outdoorAvgNeutral.map(
-                (item) => html`<${FinalCard} key=${`out-avg-${item.key}`} item=${item} compact=${true} variant="primary" />`,
-              )}
-            </div>
-            <div className="final-avg-grid final-avg-grid-two final-avg-grid-right">
-              ${indoorAvgNeutral.map(
-                (item) => html`<${FinalCard} key=${`in-avg-${item.key}`} item=${item} compact=${true} variant="primary" />`,
-              )}
+        <section className="f2-guidelines">
+          <h2 className="f2-section-title f2-guidelines-title">Air Quality Guidelines & Standards</h2>
+          <div className="f2-guideline-row">
+            <article className="f2-guideline-panel">
+              <div className="f2-guideline-header">
+                <${WhoBadge} />
+                <div className="f2-guideline-header-title">${WHO_TITLE}</div>
               </div>
-            </div>
-          </section>
+              <div className="f2-guideline-cards">
+                <${Final2MetricChip} showValue=${true} item=${{ key: "who-pm25", value: "≤ 15", unit: "µg/m³", fill: "neutral" }} />
+                <${Final2MetricChip} showValue=${true} item=${{ key: "who-pm10", value: "≤ 45", unit: "µg/m³", fill: "neutral" }} />
+              </div>
+            </article>
 
-          <section className="final-block final-block-middle">
-            <div className="final-divider"></div>
-            <div className="final-middle-wrap">
-              <div className="final-middle-side final-middle-side-left">
-                <${DecisionColorTable} table=${PM24H_DECISION_TABLES[0]} />
+            <article className="f2-guideline-panel">
+              <div className="f2-guideline-header">
+                <${ThailandBadge} />
+                <div className="f2-guideline-header-title">${THAI_TITLE}</div>
               </div>
-              <div className="final-middle-row">
-              <div className="final-middle-block final-middle-block-left">
-                <div className="final-middle-title">Outdoor AQI, 24-Hour</div>
-                <div className="final-middle-grid-top">
-                  ${outdoorAvg
-                    .slice(0, 2)
-                    .map(
-                      (item) =>
-                        html`<${FinalCard} key=${`out-mid-${item.key}`} item=${item} compact=${true} variant="primary" />`,
-                    )}
-                </div>
-                <div className="final-middle-grid-bottom">
-                  ${outdoorAvg[2]
-                    ? html`<${FinalCard} item=${outdoorAvg[2]} wide=${true} variant="primary" />`
-                    : html`<${FinalCard} item=${{ key: "avg-aqi", value: "—", unit: "", fill: "gray" }} wide=${true} variant="primary" />`}
-                </div>
+              <div className="f2-guideline-cards">
+                <${Final2MetricChip} showValue=${true} item=${{ key: "thai-pm25", value: "37.5", unit: "µg/m³", fill: "neutral" }} />
+                <${Final2MetricChip} showValue=${true} item=${{ key: "thai-pm10", value: "120", unit: "µg/m³", fill: "neutral" }} />
               </div>
+            </article>
+          </div>
+        </section>
 
-              <div className="final-middle-block final-middle-block-right">
-                <div className="final-middle-title">REFERENCE STATION (RANGSIT), 24-Hour</div>
-                <div className="final-middle-grid-top">
-                  ${referenceItems
-                    .slice(0, 2)
-                    .map(
-                      (item) =>
-                        html`<${FinalCard} key=${`ref-mid-${item.key}`} item=${item} compact=${true} variant="primary" />`,
-                    )}
-                </div>
-                <div className="final-middle-grid-bottom">
-                  <${FinalCard}
-                    item=${referenceItems[2] || { key: "ref-aqi", value: "—", unit: "", fill: "gray" }}
-                    wide=${true}
-                    variant="primary"
-                  />
-                </div>
-              </div>
-              </div>
-              <div className="final-middle-side final-middle-side-right">
-                <${DecisionColorTable} table=${PM24H_DECISION_TABLES[1]} />
-              </div>
-            </div>
-          </section>
-
-          <section className="final-block final-block-scale">
-            <div className="final-scale-wrap">
-              <div className="final-scale-label-row">
-                ${AQI_LEGEND.map(
-                  (item) => html`<div key=${`${item.label}-label`} className="final-scale-label">${item.label}</div>`,
-                )}
-              </div>
-              <div className="final-scale-bar">
-                ${AQI_LEGEND.map(
-                  (item) => html`
-                    <div key=${item.label} className=${`final-scale-segment ${item.className}`}>
-                      ${item.range}
-                    </div>
-                  `,
-                )}
-              </div>
-            </div>
-          </section>
-
-          <section className="final-block final-block-guidelines">
-            <div className="final-guidelines-title">Air Quality Guidelines & Standards</div>
-            <div className="final-guidelines-row">
-              <section className="final-guideline-panel final-guideline-panel-who">
-                <div className="final-guideline-header">
-                  <${WhoBadge} />
-                  <div className="final-guideline-header-title">${WHO_TITLE}</div>
-                </div>
-                <div className="final-guideline-subtitle">24 Hour Avg Air Quality</div>
-                <div className="final-guideline-cards final-guideline-cards-who">
-                  <${FinalCard}
-                    item=${{ key: "who-pm25", value: "≤ 15", unit: "µg/m³", fill: "neutral" }}
-                    compact=${true}
-                    variant="guideline"
-                  />
-                  <${FinalCard}
-                    item=${{ key: "who-pm10", value: "≤ 45", unit: "µg/m³", fill: "neutral" }}
-                    compact=${true}
-                    variant="guideline"
-                  />
-                </div>
-              </section>
-
-              <section className="final-guideline-panel final-guideline-panel-thai">
-                <div className="final-guideline-header">
-                  <${ThailandBadge} />
-                  <div className="final-guideline-header-title final-guideline-header-title-thai">${THAI_TITLE}</div>
-                </div>
-                <div className="final-guideline-subtitle">24 Hour Avg Air Quality</div>
-                <div className="final-guideline-cards final-guideline-cards-thai">
-                  <${FinalCard}
-                    item=${{ key: "thai-pm25", value: "37.5", unit: "µg/m³", fill: "neutral" }}
-                    compact=${true}
-                    variant="guideline"
-                  />
-                  <${FinalCard}
-                    item=${{ key: "thai-pm10", value: "120", unit: "µg/m³", fill: "neutral" }}
-                    compact=${true}
-                    variant="guideline"
-                  />
-                </div>
-              </section>
-            </div>
-          </section>
+        <div className="f2-last-updated">
+          Last updated:
+          ${lastUpdatedTime.toLocaleString(undefined, {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })}
         </div>
       </div>
     </div>

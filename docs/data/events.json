@@ -1,7 +1,7 @@
 {
   "events": [
     {
-      "enabled": false,
+      "enabled": true,
       "title": "Air Quality Awareness Workshop",
       "date": "2026-04-15",
       "location": "Asian Institute of Technology, Pathum Thani",

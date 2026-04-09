@@ -48,17 +48,7 @@ export function buildPlaylist(eventPayload) {
     return BASE_PLAYLIST;
   }
 
-  const insertionIndex = BASE_PLAYLIST.findIndex((slide) => slide.key === "slide-video-5");
-
-  if (insertionIndex === -1) {
-    return [...BASE_PLAYLIST, ...activeEvents];
-  }
-
-  return [
-    ...BASE_PLAYLIST.slice(0, insertionIndex + 1),
-    ...activeEvents,
-    ...BASE_PLAYLIST.slice(insertionIndex + 1),
-  ];
+  return [...BASE_PLAYLIST, ...activeEvents];
 }
 
 export const TOKEN = "034709b8-1071-4f2f-b695-6af71c4281bf";
