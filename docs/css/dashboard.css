@@ -26,7 +26,7 @@
       min-height: 100%;
       margin: 0 auto;
       background: #efefef;
-      padding: calc(env(safe-area-inset-top, 0px) + 14px) clamp(16px, 2.4vw, 40px) calc(env(safe-area-inset-bottom, 0px) + 10px);
+      padding: calc(env(safe-area-inset-top, 0px) + 30px) clamp(16px, 2.4vw, 40px) calc(env(safe-area-inset-bottom, 0px) + 10px);
       display: flex;
       flex-direction: column;
       gap: clamp(8px, 1vh, 14px);
@@ -63,10 +63,25 @@
     }
 
     .f2-topbar {
-      display: flex;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       align-items: center;
-      min-height: 54px;
+      column-gap: clamp(8px, 1.8vw, 26px);
+      min-height: clamp(116px, 14vh, 170px);
+    }
+
+    .f2-topbar-side {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .f2-topbar-side-left {
+      justify-content: flex-start;
+    }
+
+    .f2-topbar-side-right {
+      justify-content: flex-end;
     }
 
     .f2-main-title {
@@ -77,6 +92,49 @@
       line-height: 1;
       text-shadow: 0 4px 0 rgba(63, 111, 194, 0.18);
       letter-spacing: 0.02em;
+      white-space: nowrap;
+      text-align: center;
+      justify-self: center;
+    }
+
+    .f2-top-photo {
+      width: clamp(206px, 22vw, 330px);
+      height: clamp(136px, 17.5vh, 228px);
+      border-radius: 18px 18px 18px 18px;
+      overflow: hidden;
+      clip-path: none;
+      border: 0;
+      box-shadow: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .f2-top-photo-left {
+      margin-left: 0;
+    }
+
+    .f2-top-photo-right {
+      margin-right: 0;
+    }
+
+    .f2-top-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      border-radius: 0;
+      transform: none;
+    }
+
+    .f2-top-photo-left img {
+      object-position: left center;
+    }
+
+    .f2-top-photo-right img {
+      object-position: right center;
     }
 
     .f2-hourly-row {
@@ -152,7 +210,7 @@
     }
 
     .f2-hourly-chip {
-      min-height: clamp(56px, 6.4vh, 74px);
+      min-height: clamp(52px, 5.9vh, 68px);
       border: 1px solid #cfd5dd;
       border-radius: 9px;
       background: #e7e7e7;
@@ -160,7 +218,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 3px 5px;
+      padding: 2px 5px;
       text-align: center;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
     }
@@ -247,7 +305,7 @@
 
     .f2-ambient-cards {
       display: grid;
-      grid-template-columns: repeat(3, minmax(94px, 114px));
+      grid-template-columns: repeat(3, minmax(102px, 124px));
       gap: clamp(8px, 0.7vw, 12px);
       justify-content: center;
       width: 100%;
@@ -256,6 +314,8 @@
     .f2-ambient-cards .f2-metric-chip {
       min-height: clamp(60px, 6.6vh, 74px);
       padding: 4px 7px;
+      border: 1px solid rgba(93, 112, 133, 0.55);
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.14);
     }
 
     .f2-ambient-cards .f2-chip-label {
@@ -263,7 +323,7 @@
     }
 
     .f2-ambient-cards .f2-chip-value {
-      font-size: clamp(1.18rem, 1.42vw, 1.62rem);
+      font-size: clamp(1.48rem, 1.78vw, 2.08rem);
     }
 
     .f2-ambient-cards .f2-chip-unit {
@@ -275,6 +335,8 @@
       border: 1px solid rgba(115, 132, 153, 0.35);
       min-height: clamp(72px, 7.8vh, 88px);
       padding: 6px 8px;
+      overflow: hidden;
+      background-clip: padding-box;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -562,6 +624,11 @@
       .f2-scale-section {
         width: 100%;
       }
+
+      .f2-top-photo {
+        width: clamp(152px, 28vw, 224px);
+        height: clamp(102px, 15vh, 150px);
+      }
     }
 
     @media (max-width: 768px) {
@@ -594,6 +661,19 @@
 
       .f2-last-updated {
         text-align: center;
+      }
+
+      .f2-topbar {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .f2-topbar-side {
+        display: none;
+      }
+
+      .f2-top-photo {
+        display: none;
       }
     }
 

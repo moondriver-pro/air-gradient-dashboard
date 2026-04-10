@@ -278,7 +278,17 @@ export function DashboardSlide({ sensors, air4thaiData }) {
     <div className="slide-dashboard f2-dashboard-slide">
       <div className="f2-dashboard-shell">
         <header className="f2-topbar">
+          <div className="f2-topbar-side f2-topbar-side-left">
+            <div className="f2-top-photo f2-top-photo-left">
+              <img src="images/Outdoor.jpeg" alt="Outdoor sensor" loading="lazy" />
+            </div>
+          </div>
           <h1 className="f2-main-title">Air Quality Today</h1>
+          <div className="f2-topbar-side f2-topbar-side-right">
+            <div className="f2-top-photo f2-top-photo-right">
+              <img src="images/Indoor.jpeg" alt="Indoor sensor" loading="lazy" />
+            </div>
+          </div>
         </header>
 
         <section className="f2-hourly-row">

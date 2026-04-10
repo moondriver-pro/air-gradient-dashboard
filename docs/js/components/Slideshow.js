@@ -1,6 +1,6 @@
 import { html, useEffect, useRef, useState } from "../react-shim.js";
-import { DashboardSlide } from "./DashboardSlide.js?v=20260409f19";
-import { EventSlide } from "./EventSlide.js?v=20260409f19";
+import { DashboardSlide } from "./DashboardSlide.js?v=20260410f41";
+import { EventSlide } from "./EventSlide.js?v=20260410f41";
 // To switch back to the previous dashboard layout later, import
 // DashboardSlideLegacy from "./DashboardSlideLegacy.js" and use it below instead.
 

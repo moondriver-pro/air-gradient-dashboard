@@ -24,7 +24,13 @@ export const BASE_PLAYLIST = [
   { key: "slide-dashboard-3", type: "dashboard", duration: 120, color: "#2563eb", title: "Dashboard 3" },
 ];
 
+const IMAGE_SLIDE_DURATION_SECONDS = 15;
+
 export function buildPlaylist(eventPayload) {
+  const normalizedBasePlaylist = BASE_PLAYLIST.map((slide) =>
+    slide.type === "image" ? { ...slide, duration: IMAGE_SLIDE_DURATION_SECONDS } : slide,
+  );
+
   const activeEvents = Array.isArray(eventPayload?.events)
     ? eventPayload.events
         .filter((event) => event?.enabled)
@@ -45,10 +51,10 @@ export function buildPlaylist(eventPayload) {
     : [];
 
   if (!activeEvents.length) {
-    return BASE_PLAYLIST;
+    return normalizedBasePlaylist;
   }
 
-  return [...BASE_PLAYLIST, ...activeEvents];
+  return [...normalizedBasePlaylist, ...activeEvents];
 }
 
 export const TOKEN = "034709b8-1071-4f2f-b695-6af71c4281bf";
