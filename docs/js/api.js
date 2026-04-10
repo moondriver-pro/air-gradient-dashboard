@@ -52,12 +52,3 @@ export async function fetchAir4ThaiData() {
 
   return null;
 }
-
-export async function fetchEventData() {
-  try {
-    return await fetchJson("data/events.json");
-  } catch (error) {
-    console.warn("Event data fetch failed:", error.message);
-    return { events: [] };
-  }
-}

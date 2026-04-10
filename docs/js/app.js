@@ -1,21 +1,19 @@
-import { fetchAir4ThaiData, fetchAirGradientData, fetchEventData } from "./api.js";
-import { buildPlaylist } from "./constants.js?v=20260410f41";
+import { fetchAir4ThaiData, fetchAirGradientData } from "./api.js";
+import { buildPlaylist } from "./constants.js?v=20260410f43";
 import { html, useEffect, useMemo, useState } from "./react-shim.js";
-import { Slideshow } from "./components/Slideshow.js?v=20260410f41";
+import { Slideshow } from "./components/Slideshow.js?v=20260410f43";
 
 export function App() {
   const [sensors, setSensors] = useState([]);
   const [air4thaiData, setAir4ThaiData] = useState(null);
-  const [eventData, setEventData] = useState({ events: [] });
 
   useEffect(() => {
     let isMounted = true;
 
     const refresh = async () => {
-      const [airGradientResult, air4thaiResult, eventResult] = await Promise.allSettled([
+      const [airGradientResult, air4thaiResult] = await Promise.allSettled([
         fetchAirGradientData(),
         fetchAir4ThaiData(),
-        fetchEventData(),
       ]);
 
       if (!isMounted) return;
@@ -30,9 +28,6 @@ export function App() {
         setAir4ThaiData(air4thaiResult.value);
       }
 
-      if (eventResult.status === "fulfilled") {
-        setEventData(eventResult.value);
-      }
     };
 
     refresh();
@@ -44,7 +39,7 @@ export function App() {
     };
   }, []);
 
-  const slides = useMemo(() => buildPlaylist(eventData), [eventData]);
+  const slides = useMemo(() => buildPlaylist(), []);
 
   return html`<${Slideshow} slides=${slides} sensors=${sensors} air4thaiData=${air4thaiData} />`;
 }

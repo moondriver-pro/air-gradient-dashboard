@@ -22,39 +22,17 @@ export const BASE_PLAYLIST = [
   { key: "slide-img-15", type: "image", src: "images/15.jpg", duration: 5, color: "#9ca3af", title: "Slide 15" },
   { key: "slide-img-16", type: "image", src: "images/16.png", duration: 5, color: "#9ca3af", title: "Slide 16" },
   { key: "slide-dashboard-3", type: "dashboard", duration: 120, color: "#2563eb", title: "Dashboard 3" },
+  { key: "slide-img-event-final", type: "image", src: "images/event.png", duration: 15, color: "#9ca3af", title: "Event" },
 ];
 
 const IMAGE_SLIDE_DURATION_SECONDS = 15;
 
-export function buildPlaylist(eventPayload) {
+export function buildPlaylist() {
   const normalizedBasePlaylist = BASE_PLAYLIST.map((slide) =>
     slide.type === "image" ? { ...slide, duration: IMAGE_SLIDE_DURATION_SECONDS } : slide,
   );
 
-  const activeEvents = Array.isArray(eventPayload?.events)
-    ? eventPayload.events
-        .filter((event) => event?.enabled)
-        .map((event, index) => ({   
-          key: `slide-event-${index + 1}`,
-          type: "event",
-          duration: Number(event.duration) > 0 ? Number(event.duration) : 20,
-          color: "#f97316",
-          title: event.title || `Event ${index + 1}`,
-          event: {
-            title: event.title || "Upcoming Event",
-            date: event.date || "",
-            location: event.location || "",
-            description: event.description || "",
-            images: Array.isArray(event.images) ? event.images.filter(Boolean) : [],
-          },
-        }))
-    : [];
-
-  if (!activeEvents.length) {
-    return normalizedBasePlaylist;
-  }
-
-  return [...normalizedBasePlaylist, ...activeEvents];
+  return normalizedBasePlaylist;
 }
 
 export const TOKEN = "034709b8-1071-4f2f-b695-6af71c4281bf";

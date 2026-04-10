@@ -1,6 +1,5 @@
 import { html, useEffect, useRef, useState } from "../react-shim.js";
-import { DashboardSlide } from "./DashboardSlide.js?v=20260410f41";
-import { EventSlide } from "./EventSlide.js?v=20260410f41";
+import { DashboardSlide } from "./DashboardSlide.js?v=20260410f43";
 // To switch back to the previous dashboard layout later, import
 // DashboardSlideLegacy from "./DashboardSlideLegacy.js" and use it below instead.
 
@@ -122,14 +121,6 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
           return html`
             <div key=${slide.key} className=${`slide ${index === currentIndex ? "active" : ""}`}>
               <${DashboardSlide} sensors=${sensors} air4thaiData=${air4thaiData} />
-            </div>
-          `;
-        }
-
-        if (slide.type === "event") {
-          return html`
-            <div key=${slide.key} className=${`slide ${index === currentIndex ? "active" : ""}`}>
-              <${EventSlide} event=${slide.event} />
             </div>
           `;
         }
