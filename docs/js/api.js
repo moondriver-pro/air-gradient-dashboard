@@ -7,9 +7,28 @@ async function fetchJson(url, options = {}) {
   return response.json();
 }
 
+function normalizeSeries(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.value)) return payload.value;
+  if (Array.isArray(payload?.data)) return payload.data;
+  return [];
+}
+
+function hasAnyHourlyMetric(points) {
+  return points.some(
+    (point) =>
+      point?.pm02_corrected != null ||
+      point?.pm10_corrected != null ||
+      point?.rco2_corrected != null ||
+      point?.tvoc != null ||
+      point?.atmp_corrected != null ||
+      point?.rhum != null,
+  );
+}
+
 export async function fetchAirGradientData() {
   const currentPayload = await fetchJson(API_URL);
-  const sensors = Array.isArray(currentPayload) ? currentPayload : currentPayload.value || [];
+  const sensors = normalizeSeries(currentPayload);
   const hourlyWindow = getHourlyWindow();
   const avgWindow = get24hWindow();
 
@@ -30,11 +49,22 @@ export async function fetchAirGradientData() {
     ),
   ]);
 
-  return sensors.map((sensor, index) => ({
-    ...sensor,
-    hourlyPoints: hourlyResults[index].status === "fulfilled" ? hourlyResults[index].value : [],
-    avgPoints: avgResults[index].status === "fulfilled" ? avgResults[index].value : [],
-  }));
+  return sensors.map((sensor, index) => {
+    const hourlyPointsRaw =
+      hourlyResults[index].status === "fulfilled" ? normalizeSeries(hourlyResults[index].value) : [];
+    const avgPointsRaw = avgResults[index].status === "fulfilled" ? normalizeSeries(avgResults[index].value) : [];
+
+    // Resilience after network outages:
+    // if past-hour data is temporarily empty, show latest current reading
+    // so hourly cards do not stay blank.
+    const hourlyPoints = hasAnyHourlyMetric(hourlyPointsRaw) ? hourlyPointsRaw : [sensor];
+
+    return {
+      ...sensor,
+      hourlyPoints,
+      avgPoints: avgPointsRaw,
+    };
+  });
 }
 
 export async function fetchAir4ThaiData() {

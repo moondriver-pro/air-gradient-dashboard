@@ -1,7 +1,7 @@
-import { fetchAir4ThaiData, fetchAirGradientData } from "./api.js";
-import { buildPlaylist } from "./constants.js?v=20260410f43";
+import { fetchAir4ThaiData, fetchAirGradientData } from "./api.js?v=20260420f44";
+import { buildPlaylist } from "./constants.js?v=20260420f44";
 import { html, useEffect, useMemo, useState } from "./react-shim.js";
-import { Slideshow } from "./components/Slideshow.js?v=20260410f43";
+import { Slideshow } from "./components/Slideshow.js?v=20260420f44";
 
 export function App() {
   const [sensors, setSensors] = useState([]);
