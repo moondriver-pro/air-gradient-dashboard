@@ -1,4 +1,4 @@
-import { App } from "./app.js?v=20260505j";
+import { App } from "./app.js?v=20260505q";
 import { createRoot, html } from "./react-shim.js";
 
 const root = createRoot(document.getElementById("root"));

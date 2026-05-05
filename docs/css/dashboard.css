@@ -249,7 +249,7 @@
     }
 
     .f2-hourly-chip-value {
-      font-size: clamp(1.7rem, 1.95vw, 2.24rem);
+      font-size: clamp(1.32rem, 1.52vw, 1.76rem);
       font-weight: 700;
       color: #0f172a;
       line-height: 1;
@@ -314,7 +314,7 @@
 
     .f2-ambient-cards {
       display: grid;
-      grid-template-columns: repeat(3, minmax(168px, 220px));
+      grid-template-columns: repeat(3, minmax(134px, 174px));
       gap: clamp(10px, 1vw, 16px);
       justify-content: center;
       width: 100%;
@@ -328,7 +328,7 @@
     }
 
     .f2-ambient-cards .f2-chip-label {
-      font-size: clamp(1.18rem, 1.44vw, 1.66rem);
+      font-size: clamp(1.36rem, 1.66vw, 1.92rem);
     }
 
     .f2-ambient-cards .f2-chip-value {
