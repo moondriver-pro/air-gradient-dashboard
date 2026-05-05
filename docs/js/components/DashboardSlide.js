@@ -161,12 +161,12 @@ function WhoBadge() {
 
 function ThailandBadge() {
   return html`
-    <div className="f2-guideline-logo f2-guideline-logo-flag">
-      <span className="f2-flag-line flag-red"></span>
-      <span className="f2-flag-line flag-white"></span>
-      <span className="f2-flag-line flag-blue"></span>
-      <span className="f2-flag-line flag-white"></span>
-      <span className="f2-flag-line flag-red"></span>
+    <div className="f2-guideline-logo f2-guideline-logo-th" aria-label="Thailand">
+      <span className="f2-th-flag-band f2-th-flag-red"></span>
+      <span className="f2-th-flag-band f2-th-flag-white"></span>
+      <span className="f2-th-flag-band f2-th-flag-blue"></span>
+      <span className="f2-th-flag-band f2-th-flag-white"></span>
+      <span className="f2-th-flag-band f2-th-flag-red"></span>
     </div>
   `;
 }
@@ -283,7 +283,20 @@ export function DashboardSlide({ sensors, air4thaiData }) {
               <img src="images/Outdoor.jpeg" alt="Outdoor sensor" loading="lazy" />
             </div>
           </div>
-          <h1 className="f2-main-title">Air Quality Today</h1>
+          <div className="f2-title-block">
+            <h1 className="f2-main-title">Air Quality Today</h1>
+            <div className="f2-last-updated">
+              Last updated:
+              ${lastUpdatedTime.toLocaleString(undefined, {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </div>
+          </div>
           <div className="f2-topbar-side f2-topbar-side-right">
             <div className="f2-top-photo f2-top-photo-right">
               <img src="images/Indoor.jpeg" alt="Indoor sensor" loading="lazy" />
@@ -375,17 +388,6 @@ export function DashboardSlide({ sensors, air4thaiData }) {
           </div>
         </section>
 
-        <div className="f2-last-updated">
-          Last updated:
-          ${lastUpdatedTime.toLocaleString(undefined, {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-          })}
-        </div>
       </div>
     </div>
   `;

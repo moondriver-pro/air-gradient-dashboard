@@ -22,11 +22,11 @@
     }
 
     .f2-dashboard-shell {
-      width: min(100%, 1320px);
+      width: min(100%, 1480px);
       min-height: 100%;
       margin: 0 auto;
       background: #efefef;
-      padding: calc(env(safe-area-inset-top, 0px) + 30px) clamp(16px, 2.4vw, 40px) calc(env(safe-area-inset-bottom, 0px) + 10px);
+      padding: calc(env(safe-area-inset-top, 0px) + 30px) clamp(12px, 1.6vw, 28px) calc(env(safe-area-inset-bottom, 0px) + 10px);
       display: flex;
       flex-direction: column;
       gap: clamp(8px, 1vh, 14px);
@@ -38,7 +38,7 @@
     @media (min-width: 1280px) and (min-height: 720px) {
       .f2-dashboard-shell {
         --f2-scale: 1.2;
-        width: min(100%, 1080px);
+        width: min(100%, 1240px);
         zoom: var(--f2-scale);
       }
     }
@@ -46,7 +46,7 @@
     /* On larger TVs, keep the full design width and still apply +30% scale. */
     @media (min-width: 1700px) and (min-height: 900px) {
       .f2-dashboard-shell {
-        width: min(100%, 1320px);
+        width: min(100%, 1480px);
       }
     }
 
@@ -84,6 +84,16 @@
       justify-content: flex-end;
     }
 
+    .f2-title-block {
+      justify-self: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      text-align: center;
+      min-width: 0;
+    }
+
     .f2-main-title {
       margin: 0;
       font-size: clamp(1.96rem, 3.8vw, 3.02rem);
@@ -94,7 +104,6 @@
       letter-spacing: 0.02em;
       white-space: nowrap;
       text-align: center;
-      justify-self: center;
     }
 
     .f2-top-photo {
@@ -210,7 +219,7 @@
     }
 
     .f2-hourly-chip {
-      min-height: clamp(52px, 5.9vh, 68px);
+      min-height: clamp(62px, 7.1vh, 82px);
       border: 1px solid #cfd5dd;
       border-radius: 9px;
       background: #e7e7e7;
@@ -218,13 +227,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2px 5px;
+      padding: 4px 6px;
       text-align: center;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
     }
 
     .f2-hourly-chip-label {
-      font-size: clamp(0.88rem, 1.02vw, 1.16rem);
+      font-size: clamp(1.06rem, 1.22vw, 1.39rem);
       font-weight: 500;
       color: #111827;
       line-height: 1;
@@ -240,14 +249,14 @@
     }
 
     .f2-hourly-chip-value {
-      font-size: clamp(0.94rem, 1.08vw, 1.24rem);
+      font-size: clamp(1.7rem, 1.95vw, 2.24rem);
       font-weight: 700;
       color: #0f172a;
       line-height: 1;
     }
 
     .f2-hourly-chip-unit {
-      font-size: clamp(0.62rem, 0.72vw, 0.84rem);
+      font-size: clamp(0.74rem, 0.86vw, 1rem);
       font-weight: 600;
       color: #334155;
       line-height: 1;
@@ -305,36 +314,36 @@
 
     .f2-ambient-cards {
       display: grid;
-      grid-template-columns: repeat(3, minmax(102px, 124px));
+      grid-template-columns: repeat(3, minmax(122px, 149px));
       gap: clamp(8px, 0.7vw, 12px);
       justify-content: center;
       width: 100%;
     }
 
     .f2-ambient-cards .f2-metric-chip {
-      min-height: clamp(60px, 6.6vh, 74px);
-      padding: 4px 7px;
+      min-height: clamp(72px, 7.9vh, 89px);
+      padding: 5px 8px;
       border: 1px solid rgba(93, 112, 133, 0.55);
       box-shadow: 0 3px 8px rgba(15, 23, 42, 0.14);
     }
 
     .f2-ambient-cards .f2-chip-label {
-      font-size: clamp(0.98rem, 1.2vw, 1.38rem);
+      font-size: clamp(1.18rem, 1.44vw, 1.66rem);
     }
 
     .f2-ambient-cards .f2-chip-value {
-      font-size: clamp(1.48rem, 1.78vw, 2.08rem);
+      font-size: clamp(2.67rem, 3.21vw, 3.75rem);
     }
 
     .f2-ambient-cards .f2-chip-unit {
-      font-size: clamp(0.72rem, 0.84vw, 0.96rem);
+      font-size: clamp(0.86rem, 1.01vw, 1.15rem);
     }
 
     .f2-metric-chip {
       border-radius: 14px;
       border: 1px solid rgba(115, 132, 153, 0.35);
-      min-height: clamp(72px, 7.8vh, 88px);
-      padding: 6px 8px;
+      min-height: clamp(86px, 9.36vh, 106px);
+      padding: 7px 10px;
       overflow: hidden;
       background-clip: padding-box;
       display: flex;
@@ -346,7 +355,7 @@
     }
 
     .f2-chip-label {
-      font-size: clamp(0.92rem, 1.12vw, 1.3rem);
+      font-size: clamp(1.1rem, 1.34vw, 1.56rem);
       font-weight: 500;
       color: #0f172a;
       line-height: 1;
@@ -362,14 +371,14 @@
     }
 
     .f2-chip-value {
-      font-size: clamp(1rem, 1.18vw, 1.34rem);
+      font-size: clamp(1.8rem, 2.13vw, 2.42rem);
       font-weight: 700;
       color: #0f172a;
       line-height: 1;
     }
 
     .f2-chip-unit {
-      font-size: clamp(0.68rem, 0.78vw, 0.9rem);
+      font-size: clamp(0.82rem, 0.94vw, 1.08rem);
       font-weight: 600;
       color: #334155;
       line-height: 1;
@@ -528,53 +537,58 @@
       object-fit: contain;
     }
 
-    .f2-guideline-logo-flag {
-      border: 1px solid rgba(126, 142, 162, 0.55);
+    .f2-guideline-logo-th {
+      width: 34px;
+      height: 22px;
+      border-radius: 5px;
+      border: 1px solid rgba(17, 24, 39, 0.2);
       background: #ffffff;
       display: flex;
       flex-direction: column;
-      padding: 1px;
-      gap: 1px;
+      box-shadow: 0 1px 4px rgba(17, 24, 39, 0.14);
     }
 
-    .f2-flag-line {
+    .f2-th-flag-band {
       width: 100%;
-      height: 2px;
+      flex: 1 1 0;
     }
 
-    .f2-flag-line.flag-red {
-      background: #dc2626;
+    .f2-th-flag-blue {
+      flex-grow: 2;
+      background: #2d2a7b;
     }
 
-    .f2-flag-line.flag-white {
+    .f2-th-flag-red {
+      background: #c8102e;
+    }
+
+    .f2-th-flag-white {
       background: #ffffff;
-    }
-
-    .f2-flag-line.flag-blue {
-      background: #1d4ed8;
     }
 
     .f2-guideline-cards {
       display: grid;
-      grid-template-columns: repeat(2, minmax(116px, 168px));
+      grid-template-columns: repeat(2, minmax(139px, 202px));
       gap: 12px;
       padding: 10px 12px;
       justify-content: center;
     }
 
     .f2-guideline-cards .f2-metric-chip {
-      min-height: 54px;
+      min-height: 65px;
       border-radius: 12px;
       min-width: 0;
-      padding: 8px 10px;
+      padding: 10px 12px;
     }
 
     .f2-last-updated {
       text-align: center;
       font-size: clamp(0.84rem, 0.96vw, 1.04rem);
       color: #111827;
-      margin-top: 4px;
+      margin-top: 0;
       padding-top: 0;
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
     @media (max-width: 1200px) {
