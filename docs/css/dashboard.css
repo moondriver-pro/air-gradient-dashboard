@@ -314,8 +314,8 @@
 
     .f2-ambient-cards {
       display: grid;
-      grid-template-columns: repeat(3, minmax(122px, 149px));
-      gap: clamp(8px, 0.7vw, 12px);
+      grid-template-columns: repeat(3, minmax(168px, 220px));
+      gap: clamp(10px, 1vw, 16px);
       justify-content: center;
       width: 100%;
     }
