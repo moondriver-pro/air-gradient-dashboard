@@ -65,6 +65,8 @@ function buildSensorSummary(sensor, options = {}) {
   const avgPm10 = averageMetric(sensor.avgPoints, "pm10_corrected");
   const avgAqi = calculateAQI(avgPm25);
 
+  const avgDataValid = avgPm25 == null || avgPm25 > 5;
+
   return {
     hourly: [
       { key: "pm25", value: hourlyPm25 != null ? formatNumber(hourlyPm25, 1) : "—", unit: "µg/m³", fill: "neutral" },
@@ -77,23 +79,23 @@ function buildSensorSummary(sensor, options = {}) {
     average: [
       {
         key: "avg-pm25",
-        value: avgPm25 != null ? formatNumber(avgPm25, 1) : "—",
+        value: avgDataValid && avgPm25 != null ? formatNumber(avgPm25, 1) : "—",
         unit: "µg/m³",
-        fill: getState(pm25Metric, avgPm25).color,
+        fill: avgDataValid ? getState(pm25Metric, avgPm25).color : "gray",
       },
       {
         key: "avg-pm10",
-        value: avgPm10 != null ? formatNumber(avgPm10, 0) : "—",
+        value: avgDataValid && avgPm10 != null ? formatNumber(avgPm10, 0) : "—",
         unit: "µg/m³",
-        fill: getState(pm10Metric, avgPm10).color,
+        fill: avgDataValid ? getState(pm10Metric, avgPm10).color : "gray",
       },
       ...(include24hAqi
         ? [
             {
               key: "avg-aqi",
-              value: avgAqi != null ? String(avgAqi) : "—",
+              value: avgDataValid && avgAqi != null ? String(avgAqi) : "—",
               unit: "",
-              fill: getAQILevel(avgAqi).color,
+              fill: avgDataValid ? getAQILevel(avgAqi).color : "gray",
             },
           ]
         : []),
