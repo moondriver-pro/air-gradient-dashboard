@@ -14,12 +14,24 @@ function averageMetric(points, key) {
   return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
+function formatPmAverage(value, dec, showUnderFive = false) {
+  if (value == null) return showUnderFive ? "<5" : "—";
+  if (showUnderFive && value < 5) return "<5";
+  return formatNumber(value, dec);
+}
+
 function parseDisplayNumber(value) {
   if (value === null || value === undefined) return null;
   const text = String(value).trim();
   if (!text || text === "-" || text === "--" || text === "—") return null;
   const parsed = Number(text);
   return Number.isFinite(parsed) ? parsed : null;
+}
+
+function formatAqiDisplay(value) {
+  if (value == null) return "—";
+  if (value < 5) return "<5";
+  return formatNumber(value, 0);
 }
 
 function getMetricLabelHtml(key) {
@@ -34,7 +46,7 @@ function getMetricLabelHtml(key) {
 }
 
 function buildSensorSummary(sensor, options = {}) {
-  const { include24hAqi = false } = options;
+  const { include24hAqi = false, showUnderFivePm = false } = options;
 
   if (!sensor) {
     return {
@@ -65,12 +77,10 @@ function buildSensorSummary(sensor, options = {}) {
   const avgPm10 = averageMetric(sensor.avgPoints, "pm10_corrected");
   const avgAqi = calculateAQI(avgPm25);
 
-  const avgDataValid = avgPm25 == null || avgPm25 > 5;
-
   return {
     hourly: [
-      { key: "pm25", value: hourlyPm25 != null ? formatNumber(hourlyPm25, 1) : "—", unit: "µg/m³", fill: "neutral" },
-      { key: "pm10", value: hourlyPm10 != null ? formatNumber(hourlyPm10, 0) : "—", unit: "µg/m³", fill: "neutral" },
+      { key: "pm25", value: hourlyPm25 != null ? formatPmAverage(hourlyPm25, 1, true) : "—", unit: "µg/m³", fill: "neutral" },
+      { key: "pm10", value: hourlyPm10 != null ? formatPmAverage(hourlyPm10, 0, true) : "—", unit: "µg/m³", fill: "neutral" },
       { key: "co2", value: hourlyCo2 != null ? formatNumber(hourlyCo2, 0) : "—", unit: "ppm", fill: "neutral" },
       { key: "tvoc", value: hourlyTvoc != null ? formatNumber(hourlyTvoc, 0) : "—", unit: "ppb", fill: "neutral" },
       { key: "temp", value: hourlyTemp != null ? formatNumber(hourlyTemp, 1) : "—", unit: "°C", fill: "neutral" },
@@ -79,23 +89,23 @@ function buildSensorSummary(sensor, options = {}) {
     average: [
       {
         key: "avg-pm25",
-        value: avgDataValid && avgPm25 != null ? formatNumber(avgPm25, 1) : "—",
+        value: formatPmAverage(avgPm25, 1, showUnderFivePm),
         unit: "µg/m³",
-        fill: avgDataValid ? getState(pm25Metric, avgPm25).color : "gray",
+        fill: avgPm25 != null ? getState(pm25Metric, avgPm25).color : "gray",
       },
       {
         key: "avg-pm10",
-        value: avgDataValid && avgPm10 != null ? formatNumber(avgPm10, 0) : "—",
+        value: formatPmAverage(avgPm10, 0, showUnderFivePm),
         unit: "µg/m³",
-        fill: avgDataValid ? getState(pm10Metric, avgPm10).color : "gray",
+        fill: avgPm10 != null ? getState(pm10Metric, avgPm10).color : "gray",
       },
       ...(include24hAqi
         ? [
             {
               key: "avg-aqi",
-              value: avgDataValid && avgAqi != null ? String(avgAqi) : "—",
+              value: avgAqi != null ? formatAqiDisplay(avgAqi) : "—",
               unit: "",
-              fill: avgDataValid ? getAQILevel(avgAqi).color : "gray",
+              fill: avgAqi != null ? getAQILevel(avgAqi).color : "gray",
             },
           ]
         : []),
@@ -231,7 +241,10 @@ function Final2HourlyChip({ item }) {
 export function DashboardSlide({ sensors, air4thaiData }) {
   const [lastUpdatedTime, setLastUpdatedTime] = useState(() => getHourlyUpdateTimestamp());
 
-  const outdoorSummary = useMemo(() => buildSensorSummary(sensors[0] || null, { include24hAqi: true }), [sensors]);
+  const outdoorSummary = useMemo(
+    () => buildSensorSummary(sensors[0] || null, { include24hAqi: true, showUnderFivePm: true }),
+    [sensors],
+  );
   const indoorSummary = useMemo(() => buildSensorSummary(sensors[1] || null, { include24hAqi: false }), [sensors]);
   const referenceItems = useMemo(() => buildReferenceSummary(air4thaiData), [air4thaiData]);
 
