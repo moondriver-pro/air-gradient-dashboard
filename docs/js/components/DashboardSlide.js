@@ -30,7 +30,7 @@ function parseDisplayNumber(value) {
 
 function formatAqiDisplay(value) {
   if (value == null) return "—";
-  if (value < 5) return "<5";
+  if (value < 25) return "<25";
   return formatNumber(value, 0);
 }
 
