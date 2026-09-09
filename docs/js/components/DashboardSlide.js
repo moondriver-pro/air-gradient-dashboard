@@ -1,4 +1,4 @@
-import { A4T_COLOR, AQI_LEGEND, METRICS } from "../constants.js";
+import { A4T_COLOR, AQI_LEGEND, METRICS } from "../constants.js?v=20260909a";
 import { html, useEffect, useMemo, useState } from "../react-shim.js";
 import { calculateAQI, formatNumber, getAQILevel, getState } from "../utils.js";
 

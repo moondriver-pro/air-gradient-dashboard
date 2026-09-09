@@ -38,10 +38,10 @@ export function buildPlaylist() {
 export const TOKEN = "034709b8-1071-4f2f-b695-6af71c4281bf";
 export const API_URL = `https://api.airgradient.com/public/api/v1/locations/measures/current?token=${TOKEN}`;
 
-export const A4T_SOURCE = "http://air4thai.pcd.go.th/services/getNewAQI_JSON.php?stationID=20t";
-export const AIR4THAI_PROXIES = [
+export const A4T_SOURCE = "https://air4thai.com/forweb/getAQI_JSON.php?stationID=20t";
+export const AIR4THAI_ENDPOINTS = [
+  A4T_SOURCE,
   "https://api.allorigins.win/raw?url=" + encodeURIComponent(A4T_SOURCE),
-  "https://corsproxy.io/?" + encodeURIComponent(A4T_SOURCE),
   "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(A4T_SOURCE),
 ];
 

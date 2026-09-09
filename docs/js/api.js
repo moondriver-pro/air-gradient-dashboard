@@ -1,4 +1,4 @@
-import { AIR4THAI_PROXIES, API_URL, TOKEN } from "./constants.js";
+import { AIR4THAI_ENDPOINTS, API_URL, TOKEN } from "./constants.js?v=20260909a";
 import { get24hWindow, getHourlyWindow } from "./utils.js";
 
 async function fetchJson(url, options = {}) {
@@ -68,15 +68,27 @@ export async function fetchAirGradientData() {
 }
 
 export async function fetchAir4ThaiData() {
-  for (const url of AIR4THAI_PROXIES) {
+  for (const url of AIR4THAI_ENDPOINTS) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
       const data = await fetchJson(url, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      return data;
+
+      if (data?.AQILast) {
+        return data;
+      }
+
+      const rangsitStation = data?.stations?.find((station) => station.stationID === "20t");
+      if (rangsitStation?.AQILast) {
+        return rangsitStation;
+      }
+
+      throw new Error("Rangsit station data missing from response");
     } catch (error) {
-      console.warn("Air4Thai proxy failed:", url, error.message);
+      console.warn("Air4Thai endpoint failed:", url, error.message);
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
