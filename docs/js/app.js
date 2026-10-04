@@ -1,5 +1,5 @@
 import { fetchAir4ThaiData, fetchAirGradientData } from "./api.js?v=20260909a";
-import { buildPlaylist } from "./constants.js?v=20261004a";
+import { buildPlaylist } from "./constants.js?v=20261005a";
 import { html, useEffect, useMemo, useState } from "./react-shim.js";
 import { Slideshow } from "./components/Slideshow.js?v=20261004a";
 

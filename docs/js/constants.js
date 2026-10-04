@@ -27,7 +27,7 @@ export const BASE_PLAYLIST = [
 
 const IMAGE_SLIDE_DURATION_SECONDS = 15;
 // Set to false to restore the full image/video/dashboard rotation.
-const DASHBOARD_ONLY = true;
+const DASHBOARD_ONLY = false;
 
 export function buildPlaylist() {
   if (DASHBOARD_ONLY) {
