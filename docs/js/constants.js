@@ -26,8 +26,14 @@ export const BASE_PLAYLIST = [
 ];
 
 const IMAGE_SLIDE_DURATION_SECONDS = 15;
+// Set to false to restore the full image/video/dashboard rotation.
+const DASHBOARD_ONLY = true;
 
 export function buildPlaylist() {
+  if (DASHBOARD_ONLY) {
+    return BASE_PLAYLIST.filter((slide) => slide.type === "dashboard").slice(0, 1);
+  }
+
   const normalizedBasePlaylist = BASE_PLAYLIST.map((slide) =>
     slide.type === "image" ? { ...slide, duration: IMAGE_SLIDE_DURATION_SECONDS } : slide,
   );

@@ -55,6 +55,7 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
   };
 
   useEffect(() => {
+    if (slides.length <= 1) return;
     const onKeyDown = (event) => {
       if (!slides.length) return;
 
@@ -72,6 +73,7 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
   }, [slides.length]);
 
   useEffect(() => {
+    if (slides.length <= 1) return;
     const currentSlide = slides[currentIndex];
 
     Object.entries(videoRefs.current).forEach(([key, video]) => {
@@ -146,7 +148,7 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
         `;
       })}
 
-      <div id="slide-indicators">
+      ${slides.length > 1 ? html`<div id="slide-indicators">
         ${slides.map(
           (slide, index) => html`
             <span
@@ -157,7 +159,7 @@ export function Slideshow({ slides, sensors, air4thaiData }) {
             ></span>
           `,
         )}
-      </div>
+      </div>` : null}
 
       ${!isDashboardSlide
         ? html`
